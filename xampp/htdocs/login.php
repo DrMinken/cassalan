@@ -46,7 +46,6 @@ if ($thisLogin == 1)//user exists in database & credentials are correct
 						//close connection
 						$db->close();
 						$_SESSION['errMsg'] = "";
-						
 						header('Location: MANparticipants.php?msg="3"');
 					}
 				else 
@@ -63,9 +62,6 @@ if ($thisLogin == 1)//user exists in database & credentials are correct
 							{
 								// else login not allowed so close connection 
 								$db->close();
-								session_unset();
-								session_destroy();
-
 								$_SESSION['errMsg'] = "You cannot login after an event is started from a remote location.";
 								header('Location: home.php?msg="1"');
 							}
@@ -97,9 +93,6 @@ else
 	{
 		//close connection
 		$db->close();
-		session_unset();
-		session_destroy();
-
 		$_SESSION['errMsg'] = "Login Failed, please try again.";
 				header('Location: home.php?msg="2"');
 	}
@@ -214,15 +207,13 @@ function isStaff($db)
 			if ($row['admin'] == 1)
 				{
 					 // close result set
-    				$result->close();
-    				$_SESSION['isAdmin'] = 1;					
+    				$result->close();					
 					return 1; // user is an admin
 				}
 				else 
 					{ 
 					 // close result set
 	    			$result->close();
-	    			$_SESSION['isAdmin'] = 0;
 					return 0; // user is not an admin
 					}
 		
@@ -253,7 +244,6 @@ function login_user($db)
 						
 				// create session vars if ok
 				$_SESSION['fullName'] = $row['first_name']. " " . $row['last_name'];
-				$_SESSION['userID'] = $row['clientID'];
 			 	
 			 	// close result set
    				$result->close();			
