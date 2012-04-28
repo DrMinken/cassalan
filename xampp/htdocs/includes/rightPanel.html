@@ -13,6 +13,7 @@
 				if (isset($_SESSION['error']))
 				{
 					echo $_SESSION['error'].'<br />';
+					unset($_SESSION['error']);
 				}
 				?>
 					<!-- Form: for user login -->
@@ -23,7 +24,7 @@
 						
 						Password: <br/>
 						<input type="password" width="40px" name="password" />
-						<a href='register.php'>Not registered?</a>
+						<br /><a href='register.php'>Not registered?</a>
 					</p>
 					<p align='right'><input type="submit" value="Submit" /></p>
 					</form>
