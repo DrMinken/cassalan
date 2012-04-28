@@ -1,7 +1,3 @@
-<?php
-	include("includes/conn.php"); 			// Include the database connection
-?>
-
 
 <!-- //******************************************************
 
@@ -9,7 +5,7 @@
 // Revision: 1.0
 // Date: 
 // Author: Luke Spartalis
-// Modified: Quintin Maseyk 26/04/2012
+// Modified:
 
 //***********************************************************
 
@@ -78,12 +74,16 @@ if (isset($_POST['pizza_name'] , $_POST['description'] , $_POST['price']))
 
 	else // end of validation - if no errors
 	{
-		$query = "INSERT INTO pizza_type (pizza_name, description, price) VALUES ('".$_POST['pizza_name']."', '".$_POST['description']."', '".$_POST['price']."')";
-	   
-		$result = $db->query($query);
 
-		mysql_close($db);
-	}
+
+	include("includes/conn.php"); 	
+  
+	$query = "INSERT INTO pizza_type (pizza_name, description, price) VALUES ('".$_POST['pizza_name']."', '".$_POST['description']."', '".$_POST['price']."')";
+   
+	$result = $db->query($query);
+
+    $db->close();
+	} 
 }
 ?>
 
