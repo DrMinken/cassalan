@@ -4,6 +4,95 @@
 	include("includes/template.php"); 			// Include the template page
 	include("includes/conn.php"); 				// Include the database connection
 
+	// REGISTRATION FORM SUBMISSION
+	if (isset($_POST['submit']))
+	{
+	// SECURE AND ASSIGN POST VARIABLES 
+		// TRIM all posted values
+		$_POST = array_map('trim', $_POST);
+
+		// REJECT all real escape strings (security)
+		$_POST = array_map('mysql_real_escape_string', $_POST);
+		
+		// SET REGISTRATION VARIABLES
+		//print_r($_POST);
+		$firstName = $_POST['firstName'];
+		$lastName = $_POST['lastName'];
+		$email = htmlspecialchars($_POST['email']);
+
+		$mobile = $_POST['mobile'];
+		$userType = $_POST['userType'];
+
+		$teamName = $_POST['teamName'];
+		$teamPassword = $_POST['teamPassword'];
+
+		$selectTeam = $_POST['selectTeam'];
+		$selectPassword = $_POST['selectPassword'];
+
+		$username = $email;
+		$password = $_POST['password'];
+		$passwordConfirm = $_POST['passwordConfirm'];
+
+	// CHECK IF ANY INPUT ARE EMPTY
+
+	// ^^^ end of empty checking
+
+
+	// CHECK IF EMAIL EXISTS
+		$check = "SELECT * FROM client WHERE email = '".$email."'";
+		$result = $db->query($check);
+
+		if ($result->num_rows > 0)
+		{
+			$_SESSION['regError'] = '*Your email already exists in our system!'; 
+		}
+	
+	// CHECK IF NEW TEAM IS [on]
+		if (isset($_POST['newTeam']))
+		{
+			// NEW TEAM [on]
+			if ($_POST['newTeam'] == 'on')
+			{
+				// CHECK IF ENTERED TEAM NAME ALREADY EXISTS
+				$check = "SELECT * FROM teams WHERE team_name = '".$teamName."'";
+				$result = $db->query($check);
+
+				// IF IT DOES, WRITE ERROR
+				if ($result->num_rows > 0)
+				{
+					if (isset($_SESSION['regError']))
+					{
+						$_SESSION['regError'] .= '<br />*Your new Team Name already exists in our system!'; 
+					}
+					else
+					{
+						$_SESSION['regError'] = '*Your new Team Name already exists in our system!'; 
+					}
+				}
+			}
+		}
+		// ELSE, CHECK IF USER SELECTED A PREDEFINED TEAM
+		// ENSURE TEAM PASSWORD MATCHES
+		else
+		{
+			$check = "SELECT * FROM teams WHERE teamID = '".$selectTeam."' AND team_password = '".$selectPassword."'";
+			$result = $db->query($check);
+
+			// IF PASSWORD IS INCORRECT, WRITE ERROR
+			if ($result->num_rows != 1)
+			{
+				if (isset($_SESSION['regError']))
+				{
+					$_SESSION['regError'] .= '<br />*That Password is incorrect!'; 
+				}
+				else
+				{
+					$_SESSION['regError'] = '*That Password is incorrect!'; 
+				}
+			}
+		}
+	}
+
 ?>
 
 
@@ -24,7 +113,7 @@
 <head>
 
 <script type='text/javascript'>
-	var change = 1;
+	var change = 0;
 
 
 	function regVal()
@@ -35,26 +124,32 @@
 	{
 		if (change == 1)
 		{
-			// Team Name
+			// Team Name [on]
 			document.getElementById('teamName').style.backgroundColor='white';
 			document.getElementById('teamName').readOnly=false;
 
-			// Team Password
+			// Team Password [on]
 			document.getElementById('teamPassword').style.backgroundColor='white';
 			document.getElementById('teamPassword').readOnly=false;
 
-			// CHANGE 'Select Team' back to none
-			document.getElementById('userTeam').selectedIndex = 0;
+			// Select Team [off]
+			document.getElementById('selectTeam').selectedIndex = 0;
+
+			// Select Password [off]
+			document.getElementById('selectPassword').style.backgroundColor='#F0F0F0';
+			document.getElementById('selectPassword').readOnly=true;
+			document.getElementById('selectPassword').value = '';
+
 			change = 0;
 		}
 		else 
 		{
-			// Team Name
+			// Team Name [off]
 			document.getElementById('teamName').style.backgroundColor='#F0F0F0';
 			document.getElementById('teamName').readOnly=true;
 			document.getElementById('teamName').value = '';
 
-			// Team Password
+			// Team Password [off]
 			document.getElementById('teamPassword').style.backgroundColor='#F0F0F0';
 			document.getElementById('teamPassword').readOnly=true;
 			document.getElementById('teamPassword').value = '';
@@ -69,18 +164,23 @@
 	{
 		if (index > 0)
 		{
-			// Team Name
+			// Team Name [off]
 			document.getElementById('teamName').style.backgroundColor='#F0F0F0';
 			document.getElementById('teamName').readOnly=true;
 			document.getElementById('teamName').value = '';
 
-			// Team Password
+			// Team Password [off]
 			document.getElementById('teamPassword').style.backgroundColor='#F0F0F0';
 			document.getElementById('teamPassword').readOnly=true;
 			document.getElementById('teamPassword').value = '';
 
-			// UN-CHECK THE BOX
+			// CHECK THE BOX [off]
 			document.getElementById('newTeam').checked = false;
+
+			// Select Password [on]
+			document.getElementById('selectPassword').style.backgroundColor='white';
+			document.getElementById('selectPassword').readOnly=false;
+			document.getElementById('selectPassword').value = '';
 		}
 		else
 		{
@@ -141,6 +241,16 @@
 	<table id='registrationTable' border='0' width='500px' cellspacing='3px'>
 	<form name='registration' method='POST' onsubmit='return regVal()' action='register.php'>
 
+	<?php if (isset($_SESSION['regError']))
+	{?>
+		<tr>
+			<td colspan='2' align='left'>
+				<font class='error'><?php echo $_SESSION['regError']; unset($_SESSION['regError']); ?></font>
+			</td>
+		</tr>
+		<?php 
+	}?>
+
 	<tr><td colspan='2' align='left'><b>Participant Details</b></td></tr>
 	<tr>
 		<td width='150px' align='right'>First Name</td>
@@ -179,10 +289,33 @@
 
 
 	<tr>
+		<td width='150px' align='right'>New Team</td>
+		<td><input type='checkbox' name='newTeam' id='newTeam' checked='checked' onclick='revealTeamName()'></td>
+	</tr>
+
+	<tr>
+		<td width='150px' align='right'>Team Name</td>
+		<td><input type='text' name='teamName' id='teamName' value='' size='30' maxlength='32' 
+				    /></td>
+	</tr>
+
+	<tr>
+		<td width='150px' align='right'>Team Password</td>
+		<td><input type='text' name='teamPassword' id='teamPassword' value='' size='30' maxlength='32' 
+				   /></td>
+	</tr>
+
+
+
+	<tr><td colspan='2'><hr /></td></tr>
+
+
+
+	<tr>
 		<td width='150px' align='right'>Select Team</td>
 		<td>
-			<select name='userTeam' id='userTeam' onclick='closeNewTeam(selectedIndex)'>
-				<option value='0' selected='selected'>No Team</option>
+			<select name='selectTeam' id='selectTeam' onclick='closeNewTeam(selectedIndex)'>
+				<option value='0' selected='selected'>-- NO TEAM --</option>
 				
 				<!-- GET ALL TEAMS FROM DATABASE -->
 				<?php
@@ -201,25 +334,17 @@
 			</select>
 		</td>
 	</tr>
-	<tr>
-		<td width='150px' align='right'>New Team</td>
-		<td><input type='checkbox' name='newTeam' id='newTeam' onclick='revealTeamName()'></td>
-	</tr>
 
 	<tr>
-		<td width='150px' align='right'>Enter Team Name</td>
-		<td><input type='text' name='teamName' id='teamName' value='' size='30' maxlength='32' 
-				   readonly='readonly' class='muteInput' /></td>
+		<td width='150px' align='right'>Password</td>
+		<td><input type='text' name='selectPassword' id='selectPassword' value='' size='30' maxlength='32'
+					readonly='readonly' class='muteInput' /></td>
 	</tr>
 
-	<tr>
-		<td width='150px' align='right'>Team Password</td>
-		<td><input type='text' name='teamPassword' id='teamPassword' value='' size='30' maxlength='32' 
-				   readonly='readonly' class='muteInput' /></td>
-	</tr>
 
 
 	<tr><td colspan='2'><hr /></td></tr>
+
 
 
 	<tr>
@@ -238,7 +363,7 @@
 	</tr>
 	
 
-	<tr><td colspan='2' align='center'><br /><br />
+	<tr><td colspan='2' align='center'><br />
 		<input type='submit' name='submit' value='Submit' />
 	</td></tr>
 
