@@ -451,8 +451,11 @@ p
 	position: absolute;
 	top: 0%;
 	left: 0%;
+
 	width: 100%;
 	height: 100%;
+	min-height: 100px;
+
 	background-color: black;
 	z-index: 6001;
 	-moz-opacity: 0.8;
@@ -518,31 +521,31 @@ p
 	#S1
 	{
 		position: relative;
-		top: -500px;
+		top: -520px;
 		left: 50px;
 	}
 	#S2
 	{
 		position: relative;
-		top: -605px;
+		top: -650px;
 		left: 820px;
 	}
 	#S3
 	{
 		position: relative;
-		top: -585px;
+		top: -635px;
 		left: 360px;
 	}
 	#S4
 	{
 		position: relative;
-		top: -530px;
+		top: -580px;
 		left: 360px;
 	}
 	#S5
 	{
 		position: relative;
-		top: -636px;
+		top: -686px;
 		left: 820px;
 	}
 	.seatNumberTop
