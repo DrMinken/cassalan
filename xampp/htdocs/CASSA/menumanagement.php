@@ -11,6 +11,8 @@
 
 //*************** Start of CREATE PIZZA ******************* -->
 
+
+
 <html>
 <body>
 
@@ -18,10 +20,12 @@
 	session_start();
 	//$_SESSION['pizzaID'];
 	//$_SESSION['prevPage'];
-
 	include("includes/conn.php"); 	
+?>
 
 
+
+<?php
 	$query = "SELECT * FROM pizza_type";
 	$result = $db->query($query);
 
@@ -30,7 +34,7 @@ echo "<center> Pizzas </center>";
 for ($i=0; $i<$result->num_rows; $i++)
   {
 $row = $result->fetch_assoc();
-  echo "</ br> <img src='images/buttons/add_60.png' alt='Add'/> " . "<img src='images/buttons/edit_60.png' alt='Edit'/> " . "<img src='images/buttons/delete_60.png' alt='Delete'/> " . " " ;
+  echo "</ br> <img src='images/buttons/add_60.png' alt='Add'/> " . "<img src='images/buttons/edit_60.png' alt='Edit'/> </a>" . "<img src='images/buttons/delete_60.png' alt='Delete'/> " . " " ;
   echo "<b>Pizza ID:</b> " . $pizzaID[] = $row['pizzaID'] . ", ";
   echo "<b>Pizza Name:</b> " . $pizza_name[] = $row['pizza_name'] . ", ";
   echo "<b>Description:</b> " . $description[] = $row['description'] . ", ";
@@ -45,11 +49,20 @@ $row = $result->fetch_assoc();
 	for ($i=0; $i<$result1->num_rows; $i++)
 	{
 	$row1 = $result1->fetch_assoc();
-	  echo  "<img src='images/buttons/delete_60.png' alt='Delete'/> ";
-	  echo $pizzaID1[] = $row1['pizza_name'] . "<br />";
-	}
+	  echo  "<INPUT TYPE='image' SRC='images/buttons/delete_60.png' ALT='Submit Form'>";
+	  echo	" " . $pizzaID1[] = $row1['pizza_name'] . "<br />";
 
-  ?>
+	}
+?>
+
+<?
+if (isset($_POST['pizza_name']))
+{
+	$pizza_name = $_POST['pizza_name'];
+	$query3 = "DELETE FROM menu_items WHERE pizza_name='".$_POST['pizza_name']."'";
+	$result3 = $db->query($query3);
+}
+?>
 
 </body>
-</html> 
+</html>
