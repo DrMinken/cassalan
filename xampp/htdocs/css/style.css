@@ -106,7 +106,7 @@ body
 	line-height: 14px;
 
 	position: relative;
-	z-index: 99999999999999;
+	z-index: 10;
 }
 	.menuBar ul
 	{
@@ -162,7 +162,7 @@ body
 					position: absolute;
 					top: 38px;
 					left: 0pt;
-					z-index: 99999999;
+					z-index: 10;
 
 					float: left;
 
@@ -185,7 +185,7 @@ body
 						text-align: left;
 
 						position: relative;
-						z-index: 99999999;
+						z-index: 10;
 					}
 
 
@@ -209,7 +209,7 @@ body
 }
 	#loginBox
 	{
-		width: 182px;
+		width: 160px;
 		/*height: 200px;*/
 
 		border: 2px solid #000099;
@@ -270,6 +270,7 @@ body
 {
 	color: red;
 	font-size: 10pt;
+	line-height: 14pt;
 }
 p
 {
@@ -439,3 +440,120 @@ p
 	font-weight: bold;
 	width: 480px;
 }
+
+
+
+
+/* SIMPLE LIGHTBOX */
+.black_overlay
+{
+	display: none;
+	position: absolute;
+	top: 0%;
+	left: 0%;
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	z-index: 6001;
+	-moz-opacity: 0.8;
+	opacity:.80;
+	filter: alpha(opacity=80);
+}
+.white_content 
+{
+	display: none;
+	position: absolute;
+	/*top: 25%;
+	left: 25%;
+	width: 50%;
+	height: 50%;*/
+
+	/*position: fixed;*/
+	top: 50%;
+	left: 50%;
+	margin-top: -285px;
+	margin-left: -600px;
+
+	width: 1142px;
+	height: 550px;
+
+	padding: 16px;
+	border: 5px solid lightblue;
+	background-color: white;
+	z-index: 6002;
+	overflow: none;
+}
+	.white_content #closeButton
+	{
+		position: relative;
+		left: 1130px;
+		top: -10px;
+	}
+	.white_content #legend
+	{
+		font-size: 10pt;
+		text-align: right;
+		position: relative;
+		top: 20px;
+	}
+	.white_content #seatDetails
+	{
+		font-size: 10pt;
+		text-align: left;
+		position: relative;
+		top: 0px;
+	}
+
+
+	/* Seat Plan */
+	.seat
+	{
+		border: 0px;
+	}
+	.seat_sm
+	{
+		width: 49px;
+		height: 53px;
+	}
+	#S1
+	{
+		position: relative;
+		top: -500px;
+		left: 50px;
+	}
+	#S2
+	{
+		position: relative;
+		top: -605px;
+		left: 820px;
+	}
+	#S3
+	{
+		position: relative;
+		top: -585px;
+		left: 360px;
+	}
+	#S4
+	{
+		position: relative;
+		top: -530px;
+		left: 360px;
+	}
+	#S5
+	{
+		position: relative;
+		top: -636px;
+		left: 820px;
+	}
+	.seatNumberTop
+	{
+		position: relative;
+		left: 20px;
+		top: 45px;
+	}
+	.seatNumberBot
+	{
+		position: relative;
+		left: 15px;
+		top: -42px;
+	}
