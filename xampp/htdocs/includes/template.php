@@ -9,6 +9,7 @@
 // Modified: Quintin M 09/04/2012
 // Modified: Quintin M 15/04/2012
 // Modified: Quintin M 16/04/2012
+// Modified: Quintin M 26/04/2012
 
 //***********************************************************
 //******************** Start of TEMPLATE PAGE ************** -->
@@ -26,9 +27,15 @@
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
 
-	<!-- JQuery -->
-	<script type='text/javascript' href='js/jquery.js'></script>
 
+	<!-- JQuery / Lightbox 2 -->
+	<script type="text/javascript" src="js/js/jquery.js"></script>
+	<script type="text/javascript" src="js/js/lightbox.js"></script>
+	<script type="text/javascript" src="js/js/jquery.smooth-scroll.min.js"></script>
+	<script type="text/javascript" src="js/js/jquery-ui-1.8.18.custom.min.js"></script>
+	
+	<link rel="stylesheet" type="text/css" src="js/css/lightbox.css" />
+	<link rel="stylesheet" type="text/css" src="js/css/screen.css" />
 
 
 
