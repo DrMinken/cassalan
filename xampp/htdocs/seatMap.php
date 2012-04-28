@@ -87,6 +87,9 @@
 			$row = $result->fetch_assoc();
 			$seatNumber[$i] = $row['seat_number'];
 			$seatStatus[$i] = $row['status'];
+
+			// DISPLAY ALL SEAT STATUS
+			//echo $seatNumber[$i] = $row['seat_number'] . ' | ' .$seatStatus[$i] = $row['status'].'<br/>';
 		}
 
 		// SET IMAGE VARIABLE
@@ -102,14 +105,6 @@
 		// SET MOUSE EVENTS
 		$mover = " onmouseover='showName(this.id)'";
 		$mout = " onmouseout='hideName()'";
-
-
-
-		// UN-COMMENT TO SHOW CURRENT SEAT STATUS
-		/*for ($i=0; $i<count($seatNumber); $i++)
-		{
-			echo 'Seat#: ' .$seatNumber[$i]. ', Status: ' .$seatStatus[$i].' <br/>';
-		}*/
 	?>
 
 
@@ -122,16 +117,16 @@
 				{
 					echo "<input type='hidden' name='".$i."name' id='".$i."name' value='' />";
 					echo "<td id='".$i."'".$mover.$mout.">";
-					echo "<div class='seatNumberTop'>".$i."</div>";
-					echo "<img class='seat_sm pointer' src='".$src.$top."green".$ext;
+						echo "<div class='seatNumberTop'>".$i."</div>";
+						echo "<img class='seat_sm pointer' src='".$src.$top."Y".$ext;
 					echo "</td>";					
 				}	
 				else
 				{
 					echo "<input type='hidden' name='".$i."name' id='".$i."name' value='' />";
 					echo "<td id='".$i."'".$mover.$mout.">";
-					echo "<div class='seatNumberTop'>".$i."</div>";
-					echo "<img class='seat_sm pointer' src='".$src.$top.$seatStatus[$i].$ext;
+						echo "<div class='seatNumberTop'>".$i."</div>";
+						echo "<img class='seat_sm pointer' src='".$src.$top.$seatStatus[$i].$ext;
 					echo "</td>";
 				}
 			}
@@ -145,16 +140,16 @@
 				{
 					echo "<input type='hidden' name='".$i."name' id='".$i."name' value='' />";
 					echo "<td id='".$i."'".$mover.$mout.">";
-					echo "<img class='seat_sm pointer' src='".$src.$bot."green".$ext;
-					echo "<div class='seatNumberBot'>".$i."</div>";
+						echo "<img class='seat_sm pointer' src='".$src.$bot."Y".$ext;
+						echo "<div class='seatNumberBot'>".$i."</div>";
 					echo "</td>";					
 				}	
 				else
 				{
 					echo "<input type='hidden' name='".$i."name' id='".$i."name' value='' />";
 					echo "<td id='".$i."'".$mover.$mout.">";
-					echo "<img class='seat_sm pointer' src='".$src.$bot.$seatStatus[$i].$ext;
-					echo "<div class='seatNumberBot'>".$i."</div>";
+						echo "<img class='seat_sm pointer' src='".$src.$bot.$seatStatus[$i].$ext;
+						echo "<div class='seatNumberBot'>".$i."</div>";
 					echo "</td>";
 				}
 			}
