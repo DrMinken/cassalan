@@ -1,0 +1,90 @@
+<br />
+<!--RIGHT PANEL [FLOAT RIGHT] -->
+<div id='rightPanel'>
+
+
+	<!-- Login Box -->
+	<div id='loginBox'>
+
+		<?php 
+			if (!isset($_SESSION['isStaff']))
+			{
+				// If there is an error, handle it
+				if (isset($_SESSION['error']))
+				{
+					echo $_SESSION['error'].'<br />';
+					unset($_SESSION['error']);
+				}
+				?>
+					<!-- Form: for user login -->
+					<form name="login" method="POST" onsubmit="return loginValidate();" action="login.php">
+					<p align='left'>
+						Username: <br/>
+						<input type="text" width="40px" name="username" />
+						
+						Password: <br/>
+						<input type="password" width="40px" name="password" />
+						<br /><a href='register.php'>Not registered?</a>
+					</p>
+					<p align='right'><input type="submit" value="Submit" /></p>
+					</form>
+				<?php
+			}
+			else
+			{
+				?>
+					<div id='logoutBox'>
+						<input type="button" value="Logout" onclick="window.location.href='logout.php'" />
+					</div>
+				<?php
+			}
+		?>
+
+	</div><!-- end of: Login Box -->
+
+
+	<br />
+
+
+	<!-- Navigation Panel -->
+	<div id='rightPanelNavigation'>
+		<b>Recent Posts</b>
+		<ul class='rightPanelList'>
+			<li>MegaLAN</li>
+			<li>Aladin</li>
+			<li>I Cyborg</li>
+			<li>April Fools</li>
+			<li>2010 Best Fails</li>
+		</ul>
+
+		<b>Archives</b>
+		<ul class='rightPanelList'>
+			<li>April 2012</li>
+			<li>March 2012</li>
+			<li>February 2012</li>
+			<li>December 2011</li>
+			<li>October 2011</li>
+			<li>August 2011</li>
+			<li>July 2011</li>
+		</ul>
+
+		<b>Site Tools</b>
+		<ul class='rightPanelList'>
+			<li>Log in</li>
+			<li>Entries RSS</li>
+			<li>Comments RSS</li>
+		</ul>
+
+		<b>Categories</b>
+		<ul class='rightPanelList'>
+			<li>CASSA News</li>
+			<li>Meetings</li>
+			<li>MegaLAN</li>
+			<li>Other News</li>
+			<li>Posts</li>
+			<li>Site Updates</li>
+			<li>Social Events</li>
+			<li>Tech Post</li>
+		</ul>
+	</div><!-- end of: Navigation Panel -->
+</div><!-- end of: Right Panel -->
