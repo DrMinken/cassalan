@@ -1,7 +1,3 @@
-<?php
-	include("includes/conn.php"); 			// Include the database connection
-?>
-
 
 <!-- //******************************************************
 
@@ -9,7 +5,7 @@
 // Revision: 1.0
 // Date: 
 // Author: Luke Spartalis
-// Modified: Quintin Maseyk 26/04/2012
+// Modified:
 
 //***********************************************************
 
@@ -78,12 +74,24 @@ if (isset($_POST['pizza_name'] , $_POST['description'] , $_POST['price']))
 
 	else // end of validation - if no errors
 	{
-		$query = "INSERT INTO pizza_type (pizza_name, description, price) VALUES ('".$_POST['pizza_name']."', '".$_POST['description']."', '".$_POST['price']."')";
-	   
-		$result = $db->query($query);
+		// CONNECT TO THE DATABASE: MegaLAN
+	@ $db = new mysqli('localhost', 'root','','cassa_lan');
 
-		mysql_close($db);
+
+	// Handle connection error
+	if (mysqli_connect_error())
+	{
+		echo '<p align="center">Error connecting to database.<br /></p>';
+		echo '<p align="center">Error Message: '.mysqli_connect_error().'</p>';
+		exit;
 	}
+  
+	$query = "INSERT INTO pizza_type (pizza_name, description, price) VALUES ('".$_POST['pizza_name']."', '".$_POST['description']."', '".$_POST['price']."')";
+   
+	$result = $db->query($query);
+
+	mysql_close($db);
+	} 
 }
 ?>
 
