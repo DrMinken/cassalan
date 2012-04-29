@@ -7,7 +7,7 @@
 	<div id='loginBox'>
 
 		<?php 
-			if (!isset($_SESSION['isStaff']))
+			if (!isset($_SESSION['isAdmin']))
 			{
 				// If there is an error, handle it
 				if (isset($_SESSION['error']))
