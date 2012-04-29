@@ -9,46 +9,35 @@
 //***********************************************************
 
 //*************** Start of DELETE PIZZA ******************* -->
-
-
 <?php
+include("includes/conn.php");
+
+
 if (isset($_POST['pizza_name']))
 {
-
 	$pizza_name = $_POST['pizza_name'];
-	
-	include("includes/conn.php"); 
-
-	$query = "DELETE FROM pizza_type WHERE pizza_name='".$_POST['pizza_name']."';
-
-
-
-
-
-}	
-
+	$query2 = "DELETE FROM pizza_type WHERE pizza_name='".$_POST['pizza_name']."'";
+	$result2 = $db->query($query2);
+	$db->close();
+}
 ?>
 
 
 
+<?php 
+$query1 = "SELECT pizza_name FROM pizza_type";
 
-<?php
+$result = $db->query($query1);
 
-
-
-$result = "SELECT pizza_name FROM pizza_type";
-
-while ($row = mysql_fetch_array($result)) 
+for ($i=0; $i<$result->num_rows; $i++) 
 	{
-	$pizza_name[] = $row['pizza_name']; // loop to run through result
+		$row = $result->fetch_assoc();
+		$pizza_name[] = $row['pizza_name']; // loop to run through result
 	}
 
 
-<form action="deletepizza.php" method="post">
-<select name="pizza_name" size="1" id="selpizza_name">
-
-
-
+echo "<form action='deletepizza.php' method='post'>";
+echo "<select name='pizza_name' size='1' id='selpizza_name'>";
 
 
 $option = "<option value=\"Please select a Pizza\">Please select a Pizza</option> \n";
