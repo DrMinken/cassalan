@@ -10,10 +10,10 @@
 			if (!isset($_SESSION['isAdmin']))
 			{
 				// If there is an error, handle it
-				if (isset($_SESSION['error']))
+				if (isset($_SESSION['errMsg']))
 				{
-					echo $_SESSION['error'].'<br />';
-					unset($_SESSION['error']);
+					echo $_SESSION['errMsg'].'<br />';
+					unset($_SESSION['errMsg']);
 				}
 				?>
 					<!-- Form: for user login -->

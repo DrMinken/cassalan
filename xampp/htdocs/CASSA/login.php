@@ -97,10 +97,10 @@ else
 	{
 		//close connection
 		$db->close();
-		session_unset();
-		session_destroy();
+		/*session_unset();
+		session_destroy();*/
 
-		$_SESSION['errMsg'] = "Login Failed, please try again.";
+		$_SESSION['errMsg'] = "<font class='error'>Login failed, please try again.</font>";
 				header('Location: home.php?msg="2"');
 	}
 
