@@ -245,7 +245,7 @@ function login_user($db)
 	
 		
 		// Check username and password match stored record
-		if ($row_cnt = 1) 
+		if ($row_cnt == 1) 
 			{
 				// Set username session variable
 				$_SESSION['username'] = $_POST['username'];
