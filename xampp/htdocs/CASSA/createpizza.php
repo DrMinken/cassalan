@@ -77,11 +77,8 @@ if (isset($_POST['pizza_name'] , $_POST['description'] , $_POST['price']))
 
 
 	include("includes/conn.php"); 	
-  
 	$query = "INSERT INTO pizza_type (pizza_name, description, price) VALUES ('".$_POST['pizza_name']."', '".$_POST['description']."', '".$_POST['price']."')";
-   
 	$result = $db->query($query);
-
     $db->close();
 	} 
 }
