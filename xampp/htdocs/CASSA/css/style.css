@@ -574,3 +574,15 @@ p
 	position: relative;
 	left: 200px;
 }
+
+/* DELETE PIZZA */
+#deletePizza
+{
+	width: 400px;
+	padding: 30px;
+	border: 3px solid black;
+	text-align: left;
+
+	position: relative;
+	left: 200px;
+}

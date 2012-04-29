@@ -79,9 +79,7 @@
 <html>
 <head></head>
 <body>
-
 <center>
-
 <div id='shell'>
 
 <!-- Main Content [left] -->

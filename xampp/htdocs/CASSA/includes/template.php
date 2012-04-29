@@ -192,9 +192,9 @@
 
 		<!-- STAFF -->
 		<?php 
-		if(isset($_SESSION['isStaff']))
+		if(isset($_SESSION['isAdmin']))
 		{
-			if($_SESSION['isStaff'] == 1)
+			if($_SESSION['isAdmin'] == 1)
 			{
 			?>
 				<li onmouseover='this.style.backgroundColor="#333333"; 
@@ -210,6 +210,17 @@
 						<li onclick='window.location.href="ADDnotices.php"'>
 							<a href='ADDnotices.php'>Add Notices</a>
 						</li>
+
+						<!-- Create Pizza -->
+						<li onclick='window.location.href="createPizza.php"'>
+							<a href='createPizza.php'>Create Pizza</a>
+						</li>
+
+						<!-- Delete Pizza -->
+						<li onclick='window.location.href="deletePizza.php"'>
+							<a href='deletePizza.php'>Delete Pizza</a>
+						</li>
+
 						<!-- MANAGE Participants -->
 						<li onclick='window.location.href="MANparticipants.php"'>
 							<a href='MANparticipants.php'>Manage Participants</a>
@@ -243,7 +254,7 @@
 				</li>
 			<?php 
 			}
-			else if($_SESSION['isStaff'] == 0)
+			else if($_SESSION['isAdmin'] == 0)
 			{
 			?>
 				<!-- PARTICIPANT -->
