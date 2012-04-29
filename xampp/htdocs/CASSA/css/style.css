@@ -560,3 +560,17 @@ p
 		left: 15px;
 		top: -42px;
 	}
+
+
+
+/* CREATE PIZZA */
+#createPizza
+{
+	width: 300px;
+	padding: 30px;
+	border: 3px solid black;
+	text-align: left;
+
+	position: relative;
+	left: 200px;
+}
