@@ -47,7 +47,19 @@
 				$errors[] = 'Description is too long, 128 characters only';
 			}
 		}
+		// end of validation - if no errors
+		if (empty($errors)) 
+		{
+			// OPEN DATABASE CONNECTION
+			include("includes/conn.php"); 	
+
+			// INSERT NEW PIZZA
+			$query = "INSERT INTO pizza_type (pizza_name, description, price) VALUES ('".$_POST['pizza_name']."', '".$_POST['description']."', '".$_POST['price']."')";
+			$result = $db->query($query);
+			$db->close();
+		}
 	}
+
 ?>
 
 
@@ -87,16 +99,6 @@
 				echo '<strong>*' . $error .  '</strong><br />';
 				echo '</div>';
 			}
-		}
-		else // end of validation - if no errors
-		{
-			// OPEN DATABASE CONNECTION
-			include("includes/conn.php"); 	
-
-			// INSERT NEW PIZZA
-			$query = "INSERT INTO pizza_type (pizza_name, description, price) VALUES ('".$_POST['pizza_name']."', '".$_POST['description']."', '".$_POST['price']."')";
-			$result = $db->query($query);
-			$db->close();
 		}
 	?>
 
