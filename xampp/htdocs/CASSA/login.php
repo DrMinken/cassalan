@@ -63,8 +63,7 @@ if ($thisLogin == 1)//user exists in database & credentials are correct
 							{
 								// else login not allowed so close connection 
 								$db->close();
-								session_unset();
-								session_destroy();
+								
 
 								$_SESSION['errMsg'] = "You cannot login after an event is started from a remote location.";
 								header('Location: home.php?msg="1"');
@@ -97,11 +96,9 @@ else
 	{
 		//close connection
 		$db->close();
-		/*session_unset();
-		session_destroy();*/
 
 		$_SESSION['errMsg'] = "<font class='error'>Login failed, please try again.</font>";
-				header('Location: home.php?msg="2"');
+		header('Location: home.php?msg="2"');
 	}
 
 
