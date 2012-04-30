@@ -149,13 +149,13 @@ if ($row_cnt = 1)
 function check_IP_address($db)
 {
 	
-	$query = "SELECT IP_address FROM event WHERE event_started = '1'";
+	$query = "SELECT server_IP_address FROM event WHERE event_started = '1'";
 	$result = $db->query($query);
 	$row = $result->fetch_array(MYSQLI_BOTH);	
 		
 		
 				
-	$serverIP = abs(ip2long($row['IP_address']));
+	$serverIP = abs(ip2long($row['server_IP_address']));
 	
 	// Now create the hi and lo values of the server address
 	
@@ -170,7 +170,7 @@ function check_IP_address($db)
 		
 	// *******Remove after testing ***********
 	
-		$userIP = abs(ip2long("192.168.1.033"));
+		$userIP = abs(ip2long("192.168.0.033"));
 	// Check whether the address is within range and return the result
 	
 	if ( $userIP <= $lowIP || $userIP >= $highIP )

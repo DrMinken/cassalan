@@ -63,7 +63,19 @@ if (!isset($_SESSION['username']))
 			echo '<br /><hr/>';
 			$_SESSION['clientID'] = $row['clientID'];
 			$result->close();
-
+			
+			
+$query = "SELECT e.event_name, a.paid_Admission FROM (event e INNER JOIN attendee a ON e.eventID = a.eventID)
+							WHERE a.clientID = '" . mysql_real_escape_string($_SESSION['clientID']). "'";
+			
+			$result = $db->query($query);
+			$row = $result->fetch_array(MYSQLI_BOTH);
+			echo '<br />';
+			echo '<table width ="200px">';
+			echo '<tr><td>Event Registrations Active:</td><td>' . $row['event_name'] . '</td>
+									<td> Paid Y/N ?</td><td>' . $row['paid_admission'] . '</td></tr>';
+			echo '<br />';
+			$result->close();
 			
 ?>
 
