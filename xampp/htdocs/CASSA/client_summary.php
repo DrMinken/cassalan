@@ -45,21 +45,26 @@ if (!isset($_SESSION['username']))
 		echo '<form name="update" action="user_update.php" method="post">';
 	while($row = $result->fetch_array(MYSQLI_BOTH))
 		{
-			echo '<tr><td><t8>Username: </t8></td><td><input type="text" name="username" value="' . $row['username'] . '"/></td></tr>';
+			echo '<tr><td>Username: </td><td><input type="text" name="username" value="' . $row['username'] . '"/></td></tr>';
 						
-			echo '<tr><td><t8>Name: </t8></td><td><input type="text" name="first_name" value="' . $row['first_name'] . '"/></td></tr>';
+			echo '<tr><td>Name: </td><td><input type="text" name="first_name" value="' . $row['first_name'] . '"/></td></tr>';
 			
-			echo '<tr><td><t8>Surname: </t8></td><td><input  type="text" name="last_name" value="' . $row['last_name'] .'"/></td></tr>';
+			echo '<tr><td>Surname: </td><td><input  type="text" name="last_name" value="' . $row['last_name'] .'"/></td></tr>';
 			
-			echo '<tr><td><t8>Mobile #: </t8></td><td><input  type="text" name="mobile" value="' . $row['mobile'] .'"/></td></tr>'; 
+			echo '<tr><td>Mobile #: </td><td><input  type="text" name="mobile" value="' . $row['mobile'] .'"/></td></tr>'; 
 			
-			echo '<tr><td><t8>Email: </t8></td><td><input  type="text" name="email" value="' . $row['email'] .'"/></td></tr>'; 
+			echo '<tr><td>Email: </td><td><input  type="text" name="email" value="' . $row['email'] .'"/></td></tr>'; 
 			echo '<input type ="hidden" name= "clientID" value = "' . $row['clientID'] . '"/>';
 		} 
 			echo '</table>';
 			
 			echo' <input  type="submit" value="Update" >';
 			echo '</form>';
+			echo '<br /><hr/>';
+			$_SESSION['clientID'] = $row['clientID'];
+			$result->close();
+
+			
 ?>
 
 <!-- INCLUDE THIS AFTER 'MAIN CONTENT' -->
