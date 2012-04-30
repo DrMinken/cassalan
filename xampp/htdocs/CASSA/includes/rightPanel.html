@@ -8,31 +8,31 @@
 
 		<?php 
 
-			if (isset($_SESSION['username']))
-
-			if (!isset($_SESSION['isAdmin']))
-
+			if (!isset($_SESSION['username']))
 			{
-				// If there is an error, handle it
-				if (isset($_SESSION['errMsg']))
+				if (!isset($_SESSION['isAdmin']))
 				{
-					echo $_SESSION['errMsg'].'<br />';
-					unset($_SESSION['errMsg']);
+					// If there is an error, handle it
+					if (isset($_SESSION['errMsg']))
+					{
+						echo $_SESSION['errMsg'].'<br />';
+						unset($_SESSION['errMsg']);
+					}
+					?>
+						<!-- Form: for user login -->
+						<form name="login" method="POST" onsubmit="return loginValidate();" action="login.php">
+						<p align='left'>
+							Username: <br/>
+							<input type="text" width="40px" name="username" />
+							
+							Password: <br/>
+							<input type="password" width="40px" name="password" />
+							<br /><a href='register.php'>Not registered?</a>
+						</p>
+						<p align='right'><input type="submit" value="Submit" /></p>
+						</form>
+					<?php
 				}
-				?>
-					<!-- Form: for user login -->
-					<form name="login" method="POST" onsubmit="return loginValidate();" action="login.php">
-					<p align='left'>
-						Username: <br/>
-						<input type="text" width="40px" name="username" />
-						
-						Password: <br/>
-						<input type="password" width="40px" name="password" />
-						<br /><a href='register.php'>Not registered?</a>
-					</p>
-					<p align='right'><input type="submit" value="Submit" /></p>
-					</form>
-				<?php
 			}
 			else
 			{
