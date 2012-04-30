@@ -444,6 +444,35 @@ p
 
 
 
+
+/* BOARD DIV */
+.boardDIV
+{	
+	width: 740px;
+	height: 300px;
+	padding: 20px;
+
+ 	border: 5px solid #CDCDCD;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+
+	text-align: center;
+}
+.boardButton
+{
+	width: 200px;
+	height: 200px;
+	cursor: pointer;
+
+	border: 0;
+}
+
+
+
+
+
+
+
 /* SIMPLE LIGHTBOX */
 .black_overlay
 {
