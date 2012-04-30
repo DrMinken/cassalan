@@ -47,7 +47,7 @@ if ($thisLogin == 1)//user exists in database & credentials are correct
 						$db->close();
 						$_SESSION['errMsg'] = "";
 						
-						header('Location: MANparticipants.php?msg="3"');
+						header('Location: staffBoard.php?msg="3"');
 					}
 				else 
 					{
@@ -63,8 +63,6 @@ if ($thisLogin == 1)//user exists in database & credentials are correct
 							{
 								// else login not allowed so close connection 
 								$db->close();
-								
-
 								$_SESSION['errMsg'] = "You cannot login after an event is started from a remote location.";
 								header('Location: home.php?msg="1"');
 							}
@@ -80,7 +78,7 @@ if ($thisLogin == 1)//user exists in database & credentials are correct
 							//close connection
 							$db->close();
 							$_SESSION['errMsg'] = "";
-							header('Location: MANparticipants.php?msg="5"');
+							header('Location: staffBoard.php?msg="5"');
 						}
 					else
 							{
@@ -113,7 +111,7 @@ else
 function event_check($db)
 {
 
-	$query = "SELECT * FROM event WHERE event_started = '1'";
+	$query = "SELECT event_started FROM event WHERE event_started = 1";
 	$result = $db->query($query);
 	$row = $result->fetch_array(MYSQLI_BOTH);
 	$row_cnt = $result->num_rows;
@@ -149,7 +147,7 @@ if ($row_cnt = 1)
 function check_IP_address($db)
 {
 	
-	$query = "SELECT server_IP_address FROM event WHERE event_started = '1'";
+	$query = "SELECT server_IP_address FROM event WHERE event_started = 1";
 	$result = $db->query($query);
 	$row = $result->fetch_array(MYSQLI_BOTH);	
 		
