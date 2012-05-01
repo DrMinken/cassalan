@@ -24,13 +24,13 @@
 <head>
 
 <script type='text/javascript'>
-	function showName(index)
+	function showName(number)
 	{
 		// SEAT NUMBER
-		document.getElementById('seatN').value = index;
+		document.getElementById('seatNumber').value = number;
 
 		// SEAT NAME
-		var name = document.getElementById(index+'name').value;
+		var name = document.getElementById(number + 'name').value;
 		document.getElementById('seatName').value = name;
 	}
 	function hideName()
@@ -70,8 +70,13 @@
 	</div>
 
 	<div id='seatDetails'>
-	Seat Number: <input type='text' name='seatN' id='seatN' value='' size='2' />&nbsp;&nbsp;&nbsp;
-	Reserved For: <input type='text' name='seatName' id='seatName' value='' size='16' />
+	Seat Number: 
+		<input type='text' name='seatNumber' id='seatNumber' value='' size='2' readonly='readonly' />
+	
+	&nbsp;&nbsp;&nbsp;
+	
+	Reserved For: 
+		<input type='text' name='seatName' id='seatName' value='' size='32' readonly='readonly' />
 	</div>
 
 
@@ -82,14 +87,38 @@
 		
 		$seatNumber = Array();
 		$seatStatus = Array();
+		$client = Array();
 		for ($i=0; $i<$result->num_rows; $i++)
 		{
 			$row = $result->fetch_assoc();
-			$seatNumber[$i] = $row['seat_number'];
+			$seatNumber[$i] = $row['seatID'];
 			$seatStatus[$i] = $row['status'];
 
 			// DISPLAY ALL SEAT STATUS
 			//echo $seatNumber[$i] = $row['seat_number'] . ' | ' .$seatStatus[$i] = $row['status'].'<br/>';
+
+			if ($row['status'] != 'Y')
+			{
+				// GET [this] CLIENT ID
+				$getClient = "SELECT clientID FROM attendee WHERE seatID = '".$seatNumber[$i]."'";
+				$resultClient = $db->query($getClient);
+				$row = $resultClient->fetch_assoc();
+				
+				$clientID = $row['clientID'];
+
+				// GET [this] CLIENT DETAILS
+				$getName = "SELECT * FROM client WHERE clientID = '".$clientID."'";
+				$resultName = $db->query($getName);
+				$row = $resultName->fetch_assoc();
+
+				$name = ucwords($row['first_name']. ' ' .$row['last_name']);
+				// echo $name.'<br/>';
+				$client[$i] = $name;
+			}
+			else
+			{
+				$client[$i] = '';
+			}
 		}
 
 		// SET IMAGE VARIABLE
@@ -109,49 +138,43 @@
 
 
 	<table id='S1' class='seat' cellspacing="0" cellpadding="0" border='0'>
+		<!-- [this] TABLE TOP ROW -->
 		<tr>
 		<?php
-			for ($i=1; $i<6; $i++)
+			for ($i=0; $i<5; $i++)
 			{
-				if (!array_search($i, $seatNumber))
-				{
-					echo "<input type='hidden' name='".$i."name' id='".$i."name' value='' />";
-					echo "<td id='".$i."'".$mover.$mout.">";
-						echo "<div class='seatNumberTop'>".$i."</div>";
-						echo "<img class='seat_sm pointer' src='".$src.$top."Y".$ext;
-					echo "</td>";					
-				}	
-				else
-				{
-					echo "<input type='hidden' name='".$i."name' id='".$i."name' value='' />";
-					echo "<td id='".$i."'".$mover.$mout.">";
-						echo "<div class='seatNumberTop'>".$i."</div>";
-						echo "<img class='seat_sm pointer' src='".$src.$top.$seatStatus[$i].$ext;
-					echo "</td>";
-				}
+			// SET HIDDEN FIELD WITH CLIENT NAME
+			echo "<input type='hidden' name='".($i+1)."name' id='".($i+1)."name' value='".$client[$i]."' />";
+
+				// [this] SEAT 
+				echo "<td id='".($i+1)."' ".$mover.$mout.">";
+					
+					// [this] SEAT NUMBER
+					echo "<div class='seatNumberTop'>".($i+1)."</div>";
+
+					// [this] SEAT IMAGE
+					echo "<img class='seat_sm pointer' src='".$src.$top.$seatStatus[$i].$ext;
+				echo "</td>";
 			}
 		?>
 		</tr>
+		<!-- [this] TABLE BOTTOM ROW -->
 		<tr>
 		<?php
-			for ($i=6; $i<11; $i++)
+			for ($i=5; $i<10; $i++)
 			{
-				if (!array_search($i, $seatNumber))
-				{
-					echo "<input type='hidden' name='".$i."name' id='".$i."name' value='' />";
-					echo "<td id='".$i."'".$mover.$mout.">";
-						echo "<img class='seat_sm pointer' src='".$src.$bot."Y".$ext;
-						echo "<div class='seatNumberBot'>".$i."</div>";
-					echo "</td>";					
-				}	
-				else
-				{
-					echo "<input type='hidden' name='".$i."name' id='".$i."name' value='' />";
-					echo "<td id='".$i."'".$mover.$mout.">";
-						echo "<img class='seat_sm pointer' src='".$src.$bot.$seatStatus[$i].$ext;
-						echo "<div class='seatNumberBot'>".$i."</div>";
-					echo "</td>";
-				}
+			// SET HIDDEN FIELD WITH CLIENT NAME
+			echo "<input type='hidden' name='".($i+1)."name' id='".($i+1)."name' value='".$client[$i]."' />";
+
+				// [this] SEAT 
+				echo "<td id='".($i+1)."' ".$mover.$mout.">";
+
+					// [this] SEAT NUMBER
+					echo "<img class='seat_sm pointer' src='".$src.$bot.$seatStatus[$i].$ext;
+
+					// [this] SEAT IMAGE
+					echo "<div class='seatNumberBot'>".($i+1)."</div>";
+				echo "</td>";
 			}
 		?>		
 		</tr>
