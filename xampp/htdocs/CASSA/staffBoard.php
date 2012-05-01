@@ -34,7 +34,7 @@
 	<tr>
 		<td>
 			<!-- MANAGE EVENT -->
-			<a href='MANevent'>
+			<a href='MANevent.php'>
 				<img class='boardButton' src='images/buttons/event.jpg' title='Manage Event' 
 					onmouseover='this.src="images/buttons/eventO.jpg"' 
 					onmouseout='this.src="images/buttons/event.jpg"' />
@@ -42,7 +42,7 @@
 		</td>
 		<td>
 			<!-- MANAGE TOURNAMENT -->
-			<a href='MANtournament'>
+			<a href='MANtournament.php'>
 				<img class='boardButton' src='images/buttons/tournament.jpg' title='Manage Tournaments'
 					onmouseover='this.src="images/buttons/tournamentO.jpg"' 
 					onmouseout='this.src="images/buttons/tournament.jpg"' />
@@ -50,7 +50,7 @@
 		</td>
 		<td>
 			<!-- MANAGE PIZZA MENU -->
-			<a href='MANpizza'>
+			<a href='MANpizza.php'>
 				<img class='boardButton' src='images/buttons/pizza.jpg' title='Manage Pizza'
 					onmouseover='this.src="images/buttons/pizzaO.jpg"' 					onmouseout='this.src="images/buttons/pizza.jpg"' />
 			</a>
