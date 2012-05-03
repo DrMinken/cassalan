@@ -13,10 +13,13 @@
 <?php 
 	session_start();														// Start/resume THIS session
 	$_SESSION['title'] = "Event Management | MegaLAN"; 		// Declare this page's Title
+		$eventID = $_GET['my_eventID'];		
 	include("includes/conn.php");										// Include the db connection
-	$eventID = $_GET['eventID'];
- 	$query = "SELECT * FROM event WHERE eventID = '" . $eventID . "'";
+
+ 	$query = "SELECT * FROM event WHERE eventID = " . $eventID;
 	$result = $db->query($query);
+echo $eventID;
+echo '<br />';
 echo '<table border="1">';
 echo '<tr>';
 echo '<th>Event Name</th>';
@@ -39,7 +42,7 @@ while($row = $result->fetch_array(MYSQLI_BOTH))
   }
 echo '</table>';
 
-mysql_close($con);
+
 
 	
 ?>
