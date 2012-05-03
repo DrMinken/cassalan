@@ -22,12 +22,12 @@
 	
 ?>
 
-<?
-if (isset($_POST['pizzaID1'])) // Delete pizza from menu
+<?php
+if (isset($_POST['pizzaID'])) // Delete pizza from menu
 {
 	include("includes/conn.php"); 
-	$pizzaID1 = $_POST['pizzaID1'];
-	$query3 = "DELETE FROM menu_items WHERE pizzaID='".$_POST['pizzaID1']."'";
+	$pizzaID = $_POST['pizzaID'];
+	$query3 = "DELETE FROM menu_items WHERE pizzaID='".$_POST['pizzaID']."'";
 	$result3 = $db->query($query3);
 	$db->close();
 	echo "Thanks";
@@ -46,14 +46,19 @@ echo "<center> Pizzas </center>";
 for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the database
   {
 $row = $result->fetch_assoc();
-  echo "</ br> <img src='images/buttons/add_60.png' alt='Add'/> " . "<img src='images/buttons/edit_60.png' alt='Edit'/> </a>" . " " ;
+  echo "</ br> <img src='images/buttons/add_60.png' alt='Add'/>" . " ";
+  echo "<img src='images/buttons/edit_60.png' alt='Edit'/> </a>" . " " ;
   echo "<b>Pizza ID:</b> " . $pizzaID[] = $row['pizzaID'] . ", ";
   echo "<b>Pizza Name:</b> " . $pizza_name[] = $row['pizza_name'] . ", ";
   echo "<b>Description:</b> " . $description[] = $row['description'] . ", ";
   echo "<b>Price:</b> " . $price[] = $row['price'] . ", ";
   echo "<br /><br />";
   }
+
+ ?>
   
+
+  <?php
   echo "<center>Current Pizza Menu </center>";
 
   $query1 = "SELECT menu_items.pizzaID, pizza_type.pizza_name FROM menu_items INNER JOIN pizza_type ON menu_items.pizzaID = pizza_type.pizzaID WHERE menuID ='1'";
@@ -61,17 +66,18 @@ $row = $result->fetch_assoc();
 	for ($i=0; $i<$result1->num_rows; $i++) //create a list of pizza's currently on menu
 	{
 	$row1 = $result1->fetch_assoc();
-	  echo  "<INPUT TYPE='image' SRC='images/buttons/delete_60.png' ALT='Submit Form'>";
-	  echo	" " . $pizzaID1[] = $row1['pizzaID'] ;
-	  echo	" " . $pizza_name1[] = $row1['pizza_name'] . "<br />";
+	  echo  "<head> <img src='images/buttons/delete_60.png' alt='Delete' onclick='del(document.getElementById('rowID').value)' /> </head>";
+	  echo	" " . $pizzaID[] = $row1['pizzaID'] ;
+	  echo	" " . $pizza_name[] = $row1['pizza_name'] . "<br />";
 
 	}
 
 	$db->close();
 ?>
 
+
 <form action="menumanagement.php" method="post">
-Pizza ID:<br /> <input type="text" name="pizzaID1" /><br />
+Pizza ID:<br /> <input type="text" name="pizzaID" /><br />
 <br /> <input type="submit" />
 </form> 
 
