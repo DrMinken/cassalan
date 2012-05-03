@@ -23,11 +23,11 @@
 <head>
 <script type="text/javascript">
 
-function getEvent(str)
+function getEvent(eventID)
 {
-if (str=="")
+if (eventID=="")
   {
-  document.getElementById("txtHint").innerHTML="";
+  document.getElementById("eventTable").innerHTML="";
   return;
   } 
 if (window.XMLHttpRequest)
@@ -45,7 +45,8 @@ xmlhttp.onreadystatechange=function()
     document.getElementById("eventTable").innerHTML=xmlhttp.responseText;
     }
   }
-xmlhttp.open("GET","selectEvent.php?eventID ="+str,true);
+  
+xmlhttp.open("GET","selectEvent.php?my_eventID ="+eventID,true);
 xmlhttp.send();
 }
 
@@ -74,21 +75,22 @@ $username = $_SESSION['username'];
 
 echo '<hr />';
 echo '<p><h2>Current Events</h2></p>';
-echo '<FORM name="frm1" action="" method="post">';
+//echo '<FORM name="frm1" action="" method="get">';
 echo '<P>';
-echo '<SELECT size="6" name="selectEvent" onchange = "getEvent(this.value)">';
+echo '<SELECT size="6" name="selectEvent" onclick = getEvent(this.value)>';
+
 // Now we can output the option fields to populate the list box.
 for ($i = 0; $i<$result->num_rows;$i++) 
 	{
 		$row = $result->fetch_array(MYSQLI_BOTH);    
-    echo '<OPTION name="optEvent" selected value="' . $row[0]. '">' . $row[1] . '</OPTION>';
+    echo '<OPTION value="' . $row['eventID']. '">' . $row['event_name'] . '</OPTION>';
 	}
 
 		echo '</SELECT>';
 			echo '<br />';
    		echo '<INPUT type="submit" value="Send"><INPUT type="reset">';
    			echo '</P>';
-					echo '</FORM>';
+//					echo '</FORM>';
 						echo '<hr />';
 
 ?>
