@@ -608,10 +608,55 @@ p
 #deletePizza
 {
 	width: 400px;
-	padding: 30px;
+	table.cellpadding: 30px;
 	border: 3px solid black;
 	text-align: left;
 
 	position: relative;
 	left: 200px;
+}
+
+/* Event Page */
+table 
+{  
+	border-collapse: separate;   
+	border-spacing: 10px;   
+	*border-collapse: expression('separate', cellSpacing = '5px'); } 
+
+#eventDetail
+{
+	width: 500px;
+	border: 1px solid blue;
+	border-spacing: 0px;
+	text-align: center;;
+	
+
+}	
+	
+#headCell
+{
+	background-color: black;
+	color:white;
+	font-style: bold;
+	align:center;
+	height: 30px;
+	
+
+}	
+#titleCell
+{
+	background-color: 3399CC;
+	color:white;
+	font-style: bold;
+	height: 30px;
+	width: 150px;
+}	
+
+#detailCell
+{
+	background-color: #D0D0D0;
+	color: black;
+	height: 30px;
+	width: 250px;
+	align: left;
 }

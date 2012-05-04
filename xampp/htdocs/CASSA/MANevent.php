@@ -8,7 +8,7 @@
 
 <!-- //******************************************************
 
-// Name of File: eventManagement.php
+// Name of File: MANevent.php
 // Revision: 1.0
 // Date: 16/04/2012
 // Author: Lyndon Smith
@@ -78,14 +78,13 @@ echo '<hr />';
 echo '<p><h2>Current Events</h2></p>';
 echo '<FORM>';
 echo '<P>';
-echo '<SELECT size="6" name="selectEvent" onclick = getEvent(this.value)>';
-echo '<option value="">Select an Event:</option>';
+echo '<SELECT size="6" name="selectEvent" onchange = getEvent(this.value)>';
 
 // Now we can output the option fields to populate the list box.
-for ($i = 0; $i<$result->num_rows;$i++) 
+for ($i = 0; $i < $result->num_rows;$i++) 
 	{
 		$row = $result->fetch_array(MYSQLI_BOTH);    
-    echo '<OPTION value="' . $row['eventID']. '">' . $row['event_name'] . '</OPTION>';
+    echo '<OPTION value="' . $row['eventID']. '">' . $row['event_name'] . '</OPTION><br />';
 	}
 
 		echo '</SELECT>';
@@ -99,15 +98,9 @@ for ($i = 0; $i<$result->num_rows;$i++)
 <!-- INCLUDE THIS AFTER 'MAIN CONTENT' -->
 <!-- ********************************* -->
 <div id="eventTable"></div>
-
-
 </div><!-- end of: Content -->
-
-
 <!-- INSERT: rightPanel -->
 <?php include('includes/rightPanel.html'); ?>
-
-
 <!-- INSERT: footer -->
 <div id="footer">
 	<?php include('includes/footer.html'); ?>
