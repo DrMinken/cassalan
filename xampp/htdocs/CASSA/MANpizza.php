@@ -5,6 +5,7 @@
 	
 
 	print_r($_POST);
+	
 ?>
 
 <!-- //******************************************************
@@ -39,6 +40,37 @@ function saveRow(x)
 		document.forms[x+"_form"].submit();
 	}
 }
+
+function deleteRow(x)
+{
+	var answer = confirm("Are you sure you want to delete this row?");
+	if (answer == true)
+	{
+		// SEND [this] FORM TO SERVER
+		document.forms[x+"_form"].submit();
+	}
+}
+
+function addtomenuRow(x)
+{
+	var answer = confirm("Are you sure you want add this row to the current menu?");
+	if (answer == true)
+	{
+		// SEND [this] FORM TO SERVER
+		document.forms[x+"_form"].submit();
+	}
+}
+
+function deletefrommenuRow(x)
+{
+	var answer = confirm("Are you sure you want to delete this from the menu?");
+	if (answer == true)
+	{
+		// SEND [this] FORM TO SERVER
+		document.forms[x+"_form"].submit();
+	}
+}
+
 </script>
 
 </head>
@@ -55,17 +87,17 @@ function saveRow(x)
 </th>
 
 
-<?php
-if (isset($_POST['pizzaID'])) // Delete pizza from menu
+<!-- <?php
+if (isset($_POST['pizza_name'])) // Delete pizza from menu
 {
 	include("includes/conn.php"); 
-	$pizzaID = $_POST['pizzaID'];
-	$query3 = "DELETE FROM menu_items WHERE pizzaID='".$_POST['pizzaID']."'";
+	$pizza_name = $_POST['pizza_name'];
+	$query3 = "DELETE FROM pizza_type WHERE pizza_name='".$_POST['pizza_name']."'";
 	$result3 = $db->query($query3);
 	$db->close();
 	echo "Thanks";
 }
-?>
+?> -->
 
 
 
@@ -98,8 +130,9 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 	echo "<tr id='".$i."_normal'>";
 
 		echo "<td>";
-			echo "<img class='pointer' src='images/buttons/add_60.png' alt='Add' />";
+			echo "<img class='pointer' src='images/buttons/add_60.png' alt='Add' onclick='addtomenuRow(".$i.")' />";
 			echo "<img class='pointer' src='images/buttons/edit_60.png' alt='Edit' onclick='editRow(".$i.", ".$result->num_rows.")' />";
+			echo "<img src='images/buttons/delete_60.png' alt='Delete' onclick='deleteRow(".$i.")' />";
 		echo "</td>";
 
 		echo "<td>" . $row['pizzaID'] . "</td>";
@@ -114,7 +147,7 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 
 	// [this] EDITABLE ROW
 	// CREATE FORM FOR SUBMISSION
-	echo "<form name='".$i."_form' method='POST' action='MANpizza.php' >";
+	echo "<form name='".$i."_form' method='POST' action='delpizza.php' >";
 	echo "<tr id='".$i."_edit' style='display: none;'>";
 		
 		echo "<td>";
@@ -149,7 +182,10 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 	{
 		$row1 = $result1->fetch_assoc();
 
-		echo  "<head> <img src='images/buttons/delete_60.png' alt='Delete' onclick='del(document.getElementById('rowID').value)' /> </head>";
+		echo "<form name='".$i."_form' method='POST' action='MANpizza.php' >";
+		echo "<tr id='".$i."_delete' style='display: none;'>";
+
+		echo  "<img src='images/buttons/delete_60.png' alt='Delete' onclick='deletefrommenuRow(".$i.", ".$result->num_rows.")' />";
 		echo	" " . $pizzaID[] = $row1['pizzaID'] ;
 		echo	" " . $pizza_name[] = $row1['pizza_name'] . "<br />";
 	}
@@ -158,10 +194,6 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 ?>
 
 
-<form action="menumanagement.php" method="post">
-Pizza ID:<br /> <input type="text" name="pizzaID" /><br />
-<br /> <input type="submit" />
-</form> 
 
 
 
