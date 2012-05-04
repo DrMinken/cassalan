@@ -4,21 +4,31 @@
 	//$_SESSION['prevPage'];
 	
 
-	//print_r($_POST);
+	print_r($_POST);
 	
-?>
 
-<?php
-if (isset($_POST['pizza_name'])) // Delete pizza from menu
+if (isset($_POST['pizza_name'])) // Delete pizza from database
 {
 	include("includes/conn.php"); 
 	$pizza_name = $_POST['pizza_name'];
 	$query3 = "DELETE FROM pizza_type WHERE pizza_name='".$_POST['pizza_name']."'";
 	$result3 = $db->query($query3);
 	$db->close();
-	echo "Thanks";
-	 header( 'Location: MANpizza.php' ) ;
 }
+
+if (isset($_POST['pizza_menu_name'])) // Delete pizza from menu
+{
+	include("includes/conn.php"); 
+	$pizzaID = $_POST['pizza_menu_name'];
+	$query3 = "DELETE FROM menu_items WHERE pizzaID='".$_POST['pizza_menu_name']."'";
+	$result3 = $db->query($query3);
+	$db->close();
+}
+
+
+
+
+
 ?>
 
 <!-- //******************************************************
@@ -158,7 +168,7 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 		echo "<td>" . $row['pizzaID'] . "</td>";
 
 		echo "<td><input type='text' name='pizza_name' id='pizza_name' value='".$row['pizza_name']."' /></td>";
-		
+
 		echo "<td><input type='text' name='description' id='description' value='".$row['description']."' /></td>";
 
 		echo "<td><input type='text' name='price' id='price' value='".$row['price']."' size='5' maxlength='5' /></td>";
@@ -183,17 +193,17 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 		$row1 = $result1->fetch_assoc();
 
 		echo "<form name='".$i."_form' method='POST' action='MANpizza.php' >";
-		echo "<tr id='".$i."_delete' style='display: none;'>";
+		echo "<tr id='".$i."_menu' style='display: none;'>";
 
-		echo  "<img src='images/buttons/delete_60.png' alt='Delete' onclick='deletefrommenuRow(".$i.", ".$result->num_rows.")' />";
+		echo "<img src='images/buttons/delete_60.png' alt='Delete' onclick='deletefrommenuRow(".$i.")'/>";
+		echo "<input type = 'hidden' name='pizza_menu_name' value='".$row1['pizzaID']."'/>";
 		echo	" " . $pizzaID[] = $row1['pizzaID'] ;
 		echo	" " . $pizza_name[] = $row1['pizza_name'] . "<br />";
+		echo "</form>";
 	}
 
 	$db->close();
 ?>
-
-
 
 
 
