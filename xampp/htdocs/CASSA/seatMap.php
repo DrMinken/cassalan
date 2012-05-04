@@ -8,7 +8,59 @@
 	// IF SOMEONE CLICKED TO BOOK A SEAT
 	if (isset($_POST['seatID']))
 	{
-		
+		// CHECK IF USER IS LOGGED ON
+		if (!isset($_SESSION['isAdmin']))
+		{
+			// Ask user to login
+			echo '<script type="text/javascript">';
+			echo 'alert("You must be logged in to book a seat");';
+			echo 'window.location.href="seatMap.php"';
+			echo '</script>';
+		}
+		else
+		{
+			// GET [this] USERS CLIENT DETAILS
+			/*$get = "SELECT `clientID` FROM client WHERE username='".$_SESSION['username']."'";
+			$result = $db->query($get);
+			$row = $result->fetch_assoc();
+			$clientID = $row['clientID'];*/
+
+
+			// CHECK IF USER HAS ALREADY RESERVED A SEAT
+			$check = "SELECT * FROM attendee WHERE clientID='".$_SESSION['userID']."'";
+			$result = $db->query($check);
+			$row = $result->fetch_assoc();
+
+
+			// USER HAS NOT BOOKED A SEAT YET
+			if (empty($row['seatID']))
+			{
+				// BOOK SEAT
+				$update = "UPDATE attendee SET seatID='".$_POST['seatID']."' WHERE clientID='".$_SESSION['userID']."'";
+				$result = $db->query($update);
+
+				// UPDATE SEAT STATUS
+				$update = "UPDATE seat SET status='N' WHERE seatID='".$_POST['seatID']."'";
+				$result = $db->query($update);
+
+				// DISPLAY CONFIRMATION 
+				echo '<script type="text/javascript">';
+				echo 'alert("Your seat booking has been made\nThank you");';
+				echo 'window.location.href="client_summary.php"';
+				echo '</script>';
+
+				// SEND EMAIL CONFIRMATION
+				/*
+				*
+				*
+				*/
+			}
+			// USER HAS ALREADY BOOKED A SEAT
+			else
+			{
+				echo '<script type="text/javascript">alert("You have already booked a seat");</script>';
+			}
+		}
 	}
 ?>
 
@@ -25,7 +77,6 @@
 
 //*************** Start of SEAT AVAILABILITY PAGE ************ -->
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 
@@ -77,17 +128,13 @@
 
 
 
+
+
+
 <!-- FORM IN WHICH GETS POSTED IF A USER CLICKS TO BOOK A SEAT -->
 <form name='bookThisSeat' method='POST' action='seatMap.php'>
 	<input type='hidden' name='seatID' id='seatID' value='' />
 </form>
-
-
-
-
-
-
-
 
 
 
@@ -102,6 +149,10 @@
 </a>
 
 
+
+
+
+
 <!-- LARGE LAYOUT IMAGE -->
 <div id="light" class="white_content">
 
@@ -113,10 +164,18 @@
 	</div><!-- end of: CLOSE BUTTON -->
 
 
+
+
+
+
 	<!-- SEAT PLAN LAYOUT -->
 	<img src='images/seatPlan/layout.png' border='0' />
 
-	
+
+
+
+
+
 	<!-- BOTTOM RIGHT LEGEND -->
 	<div id='legend'>
 		<img src='images/seatPlan/seatTop_Y30.png' /> <b>Available</b> 
@@ -140,6 +199,10 @@
 	Good to book?: 
 		<input type='text' name='seatReady' id='seatReady' value='' size='3' readonly='readonly' />
 	</div><!-- end of: SEAT DETAIL -->
+
+
+
+
 
 
 	<!-- GET CURRENT SEAT STATUS -->
