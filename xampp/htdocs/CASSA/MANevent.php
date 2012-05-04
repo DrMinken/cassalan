@@ -2,7 +2,7 @@
 	session_start();														// Start/resume THIS session
 	$_SESSION['title'] = "Event Management | MegaLAN"; 		// Declare this page's Title
 	include("includes/template.php"); 								// Include the template page
-	include("includes/conn.php"); 					   			// Include the db connection
+	include("includes/conn.php"); 									// Include the db connection
 ?>
 
 
@@ -45,8 +45,9 @@ xmlhttp.onreadystatechange=function()
     document.getElementById("eventTable").innerHTML=xmlhttp.responseText;
     }
   }
-  
-xmlhttp.open("GET","selectEvent.php?my_eventID ="+eventID,true);
+
+
+xmlhttp.open("GET","selectEvent.php?eventID="+eventID,true);
 xmlhttp.send();
 }
 
@@ -75,9 +76,10 @@ $username = $_SESSION['username'];
 
 echo '<hr />';
 echo '<p><h2>Current Events</h2></p>';
-//echo '<FORM name="frm1" action="" method="get">';
+echo '<FORM>';
 echo '<P>';
 echo '<SELECT size="6" name="selectEvent" onclick = getEvent(this.value)>';
+echo '<option value="">Select an Event:</option>';
 
 // Now we can output the option fields to populate the list box.
 for ($i = 0; $i<$result->num_rows;$i++) 
@@ -90,7 +92,7 @@ for ($i = 0; $i<$result->num_rows;$i++)
 			echo '<br />';
    		echo '<INPUT type="submit" value="Send"><INPUT type="reset">';
    			echo '</P>';
-//					echo '</FORM>';
+				echo '</FORM>';
 						echo '<hr />';
 
 ?>
