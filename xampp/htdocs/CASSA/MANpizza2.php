@@ -7,20 +7,22 @@
 	print_r($_POST);
 	
 
-if (isset($_POST['pizza_name'])) // Delete pizza from database
+if (isset($_POST['pizza_nameA'])) // Delete pizza from database
 {
-	include("includes/conn.php"); 
-	$pizza_name = $_POST['pizza_name'];
-	$query3 = "DELETE FROM pizza_type WHERE pizza_name='".$_POST['pizza_name']."'";
-	$result3 = $db->query($query3);
-	$db->close();
+echo "good work pizza delete";
 }
 
-if (isset($_POST['pizza_menu_name'])) // Delete pizza from menu
+if (isset($_POST['pizza_nameSR'])) // Delete pizza from menu
+{
+echo "good work update completed";
+}
+
+if (isset($_POST['pizzaID1'])) // Delete pizza from menu
 {
 	include("includes/conn.php"); 
-	$pizzaID = $_POST['pizza_menu_name'];
-	$query3 = "DELETE FROM menu_items WHERE pizzaID='".$_POST['pizza_menu_name']."'";
+	echo "done";
+	$pizzaID = $_POST['pizzaID1'];
+	$query3 = "DELETE FROM menu_items WHERE pizzaID='".$_POST['pizzaID1']."'";
 	$result3 = $db->query($query3);
 	$db->close();
 }
@@ -43,8 +45,8 @@ if (isset($_POST['pizza_menu_name'])) // Delete pizza from menu
 
 //*************** Start of CREATE PIZZA ******************* -->
 
-<html>
 
+<html>
 <head>
 
 <script type='text/javascript'>
@@ -61,37 +63,25 @@ function saveRow(x)
 	if (answer == true)
 	{
 		// SEND [this] FORM TO SERVER
-		document.forms[x+"_form"].submit();
+		document.forms[x+"_formSR"].submit();
 	}
 }
-
 function deleteRow(x)
 {
-	var answer = confirm("Are you sure you want to delete this row?");
+	var answer = confirm("Are you sure you want to delete?");
 	if (answer == true)
 	{
 		// SEND [this] FORM TO SERVER
-		document.forms[x+"_form"].submit();
+		document.forms[x+"_formA"].submit();
 	}
 }
-
-function addtomenuRow(x)
+function deletemenuRow(x)
 {
-	var answer = confirm("Are you sure you want add this row to the current menu?");
+	var answer = confirm("Are you sure you want to delete this item from the menu?");
 	if (answer == true)
 	{
 		// SEND [this] FORM TO SERVER
-		document.forms[x+"_form"].submit();
-	}
-}
-
-function deletefrommenuRow(x)
-{
-	var answer = confirm("Are you sure you want to delete this from the menu?");
-	if (answer == true)
-	{
-		// SEND [this] FORM TO SERVER
-		document.forms[x+"_form"].submit();
+		document.forms[x+"_form1"].submit();
 	}
 }
 
@@ -99,7 +89,6 @@ function deletefrommenuRow(x)
 
 </head>
 <body>
-
 
 <table rules='rows' cellpadding='5px'>
 <caption>Pizza's</caption>
@@ -111,17 +100,16 @@ function deletefrommenuRow(x)
 </th>
 
 
-
 <?php 
 	include("includes/conn.php"); 
 	$query = "SELECT * FROM pizza_type";
 	$result = $db->query($query);
 
 
-
 for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the database
 {
 	$row = $result->fetch_assoc();
+
 
 
 	// [this] NORMAL ROW
@@ -130,24 +118,34 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 		echo "<td>";
 			echo "<img class='pointer' src='images/buttons/add_60.png' alt='Add' onclick='addtomenuRow(".$i.")' />";
 			echo "<img class='pointer' src='images/buttons/edit_60.png' alt='Edit' onclick='editRow(".$i.", ".$result->num_rows.")' />";
-			echo "<img src='images/buttons/delete_60.png' alt='Delete' onclick='deleteRow(".$i.")' />";
+
 		echo "</td>";
+
 
 		echo "<td>" . $row['pizzaID'] . "</td>";
 		echo "<td>"	. $row['pizza_name']."</td>";
 		echo "<td>" . $row['description'] . "</td>";
 		echo "<td>" . $row['price'] . "</td>";
 
+
 	echo "</tr>";
 
 	// [this] EDITABLE ROW
 	// CREATE FORM FOR SUBMISSION
-	echo "<form name='".$i."_form' method='POST' action='MANpizza.php' >";
 	echo "<tr id='".$i."_edit' style='display: none;'>";
 		
 		echo "<td>";
-			echo "<img src='images/buttons/add_60.png' alt='Add' />";
+			echo "<form name='".$i."_formSR' method='POST' action='MANpizza2.php' >";
 			echo "&nbsp;&nbsp;&nbsp;<img src='images/layers/tick.png' alt='Save' onclick='saveRow(".$i.")' />";
+			echo "<td><input type='text' name='pizza_nameSR' id='pizza_nameSR' value='".$row['pizza_name']."' /></td>";
+			echo "</form>";
+
+			echo "<form name='".$i."_formA' method='POST' action='MANpizza2.php' >";
+			echo "<img src='images/buttons/delete_60.png' alt='Delete' onclick='deleteRow(".$i.")' />";
+			echo "<td><input type='text' name='pizza_nameA' id='pizza_nameA' value='".$row['pizza_name']."' /></td>";
+			echo "</form>";
+
+
 		echo "</td>";
 
 		echo "<td>" . $row['pizzaID'] . "</td>";
@@ -155,38 +153,38 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 		echo "<td><input type='text' name='description' id='description' value='".$row['description']."' /></td>";
 		echo "<td><input type='text' name='price' id='price' value='".$row['price']."' size='5' maxlength='5' /></td>";
 	echo "</tr>";
-	echo "</form>";
 }
-
-
-
-
+	$db->close();
 ?>
-  
 
-  <?php
+<?php
 	echo "<center>Current Pizza Menu </center>";
-
-	$query1 = "SELECT menu_items.pizzaID, pizza_type.pizza_name FROM menu_items INNER JOIN pizza_type ON menu_items.pizzaID = pizza_type.pizzaID WHERE menuID = '1'";
+include("includes/conn.php"); 
+	$query1 = "SELECT * FROM menu_items";
 	$result1 = $db->query($query1);
+
+
+for ($i=0; $i<$result1->num_rows; $i++) // create a list of all pizza's in the database
+{
+	$row1 = $result1->fetch_assoc();
+
+
+
+
+			echo "<form name='".$i."_form1' method='POST' action='MANpizza2.php' >";
+			echo "<img class='pointer' src='images/buttons/delete_60.png' alt='Delete' onclick='deletemenuRow(".$i.")' />";
+			echo $row1['pizzaID'];
+			echo "<input type='hidden' name='pizzaID1' id='pizzaID1' value='".$row1['pizzaID']."' /><br />";
+			echo "</form>";
+
 	
-	for ($i=0; $i<$result1->num_rows; $i++) //create a list of pizza's currently on menu
-	{
-		$row1 = $result1->fetch_assoc();
 
-		echo "<form name='".$i."_form' method='POST' action='MANpizza.php' >";
 
-		echo "<img src='images/buttons/delete_60.png' alt='Delete' onclick='deletefrommenuRow(".$i.")'/>";
-		echo "<input type = 'hidden' name='pizza_menu_name' value='".$row1['pizzaID']."'/>";
-		echo	" " . $pizzaID[] = $row1['pizzaID'] ;
-		echo	" " . $pizza_name[] = $row1['pizza_name'] . "<br /><br />";
-		echo "</form>";
-	}
+}
 
 	$db->close();
 ?>
 
-
-
 </body>
 </html>
+
