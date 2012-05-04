@@ -4,8 +4,21 @@
 	//$_SESSION['prevPage'];
 	
 
-	print_r($_POST);
+	//print_r($_POST);
 	
+?>
+
+<?php
+if (isset($_POST['pizza_name'])) // Delete pizza from menu
+{
+	include("includes/conn.php"); 
+	$pizza_name = $_POST['pizza_name'];
+	$query3 = "DELETE FROM pizza_type WHERE pizza_name='".$_POST['pizza_name']."'";
+	$result3 = $db->query($query3);
+	$db->close();
+	echo "Thanks";
+	 header( 'Location: MANpizza.php' ) ;
+}
 ?>
 
 <!-- //******************************************************
@@ -87,19 +100,6 @@ function deletefrommenuRow(x)
 </th>
 
 
-<!-- <?php
-if (isset($_POST['pizza_name'])) // Delete pizza from menu
-{
-	include("includes/conn.php"); 
-	$pizza_name = $_POST['pizza_name'];
-	$query3 = "DELETE FROM pizza_type WHERE pizza_name='".$_POST['pizza_name']."'";
-	$result3 = $db->query($query3);
-	$db->close();
-	echo "Thanks";
-}
-?> -->
-
-
 
 <?php 
 	include("includes/conn.php"); 
@@ -147,7 +147,7 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 
 	// [this] EDITABLE ROW
 	// CREATE FORM FOR SUBMISSION
-	echo "<form name='".$i."_form' method='POST' action='delpizza.php' >";
+	echo "<form name='".$i."_form' method='POST' action='MANpizza.php' >";
 	echo "<tr id='".$i."_edit' style='display: none;'>";
 		
 		echo "<td>";
