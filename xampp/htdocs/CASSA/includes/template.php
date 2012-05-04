@@ -291,9 +291,23 @@
 			<?php
 			}
 		}
+
+		// IF USER IS LOGGED IN, DISPLAY LOGOUT BUTTON
+		if (isset($_SESSION['username']))
+		{
+		?>
+			<!-- LOGGOUT -->
+			<li onmouseover='this.style.backgroundColor="#333333"' 
+				onmouseout='this.style.backgroundColor="black"'
+				onclick='window.location.href="logout.php"'>
+				<a href='logout.php'><div class='menuUserColor'>Logout</div></a>
+			</li>
+
+		<?php
+		}
 		?>
 	</ul>
-	<br style='clear: left' />
+	<br style='clear: both' />
 </div><!-- end of: menu Bar -->
 
 
