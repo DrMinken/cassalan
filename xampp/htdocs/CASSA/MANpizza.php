@@ -136,6 +136,7 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 {
 	$row = $result->fetch_assoc();
 
+
 	// [this] NORMAL ROW
 	echo "<tr id='".$i."_normal'>";
 
@@ -146,11 +147,8 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 		echo "</td>";
 
 		echo "<td>" . $row['pizzaID'] . "</td>";
-
-		echo "<td>" . $row['pizza_name'] . "</td>";
-
+		echo "<td>"	. $row['pizza_name']."</td>";
 		echo "<td>" . $row['description'] . "</td>";
-
 		echo "<td>" . $row['price'] . "</td>";
 
 	echo "</tr>";
@@ -166,11 +164,8 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 		echo "</td>";
 
 		echo "<td>" . $row['pizzaID'] . "</td>";
-
 		echo "<td><input type='text' name='pizza_name' id='pizza_name' value='".$row['pizza_name']."' /></td>";
-
 		echo "<td><input type='text' name='description' id='description' value='".$row['description']."' /></td>";
-
 		echo "<td><input type='text' name='price' id='price' value='".$row['price']."' size='5' maxlength='5' /></td>";
 	echo "</tr>";
 	echo "</form>";
@@ -193,7 +188,6 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 		$row1 = $result1->fetch_assoc();
 
 		echo "<form name='".$i."_form' method='POST' action='MANpizza.php' >";
-		echo "<tr id='".$i."_menu' style='display: none;'>";
 
 		echo "<img src='images/buttons/delete_60.png' alt='Delete' onclick='deletefrommenuRow(".$i.")'/>";
 		echo "<input type = 'hidden' name='pizza_menu_name' value='".$row1['pizzaID']."'/>";
