@@ -5,17 +5,35 @@
 	
 
 	print_r($_POST);
-	
 
-if (isset($_POST['pizza_nameA'])) // Delete pizza from database
-{
-echo "good work pizza delete";
-}
+//if (!isset($_SESSION['username']))
+//	{
+//		echo '<script type="text/javascript">history.back()</script>';
+	//	die();
+	//} 
 
-if (isset($_POST['pizza_nameSR'])) // Delete pizza from menu
-{
-echo "good work update completed";
-}
+if (isset($_POST['pizza_nameDEL'])) // Delete pizza from database
+	{
+	include("includes/conn.php"); 
+	echo "done";
+	$pizza_name = $_POST['pizza_nameDEL'];
+	$query3 = "DELETE FROM pizza_type WHERE pizza_name='".$_POST['pizza_nameDEL']."'";
+	$result3 = $db->query($query3);
+	$db->close();
+	}
+
+if (isset($_POST['pizzaIDedit'])) // Update menu
+	{
+    include("includes/conn.php"); 
+	echo "update completed.";
+	$pizzaID = $_POST['pizzaIDedit'];
+	$pizza_name = $_POST['pizza_name'];
+	$description = $_POST['description'];
+	$price = $_POST['price'];
+	$query4 = "UPDATE pizza_type SET pizza_name='".$_POST['pizza_name']."', description='".$_POST['description']."', price='".$_POST['price']."' WHERE pizzaID='".$_POST['pizzaIDedit']."'";
+	$result4 = $db->query($query4);
+	$db->close();
+	}
 
 if (isset($_POST['pizzaID1'])) // Delete pizza from menu
 {
@@ -72,7 +90,7 @@ function deleteRow(x)
 	if (answer == true)
 	{
 		// SEND [this] FORM TO SERVER
-		document.forms[x+"_formA"].submit();
+		document.forms[x+"_formDEL"].submit();
 	}
 }
 function deletemenuRow(x)
@@ -81,8 +99,36 @@ function deletemenuRow(x)
 	if (answer == true)
 	{
 		// SEND [this] FORM TO SERVER
-		document.forms[x+"_form1"].submit();
+		document.forms[x+"_formDELmenu"].submit();
 	}
+}
+
+function getMenuID(menuID)
+{
+if (menuID=="")
+  {
+  document.getElementById("pizza_menuTable").innerHTML="";
+  return;
+  } 
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    document.getElementById("pizza_menuTable").innerHTML=xmlhttp.responseText;
+    }
+  }
+
+
+xmlhttp.open("GET","MANevent.php?menuID="+menuID,true);
+xmlhttp.send();
 }
 
 </script>
@@ -98,6 +144,7 @@ function deletemenuRow(x)
 	<td>Description</td>
 	<td>Price</td>
 </th>
+
 
 
 <?php 
@@ -116,8 +163,14 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 	echo "<tr id='".$i."_normal'>";
 
 		echo "<td>";
-			echo "<img class='pointer' src='images/buttons/add_60.png' alt='Add' onclick='addtomenuRow(".$i.")' />";
-			echo "<img class='pointer' src='images/buttons/edit_60.png' alt='Edit' onclick='editRow(".$i.", ".$result->num_rows.")' />";
+			echo "<img class='pointer' src='images/buttons/add_60.png' alt='Add' onclick='addtomenuRow(".$i.")' />"; // add pizza to menu
+			echo "<img class='pointer' src='images/buttons/edit_60.png' alt='Edit' onclick='editRow(".$i.", ".$result->num_rows.")' />"; // unhide rows
+
+			
+			echo "<form name='".$i."_formDEL' method='POST' action='MANpizza2.php' >"; // delete pizza from database
+			echo "&nbsp;&nbsp;&nbsp;<img src='images/buttons/delete_60.png' alt='Delete' onclick='deleteRow(".$i.")' />";
+			echo "<td><input type='hidden' name='pizza_nameDEL' id='pizza_nameDEL' value='".$row['pizza_name']."' /></td>";
+			echo "</form>";
 
 		echo "</td>";
 
@@ -137,13 +190,8 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 		echo "<td>";
 			echo "<form name='".$i."_formSR' method='POST' action='MANpizza2.php' >";
 			echo "&nbsp;&nbsp;&nbsp;<img src='images/layers/tick.png' alt='Save' onclick='saveRow(".$i.")' />";
-			echo "<td><input type='text' name='pizza_nameSR' id='pizza_nameSR' value='".$row['pizza_name']."' /></td>";
-			echo "</form>";
+			echo "<td><input type='hidden' name='pizzaIDedit' id='pizzaIDedit' value='".$row['pizzaID']."' /></td>";
 
-			echo "<form name='".$i."_formA' method='POST' action='MANpizza2.php' >";
-			echo "<img src='images/buttons/delete_60.png' alt='Delete' onclick='deleteRow(".$i.")' />";
-			echo "<td><input type='text' name='pizza_nameA' id='pizza_nameA' value='".$row['pizza_name']."' /></td>";
-			echo "</form>";
 
 
 		echo "</td>";
@@ -153,16 +201,72 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 		echo "<td><input type='text' name='description' id='description' value='".$row['description']."' /></td>";
 		echo "<td><input type='text' name='price' id='price' value='".$row['price']."' size='5' maxlength='5' /></td>";
 	echo "</tr>";
+				echo "</form>";
 }
 	$db->close();
 ?>
 
-<?php
-	echo "<center>Current Pizza Menu </center>";
-include("includes/conn.php"); 
-	$query1 = "SELECT * FROM menu_items";
-	$result1 = $db->query($query1);
+<!-- 	<?php  // create menu dropdown to pick a menu to edit
+	include("includes/conn.php"); 
+	echo "<form name='deletePizza' method='POST' action='MANpizza2.php'>";
+		$query6 = "SELECT * FROM pizza_menu";
 
+		$result6 = $db->query($query6);
+		echo '<br /> <br />';
+		echo '<select name="menu_name">';
+		echo '<option value="-" selected="selected">Please select a Menu to edit</option>';
+		for ($i=0; $i<$result6->num_rows; $i++) 
+		{
+			$row6 = $result6->fetch_assoc();
+			$menuID = $row6['menuID'];
+			$menu_name = $row6['menu_name'];
+			
+			// Iterate through and add pizza per line
+			echo '<option value="'.$menuID.'">'.$menu_name.'</option>';
+		}
+		 '</select>';
+		 ?>
+		<input type="submit" name="submit" value="Change current menu" />
+	</form>
+	<br />
+	<br />
+ -->
+
+<?php
+	$query5 = "SELECT * FROM pizza_menu";
+	$result5 = $db->query($query5);
+
+echo '<hr />';
+echo '<p><h2>Current Menu</h2></p>';
+echo '<FORM>';
+echo '<P>';
+echo '<SELECT size="6" name="selectMenu" onchange = getMenuID(this.value)>';
+
+// Now we can output the option fields to populate the list box.
+for ($i = 0; $i < $result5->num_rows;$i++) 
+	{
+		$row5 = $result5->fetch_array(MYSQLI_BOTH);    
+    echo '<OPTION value="' . $row5['menuID']. '">' . $row5['menu_name'] . '</OPTION><br />';
+	}
+
+		echo '</SELECT>';
+			echo '<br />';
+   		echo '<INPUT type="submit" value="Send">';
+   			echo '</P>';
+				echo '</FORM>';
+						echo '<hr />';
+						$db->close();
+
+?>
+
+	<?php 
+
+	include("includes/conn.php"); 
+
+
+	$query1 = "SELECT * FROM menu_items WHERE menuID='".$_GET['selectMenu']."'";
+
+	$result1 = $db->query($query1);
 
 for ($i=0; $i<$result1->num_rows; $i++) // create a list of all pizza's in the database
 {
@@ -171,7 +275,7 @@ for ($i=0; $i<$result1->num_rows; $i++) // create a list of all pizza's in the d
 
 
 
-			echo "<form name='".$i."_form1' method='POST' action='MANpizza2.php' >";
+			echo "<form name='".$i."_formDELmenu' method='POST' action='MANpizza2.php' >";
 			echo "<img class='pointer' src='images/buttons/delete_60.png' alt='Delete' onclick='deletemenuRow(".$i.")' />";
 			echo $row1['pizzaID'];
 			echo "<input type='hidden' name='pizzaID1' id='pizzaID1' value='".$row1['pizzaID']."' /><br />";
