@@ -618,38 +618,64 @@ p
 
 /* Event Page */
 table 
-{  
-	border-collapse: separate;   
-	border-spacing: 10px;   
-	*border-collapse: expression('separate', cellSpacing = '5px'); } 
+		{ 
+width:600px;
+border:1px solid black;    
+border-collapse: collapse;
+border-spacing: 0px;
+  
+		} 
+table td 
+	{     
+		padding: 0px; 
+	} 
 
 #eventDetail
 {
-	width: 500px;
+	width: 600px;
 	border: 1px solid blue;
 	border-spacing: 0px;
-	text-align: center;;
+	padding:20px;
+	
 	
 
 }	
 	
-#headCell
+#headCell_left
 {
 	background-color: black;
 	color:white;
-	font-style: bold;
-	align:center;
+	font-weight: bold;
+	text-align:left;
 	height: 30px;
+	width: 400px;
+}
+#headCell_middle
+{
+	background-color: black;
+	color:white;
+	text-align:left;
+	height: 30px;
+	width: 100px;
+}		
+#headCell_right
+{
+	background-color: black;
+	color:white;
+	height: 30px;
+	width: 100px;
+	text-align:right;
 	
-
-}	
+}
+	
 #titleCell
 {
 	background-color: 3399CC;
 	color:white;
+	text-align:left;
 	font-style: bold;
 	height: 30px;
-	width: 150px;
+	width: 200px;
 }	
 
 #detailCell
@@ -657,6 +683,14 @@ table
 	background-color: #D0D0D0;
 	color: black;
 	height: 30px;
-	width: 250px;
-	align: left;
+	width: 200px;
+	text-align: center;
+}
+
+#pad
+{
+	background-color: #D0D0D0;
+	height: 30px;
+	width: 200px;
+	text-align: right;	
 }
