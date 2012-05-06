@@ -68,13 +68,13 @@ if ($submit)
                          die("You have been succesfuly registered");
                           
                            //send activation email
-                           $to = $email;
-                            $subject = "Account Registration";
-                             $headers = "From: cassa_team@gmail.com";
-                              $body = "Hello $username,\n\nYour Registration has been succesfull!";
+                       //    $to = $email;
+                         //   $subject = "Account Registration";
+                           //  $headers = "From: cassa_team@gmail.com";
+                             // $body = "Hello $username,\n\nYour Registration has been succesfull!";
 
-                               if (!mail($to,$subject,$body,$headers))
-                                   echo "We couldn't sign you up at this time. Please try again later.";  
+                               //if (!mail($to,$subject,$body,$headers))
+                                 //  echo "We couldn't sign you up at this time. Please try again later.";  
        
                     }
       $db->close(); //close database 
