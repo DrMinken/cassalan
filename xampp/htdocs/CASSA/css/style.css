@@ -614,33 +614,33 @@ p
 
 	position: relative;
 	left: 200px;
+
 }
 
 /* Event Page */
-table 
-		{ 
-width:600px;
+
+
+
+#tableEventDetail
+{ 
+	width:600px;
 border:1px solid black;    
-border-collapse: collapse;
+
+	border-collapse: collapse;
 border-spacing: 0px;
   
-		} 
-table td 
-	{     
-		padding: 0px; 
-	} 
+		
+}
 
-#eventDetail
-{
-	width: 600px;
-	border: 1px solid blue;
-	border-spacing: 0px;
-	padding:20px;
-	
-	
+#tableEventDetail td 
 
-}	
+{     
+		
+	padding: 0px; 
 	
+} 
+
+
 #headCell_left
 {
 	background-color: black;
@@ -665,18 +665,18 @@ table td
 	height: 30px;
 	width: 100px;
 	text-align:right;
-	
 }
-	
 #titleCell
 {
 	background-color: 3399CC;
 	color:white;
-	text-align:left;
+	
 	font-style: bold;
 	height: 30px;
 	width: 200px;
 }	
+
+
 
 #detailCell
 {
@@ -687,6 +687,7 @@ table td
 	text-align: center;
 }
 
+
 #pad
 {
 	background-color: #D0D0D0;
@@ -694,3 +695,14 @@ table td
 	width: 200px;
 	text-align: right;	
 }
+
+
+
+#eventDetail
+{
+	width: 600px;
+	border: 1px solid blue;
+	border-spacing: 0px;
+	padding:20px;
+	text-align:left;
+}	
