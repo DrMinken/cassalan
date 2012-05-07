@@ -47,7 +47,7 @@ if ($thisLogin == 1)//user exists in database & credentials are correct
 						$db->close();
 						$_SESSION['errMsg'] = "";
 						
-						header('Location: staffBoard.php?msg="3"');
+						header('Location: /CASSA/management/staffBoard.php?msg="3"');
 					}
 				else 
 					{
@@ -57,7 +57,7 @@ if ($thisLogin == 1)//user exists in database & credentials are correct
 								//close connection
 								$db->close();
 								$_SESSION['errMsg'] = "";
-								header('Location: client_summary.php?msg="4"');
+								header('Location: /CASSA/management/client_summary.php?msg="4"');
 							}
 						else
 							{
@@ -78,14 +78,14 @@ if ($thisLogin == 1)//user exists in database & credentials are correct
 							//close connection
 							$db->close();
 							$_SESSION['errMsg'] = "";
-							header('Location: staffBoard.php?msg="5"');
+							header('Location: /CASSA/management/staffBoard.php?msg="5"');
 						}
 					else
 							{
 								// else user is not an admin so goto client summary page and close connection
 								$db->close();
 								$_SESSION['errMsg'] = "";
-								header('Location: client_summary.php?msg="6"');
+								header('Location: /CASSA/management/client_summary.php?msg="6"');
 							}
 				}
 
