@@ -624,20 +624,16 @@ p
 #tableEventDetail
 { 
 	width:600px;
-border:1px solid black;    
-
+	    
 	border-collapse: collapse;
-border-spacing: 0px;
+	border-spacing: 0px;
   
 		
 }
 
 #tableEventDetail td 
 
-{     
-		
-	padding: 0px; 
-	
+{ 
 } 
 
 
@@ -648,29 +644,35 @@ border-spacing: 0px;
 	font-weight: bold;
 	text-align:left;
 	height: 30px;
-	width: 400px;
+	width: 450px;
+	
+	
+	
 }
+
 #headCell_middle
 {
 	background-color: black;
 	color:white;
-	text-align:left;
 	height: 30px;
-	width: 100px;
+	width: 50px;
+	
 }		
+
+
 #headCell_right
 {
 	background-color: black;
 	color:white;
 	height: 30px;
 	width: 100px;
-	text-align:right;
+	
+	align: right;
 }
 #titleCell
 {
-	background-color: 3399CC;
+	background-color: blue;
 	color:white;
-	
 	font-style: bold;
 	height: 30px;
 	width: 200px;
@@ -683,8 +685,8 @@ border-spacing: 0px;
 	background-color: #D0D0D0;
 	color: black;
 	height: 30px;
-	width: 200px;
-	text-align: center;
+	width: 300px;
+	text-align: left;
 }
 
 
@@ -692,7 +694,7 @@ border-spacing: 0px;
 {
 	background-color: #D0D0D0;
 	height: 30px;
-	width: 200px;
+	width: 100px;
 	text-align: right;	
 }
 
