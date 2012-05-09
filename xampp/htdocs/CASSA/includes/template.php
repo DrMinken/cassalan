@@ -27,6 +27,8 @@
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="/cassa/css/style.css" />
 
+	<!-- Website ICON -->
+	<link rel="shortcut icon" href="/cassa/images/logos/cassa_16x16.ico">
 
 	<!-- JQuery / Lightbox 2 -->
 	<script type="text/javascript" src="/cassa/js/js/jquery.js"></script>
@@ -37,6 +39,9 @@
 	<link rel="stylesheet" type="text/css" src="/cassa/js/css/lightbox.css" />
 	<link rel="stylesheet" type="text/css" src="/cassa/js/css/screen.css" />
 
+	<!-- Thickbox -->
+	<script type="text/javascript" src="/cassa/js/thickbox/thickbox.js"></script>
+	<link rel="stylesheet" type="text/css" href="/cassa/js/thickbox/thickbox.css" />
 
 
 	<!-- VALIDATE: login form -->
@@ -187,6 +192,14 @@
 			onclick='window.location.href="/cassa/contact.php"'>
 			<a href='/cassa/contact.php'>Contact</a>
 		</li>
+
+
+
+<!-- LOGIN -->
+<li	onmouseover='this.style.backgroundColor="#333333"' 
+	onmouseout='this.style.backgroundColor="black"'>
+	<a href='/cassa/includes/login.html?height=110&width=250&model=false' class='thickbox' >Login</a>
+</li>
 
 
 

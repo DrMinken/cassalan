@@ -67,7 +67,8 @@ body > #shell
 /* DOCUMENT STRUCTURE */
 body
 {
-	background-color: #F1F1F1;
+	/*background-color: #F1F1F1;*/
+	background: black url('/CASSA/images/background/bg.jpg') top center no-repeat;
 	font-family: "Helvetica Neue", Arial, Helvetica, "Nimbus Sans L", sans-serif;
 
 }
