@@ -164,6 +164,7 @@ for ($i = 0; $i < $result->num_rows;$i++)
             <div id="tournamentTable"></div>
 <!--**************************************** -->
 
+
 </div><!-- end of: Content -->
 <!-- INSERT: rightPanel -->
 <?php include('../includes/rightPanel.html'); ?>
