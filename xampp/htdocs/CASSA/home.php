@@ -3,6 +3,15 @@
 	$_SESSION['title'] = "MegaLAN Management System"; 	// Declare this page's Title
 	include("includes/template.php"); 					// Include the template page
 	include("includes/conn.php"); 						// Include the database connection
+
+	if (isset($_POST['deleteNews']))
+	{
+		// DELETE [this] ARTICLE
+		$stmt = $db->prepare("DELETE FROM news WHERE newsID=?");
+		$stmt->bind_param('s', $newsID);
+		//$stmt->execute();
+		$stmt->close();
+	}
 ?>
 
 
@@ -26,7 +35,7 @@
 function editArticle(x)
 {
 	document.getElementById('editNewsID').value=x;
-	document.forms['editArticle'].submit();
+	document.forms['editNewsArticle'].submit();
 }
 function deleteArticle(x)
 {
@@ -34,7 +43,8 @@ function deleteArticle(x)
 	if (answer == true)
 	{
 		// Delete [x]
-
+		document.deleteNewsArticle['deleteNews'].value = x;
+		document.forms['deleteNewsArticle'].submit();
 	}
 }
 </script>
@@ -129,15 +139,18 @@ echo '</div>';
 
 
 
+
+
 <!-- FORM - for posting [this] article to be edited -->
-<form name='editArticle' method='POST' action='editNotices.php'>
-<input type='text' name='editNewsID' id='editNewsID' value='' />
+<form name='editNewsArticle' method='POST' action='/cassa/management/editNotices.php'>
+<input type='hidden' name='editNewsID' id='editNewsID' value='' />
 </form>
 
 
-
-
-
+<!-- FORM - for posting [this] article to be deleted -->
+<form name='deleteNewsArticle' method='POST' action='/cassa/home.php'>
+<input type='hidden' name='deleteNews' id='deleteNews' value='' />
+</form>
 
 
 
