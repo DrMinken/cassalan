@@ -1,10 +1,13 @@
 <?php
 
 	// PAGE SECURITY
-	if (!isset($_SESSION['username']))
+	if (!isset($_SESSION['isAdmin']))
 	{
-		echo '<script type="text/javascript">history.back()</script>';
-		die();
+		if ($_SESSION['isAdmin'] == 0)
+		{
+			echo '<script type="text/javascript">history.back()</script>';
+			die();
+		}
 	}
 
 if (isset($_POST['pizza_name'])) // Delete pizza from menu
