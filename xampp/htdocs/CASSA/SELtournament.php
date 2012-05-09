@@ -63,7 +63,7 @@ echo '<br /><br />';
                 echo '<td id="headCell_middle"></td>';
                 echo '<td id="headCell_right">';
                 echo '<img class="pointer" src="../images/buttons/edit_LSM.png" width="30" height="30" alt="" />';
-                echo '<img class="pointer" src="../images/buttons/save.png" width="30" height="30" alt="" /><td></tr>';
+                echo '<img class="pointer" src="./images/buttons/save.png" width="30" height="30" alt="" /><td></tr>';
 
 //While Loop starts here - 
 // Retrieve the data for the table. There should only be one row.
@@ -77,22 +77,22 @@ while($row = $result->fetch_array(MYSQLI_BOTH))
 // If the event has started place the stop event button in the table.
 if($row['started'] == 1) 
           {
-              $on = 'this.src="../images/buttons/stop_dwn.png"';
-              $off = 'this.src="../images/buttons/stop.png"';
+              $on = 'this.src="./images/buttons/stop_dwn.png"';
+              $off = 'this.src="./images/buttons/stop.png"';
               
               echo '<tr><td id="titleCell">Tournament Started: </td><td id="detailCell">Yes</td>
-              <td id ="pad"><img src="../images/buttons/stop_dwn.png" class="pointer" width="30" height="30"'; 
+              <td id ="pad"><img src="./images/buttons/stop_dwn.png" class="pointer" width="30" height="30"'; 
               echo 'alt="" onclick="stopEvent(' . $row['tournID'] . ')" ';
               echo 'onmouseover='.$off.' onmouseout='.$on.' /></td></tr>';
           }
  else 
 // If the event has not started place the start event button in the table. 
           {
-              $on = 'this.src="../images/buttons/start_dwn.png"';
-              $off = 'this.src="../images/buttons/start.png"';
+              $on = 'this.src="./images/buttons/start_dwn.png"';
+              $off = 'this.src="./images/buttons/start.png"';
               
               echo '<tr><td id="titleCell">Tournament Started: </td><td id="detailCell">No</td>';
-              echo '<td id ="pad"><img src="../images/buttons/start_dwn.png" class="pointer"
+              echo '<td id ="pad"><img src="./images/buttons/start_dwn.png" class="pointer"
               width="30" height="30" alt="" onclick="startTournament(' . $row['tournID'] . ')" 
               onmouseover='.$off.' onmouseout='.$on.' /></td></tr>';
           }
