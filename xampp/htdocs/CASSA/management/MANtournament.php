@@ -1,68 +1,175 @@
 <?php 
-	session_start();									// Start/resume THIS session
+    session_start();                                                    // Start/resume THIS session
 
-	// PAGE SECURITY
-	if (!isset($_SESSION['isAdmin']))
-	{
-		if ($_SESSION['isAdmin'] == 0)
-		{
-			echo '<script type="text/javascript">history.back()</script>';
-			die();
-		}
-	}
+    // PAGE SECURITY
+    //if (!isset($_SESSION['isAdmin']))
+    //{
+      //  if ($_SESSION['isAdmin'] == 0)
+        //{
+          //  echo '<script type="text/javascript">history.back()</script>';
+          // die();
+        //}
+    //}
 
-	$_SESSION['title'] = "Manage Tournament | MegaLAN"; // Declare this page's Title
-	include("../includes/template.php"); 					// Include the template page
+    $_SESSION['title'] = "Tournament Management | MegaLAN";                     // Declare this page's Title
+
+    include("../includes/template.php");                                 // Include the template page
+    include("../includes/conn.php");                                     // Include the db connection
+
+   // $username = $_SESSION['username'];
+    $query = "SELECT * FROM tournament";
+    
+    $result = $db->query($query);
+    $row = $result->fetch_array(MYSQLI_BOTH);    
+    $tournID = $row['tournID'];
 ?>
 
 
 <!-- //******************************************************
 
-// Name of File: tournaments.php
+// Name of File: MANtournament.php
 // Revision: 1.0
-// Date: 16/04/2012
-// Author: Quintin M
-// Modified: 
+// Date: 07/05/2012
+// Author: Lyndon Smith
+// Modified: Tinashe Masvaure 
 
 //***********************************************************
 
-//*************** Start of MANAGE TOURNAMENT PAGE ******************* -->
+//********** Start of MANAGE CONTACTS PAGE ************** -->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head></head>
-<body>
-<center>
-<div id='shell'>
+<head>
+<script type="text/javascript">
+//***************************************************************
+//
+// Ajax Function to create summary table on page.
+//
+//****************************************************************
+function getTournament(tournID)
+{
+    if (tournID=="")
+        
+          {
+              document.getElementById("tournamentTable").innerHTML="";
+              return;
+          } 
+    if (window.XMLHttpRequest)
+                  {    // code for mainstream browsers
+                      xmlhttp=new XMLHttpRequest();
+                  }
+                    else
+                          {// code for earlier IE versions
+                              xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                          }
+                    xmlhttp.onreadystatechange=function()
+                          {
+                              if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                                  {
+                                document.getElementById("tournamentTable").innerHTML=xmlhttp.responseText;
+                                }
+                        }
+ //Now we have the xmlhttp object, get the data using AJAX.
+        var params = "tournID=" + tournID + "queryType=0";        
+                xmlhttp.open("POST","SELtournament.php",true);
+                    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                        xmlhttp.setRequestHeader("Content-length", params.length);
+                    xmlhttp.setRequestHeader("Connection", "close");
+                xmlhttp.send(params);
+}
+function startTournament(tournID)
+{
+    if (alert( "Tournament is about to be started."))
+    {
+        if (tournID=="")
+        
+          {
+              document.getElementById("tournamentTable").innerHTML="";
+              return;
+          } 
+    if (window.XMLHttpRequest)
+                  {    // code for mainstream browsers
+                      xmlhttp=new XMLHttpRequest();
+                  }
+                    else
+                          {// code for earlier IE versions
+                              xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                          }
+                    xmlhttp.onreadystatechange=function()
+                          {
+                              if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                                  {
+                                document.getElementById("tournamentTable").innerHTML=xmlhttp.responseText;
+                                }
+                        }
+ //Now we have the xmlhttp object, get the data using AJAX.
+        var params = "tourntID=" + tournID + "queryType=1";        
+                xmlhttp.open("POST","SELtournament.php",true);
+                    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                        xmlhttp.setRequestHeader("Content-length", params.length);
+                    xmlhttp.setRequestHeader("Connection", "close");
+                xmlhttp.send(params);
+        
+    }
+    else{ return;}
+}
 
-
-
+</script>
+        </head>
+            <body onload="getTournament('<?php echo $tournID; $result->close(); ?>')">
+        <center>
+    <div id='shell'>
 <!-- Main Content [left] -->
-<div id="content">
-	<h1>Manage Tournament</h1>
+    <div id="content">
+        <h1>Tournament Management</h1>
+<?php
+//***********************************************
+// Set some variables up for use
+//***********************************************
 
 
+    echo '<hr />';
+        echo '<p><h2>Current Tournaments</h2></p>';
+            echo '<FORM>';
+                echo '<P>';
+            echo '<SELECT size="6" name="selectTournament" onchange = getTournament(this.value)>';
+    
+    
+    $result = $db->query($query);
+// Now we can output the option fields to populate the list box.
+for ($i = 0; $i < $result->num_rows;$i++) 
+    {
+        $row = $result->fetch_array(MYSQLI_BOTH);    
+        
+        if ($i==0)
+        {
+            echo '<OPTION value="'.$row['tournID'].'" selected="selected">' . $row['name'] . '</OPTION><br />';            
+        }
+        else
+        {
+            echo '<OPTION value="'.$row['tournID'].'">' . $row['name'] . '</OPTION><br />';
+        }
+    }
 
+        echo '</SELECT>';
+            echo '<br />';
+               echo '<INPUT type="submit" value="Send"><INPUT type="reset">';
+               echo '</P>';
+            echo '</FORM>';
+        echo '<hr />';
 
-
-
-
-
-
-
-
+?>
 <!-- INCLUDE THIS AFTER 'MAIN CONTENT' -->
 <!-- ********************************* -->
+<!--This is where the summary table ends up.-->
+            <div id="tournamentTable"></div>
+<!--**************************************** -->
 
 </div><!-- end of: Content -->
-
-
 <!-- INSERT: rightPanel -->
 <?php include('../includes/rightPanel.html'); ?>
-
-
 <!-- INSERT: footer -->
 <div id="footer">
-	<?php include('../includes/footer.html'); ?>
+    <?php include('../includes/footer.html'); ?>
 </div>
 
 
