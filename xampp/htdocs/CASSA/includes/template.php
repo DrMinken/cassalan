@@ -90,7 +90,7 @@
 		</td>
 
 		<!-- Title -->
-		<td width="440px" align="center" style='vertical-align: bottom;'>
+		<td width="440px" align="center" style='vertical-align: middle;'>
 			<h1 align="center">MegaLAN Management System </h1>
 		</td>
 	</tr>
@@ -195,11 +195,21 @@
 
 
 
-<!-- LOGIN -->
-<li	onmouseover='this.style.backgroundColor="#333333"' 
-	onmouseout='this.style.backgroundColor="black"'>
-	<a href='/cassa/includes/login.html?height=110&width=250&model=false' class='thickbox' >Login</a>
-</li>
+		<!-- LOGIN -->
+		<?php
+			if (!isset($_SESSION['username']))
+			{
+			?>
+
+			<li	onmouseover='this.style.backgroundColor="#333333"' 
+				onmouseout='this.style.backgroundColor="black"'>
+				<a href='/CASSA/login.php?height=110&width=250&model=false' 
+				class='thickbox'><div class='menuUserColor'>Login</div></a>
+			</li>
+
+			<?php
+			}
+			?>
 
 
 
@@ -327,6 +337,14 @@
 
 <br /><br />
 
+<?php
+	// If there is an error, handle it
+	if (isset($_SESSION['errMsg']))
+	{
+		echo $_SESSION['errMsg'].'<br />';
+		unset($_SESSION['errMsg']);
+	}
+?>
 
 
 </div>

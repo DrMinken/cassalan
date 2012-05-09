@@ -1,3 +1,11 @@
+<?php
+	// Inialise session
+	session_start(); // Start/resume THIS session
+
+	// Include database connection settings
+	include('includes/conn.php');
+?>
+
 <!-- ******************************************************
 
 // Name of File: login.php
@@ -20,19 +28,13 @@
 
 -->
 
+
+
+
 <?php
 
-// Inialise session
-session_start(); // Start/resume THIS session
-
-
-// Include database connection settings
-include('includes/conn.php');
-
-
-
-
-
+if (isset($_POST['submit']))
+{
 // First check if user exists
 $thisLogin = login_user($db);
 if ($thisLogin == 1)//user exists in database & credentials are correct
@@ -98,6 +100,7 @@ else
 		$_SESSION['errMsg'] = "<font class='error'>Login failed, please try again.</font>";
 		header('Location: home.php?msg="2"');
 	}
+}
 
 
 
@@ -131,7 +134,7 @@ if ($row_cnt = 1)
 		return 0;
 		}
 	
-}	
+}
 		
 // ********************************************end of function event_check **********************************
 
@@ -188,7 +191,7 @@ function check_IP_address($db)
     		return 1; // IP address within range.
     		}
 	
-}			
+}	
 		
 //******************************************end of function check_IP_address ********************************		
 	
@@ -261,9 +264,41 @@ function login_user($db)
     			$result->close();				
 				return 0; //user does not exist.
 			}
-	} 
-	
-	
-
+	}
 
 //*************************************End of Function login_user() ********************************************
+?>
+
+
+
+<!-- Form: for user login -->
+<form name="login" method="POST" onsubmit="return loginValidate();" action="/CASSA/login.php">
+
+<div style='text-align: center'>
+	<table id='loginThickBox'>
+		
+		<!-- LOGIN ERRORS -->
+		<?php 
+		if (isset($_SESSION['errMsg']))
+		{
+			echo '<tr><td colspan="2">'.$_SESSION['errMsg'].'</td></tr>';
+		}
+		?>
+
+		<tr>
+			<td>Username </td>
+			<td><input type="text" width="40px" name="username" maxlength='32' /></td>
+		</tr>
+
+		<tr>
+			<td>Password </td>
+			<td><input type="password" width="40px" name="password" maxlength='32' /></td>
+		</tr>
+
+		<tr>
+			<td align='right' colspan='2'><input type="submit" name='submit' value="Login" /></td>
+		</tr>
+	</table>
+</div>
+
+</form>
