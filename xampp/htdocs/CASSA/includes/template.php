@@ -39,7 +39,8 @@
 	<link rel="stylesheet" type="text/css" src="/cassa/js/css/lightbox.css" />
 	<link rel="stylesheet" type="text/css" src="/cassa/js/css/screen.css" />
 
-	<!-- Thickbox -->
+	<!-- Thickbox 
+		 http://jquery.com/demo/thickbox/ -->
 	<script type="text/javascript" src="/cassa/js/thickbox/thickbox.js"></script>
 	<link rel="stylesheet" type="text/css" href="/cassa/js/thickbox/thickbox.css" />
 
