@@ -80,6 +80,7 @@ body
 #container
 {
 	width: 950px;
+
 }
 
 
@@ -457,7 +458,7 @@ p
 /* BOARD DIV */
 .boardDIV
 {	
-	width: 740px;
+	width: 940px;
 	height: 300px;
 	padding: 20px;
 
@@ -466,6 +467,7 @@ p
 	border-radius: 15px;
 
 	text-align: center;
+	background: url('/cassa/images/layers/staffMenu.png') right bottom no-repeat;
 }
 .boardButton
 {
