@@ -222,16 +222,20 @@ body
 	{
 		font-size: 10pt;
 		text-align: left;
+		position: relative;
+		left: 5px;
 	}
 		.rightPanelList
 		{
 			position: relative;
-			left: -23px;
-			top: -12px;
+			left: 0px;
+			top: 5px;
+
 		}
 		.rightPanelList li
 		{
 			list-style-type: square;
+			margin-left: 20px;
 		}
 #loginThickBox
 {

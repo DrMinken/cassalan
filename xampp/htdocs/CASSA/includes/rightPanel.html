@@ -1,13 +1,12 @@
-<br />
 <!--RIGHT PANEL [FLOAT RIGHT] -->
-<div id='rightPanel'>
+<div id='rightPanel' style='border: 0px solid black'>
 
 
 
 
 	<!-- Login Box -->
 	<?php 
-		if (!isset($_SESSION['username']))
+		/*if (!isset($_SESSION['username']))
 		{
 			if (!isset($_SESSION['isAdmin']))
 			{
@@ -18,10 +17,10 @@
 				{
 					echo $_SESSION['errMsg'].'<br />';
 					unset($_SESSION['errMsg']);
-				}
+				}*/
 				?>
 					<!-- Form: for user login -->
-					<form name="login" method="POST" onsubmit="return loginValidate();" action="login.php">
+					<!-- form name="login" method="POST" onsubmit="return loginValidate();" action="login.php">
 
 					<p align='left'>
 						Username: <br/>
@@ -35,16 +34,15 @@
 					<div align='right'><input type="submit" value="Login" /></div>
 					<br />
 					</form>
-					</div><!-- end of: Login Box -->
+					</div --><!-- end of: Login Box -->
 				<?php
-			}
-		}
+			/*}
+		}*/
 	?>
 
 
 
 
-	<br />
 
 
 
