@@ -38,12 +38,12 @@
 
 <h3 style='line-height: 20pt;'>Clubroom</h3>
 
-<div style='height: 146px'>
-	<div style='float: left'>
+<div style='height: 146px;  border: 0px solid black'>
+	<div style='float: left;'>
 		<img src='images/layers/clubroom.jpg' width='120px' height='146px' />
 		<br />
 	</div>
-	<div style='float: right; margin-left: 15px; word-spacing: 2px;'>
+	<div style='float: right; width: 500px; margin-left: 15px; word-spacing: 2px; border: 0px solid black'>
 		We are located on ECU Mt. Lawley campus, room 03.202 (upstairs next to the lecture theatre). We have the screen on top of our door so you won’t miss us.<br /><br />
 		 
 		We aim to be open most of the day during university hours. You can buy drinks and candy from us here.

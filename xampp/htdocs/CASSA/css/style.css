@@ -328,7 +328,7 @@ p
 	{
 		float: right;
 		position: relative;
-		top: -40px;
+		top: -45px;
 	}
 .articleMessage
 {
@@ -553,6 +553,8 @@ p
 	.seat
 	{
 		border: 0px;
+		padding: 0;
+		margin: 0;
 	}
 	.seat_sm
 	{
@@ -562,41 +564,47 @@ p
 	#S1
 	{
 		position: relative;
-		top: -520px;
+		top: -500px;
 		left: 50px;
 	}
 	#S2
 	{
 		position: relative;
-		top: -650px;
+		top: -610px;
 		left: 820px;
 	}
 	#S3
 	{
 		position: relative;
-		top: -635px;
+		top: -615px;
 		left: 360px;
 	}
 	#S4
 	{
 		position: relative;
-		top: -580px;
+		top: -560px;
 		left: 360px;
 	}
 	#S5
 	{
 		position: relative;
-		top: -686px;
+		top: -646px;
 		left: 820px;
 	}
 	.seatNumberTop
 	{
+		font-size: 11pt;
+		width: 20px;
+
 		position: relative;
 		left: 20px;
 		top: 45px;
 	}
 	.seatNumberBot
 	{
+		font-size: 11pt;
+		width: 20px;
+
 		position: relative;
 		left: 15px;
 		top: -42px;

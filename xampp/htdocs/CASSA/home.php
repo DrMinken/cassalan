@@ -82,28 +82,30 @@ echo '<div id="article">';
 
 	// DISPLAY [THIS] ARTICLE
 		// TITLE
-		echo '<div class="articleTitle">'.$subject.'<br /></div>';
+		echo '<div class="articleTitle" style="border: 0px solid black;">'.$subject.'<br /></div>';
 
 		// DATE - AUTHOR
-		echo '<div class="articleSubTitle">Posted on <u>'.$date.'</u> by <u>'.$author.'</u>';
-
-			// IF USER = STAFF, ADD TOOLBOX [EDIT/DELETE]
-			if (isset($_SESSION['isAdmin']))
-			{
-				if ($_SESSION['isAdmin'] == 1)
-				{
-					// TOOLBOX
-					echo '<div class="articleToolBox">';
-						// EDIT [this]
-						echo '<img class="pointer" src="images/buttons/edit_60.png" title="Edit" onclick="editArticle('.$newsID.')" />';
-
-						// DELETE [this]
-						echo '<img class="pointer" src="images/buttons/delete_60.png" title="Delete" onclick="deleteArticle('.$newsID.')"/>';
-					echo '</div>';
-					echo '<br /><br />';
-				}
-			}
+		echo '<div class="articleSubTitle">';
+			echo 'Posted on <u>'.$date.'</u> by <u>'.$author.'</u>';
 		echo '</div><br/>';
+
+		// IF USER = STAFF, ADD TOOLBOX [EDIT/DELETE]
+		if (isset($_SESSION['isAdmin']))
+		{
+			if ($_SESSION['isAdmin'] == 1)
+			{
+				// TOOLBOX
+				echo '<div class="articleToolBox">';
+					// EDIT [this]
+					echo '<img class="pointer" src="images/buttons/edit_60.png" title="Edit" onclick="editArticle('.$newsID.')" />';
+
+					// DELETE [this]
+					echo '<img class="pointer" src="images/buttons/delete_60.png" title="Delete" onclick="deleteArticle('.$newsID.')"/>';
+				echo '</div>';
+				echo '<br /><br />';
+			}
+		}
+
 
 		// MESSAGE
 		echo '<div class="articleMessage">'.$message.'<br /><br /></div>';
