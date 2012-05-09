@@ -1,8 +1,8 @@
 <?php
-	session_start();							// Start/resume THIS session
-	$_SESSION['title'] = "Homepage | MegaLAN"; 	// Declare this page's Title
-	include("includes/template.php"); 			// Include the template page
-	include("includes/conn.php"); 				// Include the database connection
+	session_start();									// Start/resume THIS session
+	$_SESSION['title'] = "MegaLAN Management System"; 	// Declare this page's Title
+	include("includes/template.php"); 					// Include the template page
+	include("includes/conn.php"); 						// Include the database connection
 ?>
 
 
@@ -20,7 +20,26 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head></head>
+<head>
+
+<script type='text/javascript'>
+function editArticle(x)
+{
+	document.getElementById('editNewsID').value=x;
+	document.forms['editArticle'].submit();
+}
+function deleteArticle(x)
+{
+	var answer = confirm("Are you sure you want to delete this article?");
+	if (answer == true)
+	{
+		// Delete [x]
+
+	}
+}
+</script>
+
+</head>
 <body>
 <center>
 <div id='shell'>
@@ -29,7 +48,6 @@
 
 <!-- Main Content [left] -->
 <div id="content">
-	<!-- h1>Recent News</h1 -->
 
 
 <!-- FETCH RECENT NEWS FROM DATABASE -->
@@ -60,12 +78,16 @@ echo '<div id="article">';
 		echo '<div class="articleSubTitle">Posted on <u>'.$date.'</u> by <u>'.$author.'</u>';
 
 			// IF USER = STAFF, ADD TOOLBOX [EDIT/DELETE]
-			if (isset($_SESSION['staff']))
+			if (isset($_SESSION['isAdmin']))
 			{
-				if ($_SESSION['staff'] == 1)
+				if ($_SESSION['isAdmin'] == 1)
 				{
+					// TOOLBOX
 					echo '<div class="articleToolBox">';
+						// EDIT [this]
 						echo '<img class="pointer" src="images/buttons/edit_60.png" title="Edit" onclick="editArticle('.$newsID.')" />';
+
+						// DELETE [this]
 						echo '<img class="pointer" src="images/buttons/delete_60.png" title="Delete" onclick="deleteArticle('.$newsID.')"/>';
 					echo '</div>';
 					echo '<br /><br />';
@@ -104,6 +126,21 @@ echo '<div id="article">';
 echo '</div>';
 ?>
 <!-- end of: RECENT NEWS -->
+
+
+
+<!-- FORM - for posting [this] article to be edited -->
+<form name='editArticle' method='POST' action='editNotices.php'>
+<input type='text' name='editNewsID' id='editNewsID' value='' />
+</form>
+
+
+
+
+
+
+
+
 
 <!-- INCLUDE THIS AFTER 'MAIN CONTENT' -->
 <!-- ********************************* -->

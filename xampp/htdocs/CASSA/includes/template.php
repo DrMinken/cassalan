@@ -115,14 +115,21 @@
 		</li>
 
 
-
 		<!-- REGISTER -->
+		<?php 
+		if (!isset($_SESSION['username']))
+		{
+		?>
+
 		<li	onmouseover='this.style.backgroundColor="#333333"' 
 			onmouseout='this.style.backgroundColor="black"'
 			onclick='window.location.href="/cassa/register.php"'>
 			<a href='/cassa/register.php'>Register</a>
 		</li>
 
+		<?php
+		}
+		?>
 
 
 		<!-- FAQ -->

@@ -1,4 +1,12 @@
 <?php
+
+	// PAGE SECURITY
+	if (!isset($_SESSION['username']))
+	{
+		echo '<script type="text/javascript">history.back()</script>';
+		die();
+	}
+
 if (isset($_POST['pizza_name'])) // Delete pizza from menu
 {
 	include("includes/conn.php"); 

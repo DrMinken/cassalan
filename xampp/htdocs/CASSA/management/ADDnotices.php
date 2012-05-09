@@ -1,13 +1,19 @@
 <?php 
 	session_start();								// Start/resume THIS session
+
+	// PAGE SECURITY
+	if (!isset($_SESSION['username']))
+	{
+		echo '<script type="text/javascript">history.back()</script>';
+		die();
+	}
+
 	$_SESSION['title'] = "Add Notice | MegaLAN";	// Declare this page's Title
-	include("includes/template.php"); 				// Include the template page
-	include("includes/conn.php"); 				// Include the database connection
+	include("../includes/template.php"); 		// Include the template page
+	include("../includes/conn.php"); 			// Include the database connection
 
 
-	// temp create $_SESSION['username'] variable
-	$_SESSION['username'] = 'Quintin Maseyk';
-
+	// IF 'ADD NOTICE FORM' IS SUBMITTED
 	if (isset($_POST['submit']))
 	{
 		// SET INPUT VARIABLES
@@ -223,12 +229,12 @@
 
 
 <!-- INSERT: rightPanel -->
-<?php include('includes/rightPanel.html'); ?>
+<?php include('../includes/rightPanel.html'); ?>
 
 
 <!-- INSERT: footer -->
 <div id="footer">
-	<?php include('includes/footer.html'); ?>
+	<?php include('../includes/footer.html'); ?>
 </div>
 
 
