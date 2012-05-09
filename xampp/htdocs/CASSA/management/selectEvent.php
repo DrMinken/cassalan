@@ -16,15 +16,8 @@
 //HTML table.
 //********** Start of select event script **************-->
 
-
-
-
-
-
 <!--*******************************************************-->
 <?php 
-
-	include("../includes/conn.php");												// Include the db connection	
 
 	// PAGE SECURITY
 	if (!isset($_SESSION['isAdmin']))
@@ -34,10 +27,25 @@
 			echo '<script type="text/javascript">history.back()</script>';
 			die();
 		}
-	}
+	}	
+	
+	include("../includes/conn.php");												// Include the db connection	
 
+
+	$eventID = $_POST['eventID'];												// Retrieve the search value.	
+	$queryType = $_POST['queryType]']
+											// Retrieve the query Identifier.										
+	if($queryType == 0)
+			{
+				$query = "SELECT * FROM event WHERE eventID =" . $eventID; 		//Create the general select query.
+			}
+	elseif( ($queryType == 1)
+			{
+				$query = "SELECT * FROM event WHERE eventID =" . $eventID;
+ 
 	$eventID = $_POST['eventID'];												// Retrieve the search value.
 	$query = "SELECT * FROM event WHERE eventID =" . $eventID; 		//Create the query
+
  	$result = $db->query($query); 											//and execute it.
  	$row1 = $result->fetch_array(MYSQLI_BOTH);							//use it first for the title
  	$result->close();																//then close it ready for the next execution
