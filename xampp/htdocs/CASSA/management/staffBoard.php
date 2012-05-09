@@ -67,7 +67,31 @@
 			</a>
 		</td>
 	</tr>
-	</table>
+	<tr>
+		<td>
+			<!-- MANAGE USERS -->
+			<a href='MANuser.php'>
+				<img class='boardButton' src='../images/buttons/user.jpg' title='Manage Users' 
+					onmouseover='this.src="../images/buttons/userO.jpg"' 
+					onmouseout='this.src="../images/buttons/user.jpg"' />
+			</a>
+		</td>
+		<td>
+			<!-- MANAGE PAGES -->
+			<a href='MANpages.php'>
+				<img class='boardButton' src='../images/buttons/page.jpg' title='Manage Pages'
+					onmouseover='this.src="../images/buttons/pageO.jpg"' 
+					onmouseout='this.src="../images/buttons/page.jpg"' />
+			</a>
+		</td>
+		<td>
+			<!-- SETTINGS -->
+			<a href='settings.php'>
+				<img class='boardButton' src='../images/buttons/settings.jpg' title='Site Settings'
+					onmouseover='this.src="../images/buttons/settingsO.jpg"' 					onmouseout='this.src="../images/buttons/settings.jpg"' />
+			</a>
+		</td>
+	</tr>	</table>
 </div>
 
 
