@@ -232,6 +232,10 @@ body
 		{
 			list-style-type: square;
 		}
+#loginThickBox
+{
+	font-size: 9pt;
+}
 #footer
 {
 	height: 60px;
