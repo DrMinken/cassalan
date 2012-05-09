@@ -2,10 +2,13 @@
 	session_start();
 
 	// PAGE SECURITY
-	if (!isset($_SESSION['username']))
+	if (!isset($_SESSION['isAdmin']))
 	{
-		echo '<script type="text/javascript">history.back()</script>';
-		die();
+		if ($_SESSION['isAdmin'] == 0)
+		{
+			echo '<script type="text/javascript">history.back()</script>';
+			die();
+		}
 	}
 
 	$_SESSION['title'] = "Manage Tournament | MegaLAN";		// Declare this page's Title

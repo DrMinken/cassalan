@@ -2,10 +2,13 @@
 	session_start();									// Start/resume THIS session
 	
 	// PAGE SECURITY
-	if (!isset($_SESSION['username']))
+	if (!isset($_SESSION['isAdmin']))
 	{
-		echo '<script type="text/javascript">history.back()</script>';
-		die();
+		if ($_SESSION['isAdmin'] == 0)
+		{
+			echo '<script type="text/javascript">history.back()</script>';
+			die();
+		}
 	}
 
 	$_SESSION['title'] = "Manage Notices | MegaLAN"; 	// Declare this page's Title

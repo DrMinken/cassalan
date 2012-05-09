@@ -27,10 +27,13 @@
 	include("../includes/conn.php");												// Include the db connection	
 
 	// PAGE SECURITY
-	if (!isset($_SESSION['username']))
+	if (!isset($_SESSION['isAdmin']))
 	{
-		echo '<script type="text/javascript">history.back()</script>';
-		die();
+		if ($_SESSION['isAdmin'] == 0)
+		{
+			echo '<script type="text/javascript">history.back()</script>';
+			die();
+		}
 	}
 
 	$eventID = $_POST['eventID'];												// Retrieve the search value.
