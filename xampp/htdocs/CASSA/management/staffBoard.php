@@ -2,8 +2,10 @@
 	session_start();										// Start/resume THIS session
 	$_SESSION['title'] = "Staff Home | MegaLAN"; 			// Declare this page's Title
 
+	// PAGE SECURITY
 	if (!isset($_SESSION['username']))
 	{
+		echo '<script type="text/javascript">history.back()</script>';
 		die();
 	}
 

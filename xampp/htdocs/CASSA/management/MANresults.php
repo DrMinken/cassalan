@@ -1,5 +1,13 @@
 <?php 
 	session_start();									// Start/resume THIS session
+
+	// PAGE SECURITY
+	if (!isset($_SESSION['username']))
+	{
+		echo '<script type="text/javascript">history.back()</script>';
+		die();
+	}
+
 	$_SESSION['title'] = "Manage Results | MegaLAN"; 	// Declare this page's Title
 	include("includes/template.php"); 					// Include the template page
 ?>

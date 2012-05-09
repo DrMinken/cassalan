@@ -1,6 +1,14 @@
 <?php 
 	session_start();
-	$_SESSION['title'] = "Manage Tournament | MegaLAN"; // Declare this page's Title
+
+	// PAGE SECURITY
+	if (!isset($_SESSION['username']))
+	{
+		echo '<script type="text/javascript">history.back()</script>';
+		die();
+	}
+
+	$_SESSION['title'] = "Manage Tournament | MegaLAN";		// Declare this page's Title
 	include("../includes/template.php"); 					// Include the template page
 	include("../includes/conn.php"); 
 	

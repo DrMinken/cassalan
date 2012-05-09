@@ -26,6 +26,13 @@
 
 	include("../includes/conn.php");												// Include the db connection	
 
+	// PAGE SECURITY
+	if (!isset($_SESSION['username']))
+	{
+		echo '<script type="text/javascript">history.back()</script>';
+		die();
+	}
+
 	$eventID = $_POST['eventID'];												// Retrieve the search value.
 	$query = "SELECT * FROM event WHERE eventID =" . $eventID; 		//Create the query
  	$result = $db->query($query); 											//and execute it.
