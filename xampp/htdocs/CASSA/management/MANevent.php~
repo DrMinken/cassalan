@@ -1,5 +1,16 @@
 <?php 
 	session_start();													// Start/resume THIS session
+
+	// PAGE SECURITY
+	if (!isset($_SESSION['isAdmin']))
+	{
+		if ($_SESSION['isAdmin'] == 0)
+		{
+			echo '<script type="text/javascript">history.back()</script>';
+			die();
+		}
+	}
+
 	$_SESSION['title'] = "Event Management | MegaLAN"; 					// Declare this page's Title
 
 	include("../includes/template.php"); 								// Include the template page
@@ -57,14 +68,54 @@ function getEvent(eventID)
    					 		}
    					 }
  //Now we have the xmlhttp object, get the data using AJAX.
-		var params = "eventID=" + eventID;		
+		var params = "eventID=" + eventID + "&queryType=0";		
 				xmlhttp.open("POST","selectEvent.php",true);
 					xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 						xmlhttp.setRequestHeader("Content-length", params.length);
 					xmlhttp.setRequestHeader("Connection", "close");
 				xmlhttp.send(params);
 }
-
+function startEvent(eventID)
+{
+	var message = "The selected event is about to be ";
+	    message += "started. All other started events will";
+	    message += " be stopped. Proceed?";
+	
+	var answer = confirm(message );
+	if (answer == true)
+	{
+		if (eventID=="")
+		
+  		{
+  			document.getElementById("eventTable").innerHTML="";
+  			return;
+  		} 
+	if (window.XMLHttpRequest)
+  				{	// code for mainstream browsers
+  					xmlhttp=new XMLHttpRequest();
+ 				 }
+					else
+  						{// code for earlier IE versions
+  							xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  						}
+							xmlhttp.onreadystatechange=function()
+		  						{
+		  							if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		  								{
+		    							document.getElementById("eventTable").innerHTML=xmlhttp.responseText;
+		   					 		}
+		   					 }
+ //Now we have the xmlhttp object, get the data using AJAX.
+		var params = "eventID=" + eventID + "&queryType=1";		
+				xmlhttp.open("POST","selectEvent.php",true);
+					xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+						xmlhttp.setRequestHeader("Content-length", params.length);
+					xmlhttp.setRequestHeader("Connection", "close");
+				xmlhttp.send(params);
+		
+	}
+	else{ return;}
+}
 
 </script>
 		</head>

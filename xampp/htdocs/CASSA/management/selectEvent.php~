@@ -16,32 +16,44 @@
 //HTML table.
 //********** Start of select event script **************-->
 
-
-
-
-
-
 <!--*******************************************************-->
 <?php 
-
-	include("../includes/conn.php");												// Include the db connection	
-
-	// PAGE SECURITY
-	if (!isset($_SESSION['isAdmin']))
-	{
-		if ($_SESSION['isAdmin'] == 0)
-		{
-			echo '<script type="text/javascript">history.back()</script>';
-			die();
-		}
-	}
-
-	$eventID = $_POST['eventID'];												// Retrieve the search value.
-	$query = "SELECT * FROM event WHERE eventID =" . $eventID; 		//Create the query
- 	$result = $db->query($query); 											//and execute it.
- 	$row1 = $result->fetch_array(MYSQLI_BOTH);							//use it first for the title
- 	$result->close();																//then close it ready for the next execution
- 	$result = $db->query($query); 											//re-execute the query to populate the table
+														
+	include("../includes/conn.php");											// Include the db connection
+	
+	$eventID = $_POST['eventID'];												// Retrieve the search value.	
+	$queryType = $_POST['queryType'];										// Retrieve the query Identifier.
+																					
+	if($queryType == 0)
+			{
+				$query = "SELECT * FROM event WHERE eventID =" . $eventID; 		//Create the general select query.
+			}
+	elseif ($queryType == 1)
+			{
+				
+				$query = "UPDATE event "; 
+				$query.=	"SET event_started = 2 ";
+				$query.=	"WHERE event_started =1 ";
+				
+				$query2  = "UPDATE event "; 
+				$query2 .=	"SET event_started = 1 ";
+				$query2 .=	"WHERE eventID =" . $eventID;
+				
+				
+				
+				$result = $db->query($query);					//Execute the first Query then.
+				//printf("Affected rows (UPDATE): %d\n", $db->affected_rows);
+																						
+ 				$result = $db->query($query2);				//Then Execute the second Query then move on
+ 					//printf("Affected rows (UPDATE): %d\n", $db->affected_rows);
+			}
+ 
+												
+ 			$query = "SELECT * FROM event WHERE eventID =" . $eventID; 		//Create the general select query.
+ 			$result = $db->query($query); 											
+ 				$row1 = $result->fetch_array(MYSQLI_BOTH);						//use it first for the title
+ 					$result->close();																//then close it ready for the next execution
+ 			$result = $db->query($query); 													//re-execute the query to populate the table
  	
 //****************************************************************//Some HTML to format the table	
 echo '<br /><br />';
@@ -75,7 +87,7 @@ if($row['event_started'] == 1)
   			echo 'alt="" onclick="stopEvent(' . $row['eventID'] . ')" ';
   			echo 'onmouseover='.$off.' onmouseout='.$on.' /></td></tr>';
   		}
- else 
+ elseif ($row['event_started'] == 0)
 // If the event has not started place the start event button in the table. 
   		{
   			$on = 'this.src="../images/buttons/start_dwn.png"';
@@ -86,6 +98,18 @@ if($row['event_started'] == 1)
   			width="30" height="30" alt="" onclick="startEvent(' . $row['eventID'] . ')" 
   			onmouseover='.$off.' onmouseout='.$on.' /></td></tr>';
   		}
+ elseif ($row['event_started'] == 2)
+// If the event has completed or been stopped. 
+  		{
+  			$on = 'this.src="../images/buttons/start_dwn.png"';
+  			$off = 'this.src="../images/buttons/start.png"';
+  			
+  			echo '<tr><td id="titleCell">Event Started: </td><td id="detailCell">Stopped</td>';
+  			echo '<td id ="pad"><img src="../images/buttons/start_dwn.png" class="pointer"
+  			width="30" height="30" alt="" onclick="startEvent(' . $row['eventID'] . ')" 
+  			onmouseover='.$off.' onmouseout='.$on.' /></td></tr>';
+  		} 	
+ 
  }
 //While Loop ends here.
 
