@@ -68,7 +68,7 @@ function getEvent(eventID)
    					 		}
    					 }
  //Now we have the xmlhttp object, get the data using AJAX.
-		var params = "eventID=" + eventID + "queryType=0";		
+		var params = "eventID=" + eventID + "&queryType=0";		
 				xmlhttp.open("POST","selectEvent.php",true);
 					xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 						xmlhttp.setRequestHeader("Content-length", params.length);
@@ -77,7 +77,12 @@ function getEvent(eventID)
 }
 function startEvent(eventID)
 {
-	if (alert( "Event is about to be started."))
+	var message = "The selected event is about to be ";
+	    message += "started. All other started events will";
+	    message += " be stopped. Proceed?";
+	
+	var answer = confirm(message );
+	if (answer == true)
 	{
 		if (eventID=="")
 		
@@ -93,15 +98,15 @@ function startEvent(eventID)
   						{// code for earlier IE versions
   							xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
   						}
-					xmlhttp.onreadystatechange=function()
-  						{
-  							if (xmlhttp.readyState==4 && xmlhttp.status==200)
-  								{
-    							document.getElementById("eventTable").innerHTML=xmlhttp.responseText;
-   					 		}
-   					 }
+							xmlhttp.onreadystatechange=function()
+		  						{
+		  							if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		  								{
+		    							document.getElementById("eventTable").innerHTML=xmlhttp.responseText;
+		   					 		}
+		   					 }
  //Now we have the xmlhttp object, get the data using AJAX.
-		var params = "eventID=" + eventID + "queryType=1";		
+		var params = "eventID=" + eventID + "&queryType=1";		
 				xmlhttp.open("POST","selectEvent.php",true);
 					xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 						xmlhttp.setRequestHeader("Content-length", params.length);
