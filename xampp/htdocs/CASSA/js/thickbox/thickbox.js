@@ -5,7 +5,8 @@
  * Licensed under the MIT License: http://www.opensource.org/licenses/mit-license.php
 */
 		  
-var tb_pathToImage = "images/loadingAnimation.gif";
+var tb_pathToImage = "../js/thickbox/loadingAnimation.gif";
+
 
 /*!!!!!!!!!!!!!!!!! edit below this line at your own risk !!!!!!!!!!!!!!!!!!!!!!!*/
 
