@@ -242,6 +242,20 @@ body
 {
 	font-size: 9pt;
 }
+
+#eventThickBox
+{
+	font-size: 9pt;
+	width:600px;
+	
+}
+#eventThickBox td
+{
+	font-size: 9pt;
+	
+	
+}
+
 #footer
 {
 	height: 60px;
@@ -643,7 +657,7 @@ p
 
 #tableEventDetail
 { 
-	width:600px;
+	width:700px;
 	    
 	border-collapse: collapse;
 	border-spacing: 0px;
@@ -663,8 +677,10 @@ p
 	color:white;
 	font-weight: bold;
 	text-align:left;
-	height: 30px;
-	width: 450px;
+	height: 40px;
+	width: 6500px;
+	padding:0px,0px,0px,10px;
+	
 	
 	
 	
@@ -674,8 +690,8 @@ p
 {
 	background-color: black;
 	color:white;
-	height: 30px;
-	width: 50px;
+	height: 40px;
+	width: 10px;
 	
 }		
 
@@ -684,10 +700,11 @@ p
 {
 	background-color: black;
 	color:white;
-	height: 30px;
-	width: 100px;
+	height: 40px;
+	width: 40px;
 	
-	align: right;
+	text-align: right;
+	padding:0px,0px,0px,5px;
 }
 #titleCell
 {
@@ -695,7 +712,8 @@ p
 	color:white;
 	font-style: bold;
 	height: 30px;
-	width: 200px;
+	width: 300px;
+	padding:0px,0px,0px,10px;
 }	
 
 
@@ -705,8 +723,9 @@ p
 	background-color: #D0D0D0;
 	color: black;
 	height: 30px;
-	width: 300px;
+	width: 350px;
 	text-align: left;
+	padding:0px,0px,0px,10px;
 }
 
 
@@ -714,17 +733,33 @@ p
 {
 	background-color: #D0D0D0;
 	height: 30px;
-	width: 100px;
-	text-align: right;	
+	width: 50px;
+	text-align: right;
+	padding:0px,0px,0px,5px;	
 }
 
 
 
 #eventDetail
 {
-	width: 600px;
+	width: 700px;
 	border: 1px solid blue;
 	border-spacing: 0px;
-	padding:20px;
-	text-align:left;
+	padding:5px;
+	
+}
+
+.headText {
+	font-weight: bold; 
+	font-size: 18px; 
+	color: #FFFFFF;
+	font-family: Arial, Helvetica, sans-serif;
+	broder:0px
+	}
+.labelText {
+	color: #FFFFFF;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	font-size: 14px;
+	border: 0px;
 }	
