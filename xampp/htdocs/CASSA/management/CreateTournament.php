@@ -21,6 +21,15 @@ session_start();
     die();
 }
 //get form data
+$tourntID = $_POST['tournID'];                                                // Retrieve the search value.    
+    $queryType = $_POST['queryType'];
+                                         // Retrieve the query Identifier.
+                                                                                    
+    if($queryType == 0)
+            {
+                $query = "SELECT * FROM tournament WHERE tournID =" . $tourntID;        //Create the general select query.
+                ajax_tournament_table_basic($db, $tourntID);
+            }
 $name = strip_tags( $_POST ['name']);
 $date = strip_tags( $_POST ['date']);
 $start_time = strip_tags ($_POST ['start_time']);
@@ -45,7 +54,7 @@ if ($submit)
                     {
                         // Create the tournament
                          $queryreg = mysql_query("
-                         INSERT INTO tournament VALUES ('','','$name','$date','$start_time','$end_time','','','')
+                         INSERT INTO tournament VALUES ('','2','$name','$date','$start_time','$end_time','0','0','0')
                          ");
                          die("You have succefully created a tournament");
                           
