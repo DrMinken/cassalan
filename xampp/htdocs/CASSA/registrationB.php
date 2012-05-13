@@ -17,6 +17,21 @@ session_start();
     echo '<script type="text/javascript">history.back()</script>';
     die();
 }
+
+ include("./includes/conn.php");                                            // Include the db connection
+    
+    $tourntID = $_POST['tournID'];                                                // Retrieve the search value.    
+    $queryType = $_POST['queryType'];
+                                         // Retrieve the query Identifier.
+                                                                                    
+    if($queryType == 1)
+            {
+                $query = "SELECT * FROM client WHERE clientID =" . $tourntID;        //Create the general select query.
+                ajax_tournament_table_basic($db, $clientID);
+            }
+      
+function ajax_tournament_table_basic($db, $clientID)
+{
 //get form data
 $username = strip_tags( $_POST ['username']);
 $submit = strip_tags( $_POST ['submit']);
@@ -89,6 +104,7 @@ if ($submit)
     }
     else
     echo "Please fill in <b>all</b> fields!";
+}
 }
 
 ?>
