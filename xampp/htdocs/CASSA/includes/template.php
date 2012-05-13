@@ -27,8 +27,10 @@
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="/cassa/css/style.css" />
 
+
 	<!-- Website ICON -->
 	<link rel="shortcut icon" href="/cassa/images/logos/cassa_16x16.ico">
+
 
 	<!-- JQuery / Lightbox 2 -->
 	<script type="text/javascript" src="/cassa/js/js/jquery.js"></script>
@@ -39,8 +41,13 @@
 	<link rel="stylesheet" type="text/css" src="/cassa/js/css/lightbox.css" />
 	<link rel="stylesheet" type="text/css" src="/cassa/js/css/screen.css" />
 
-	<!-- Thickbox 
-		 http://jquery.com/demo/thickbox/ -->
+
+	<!-- Thickbox -->
+	<script type="text/javascript" src="/cassa/js/colorbox/colorbox.js"></script>
+	<link rel="stylesheet" type="text/css" href="/cassa/js/colorbox/colorbox.css" />
+
+
+	<!-- ColorBox -->
 	<script type="text/javascript" src="/cassa/js/thickbox/thickbox.js"></script>
 	<link rel="stylesheet" type="text/css" href="/cassa/js/thickbox/thickbox.css" />
 
@@ -211,7 +218,7 @@
 
 			<li	onmouseover='this.style.backgroundColor="#333333"' 
 				onmouseout='this.style.backgroundColor="black"'>
-				<a href='/CASSA/login.php?height=110&width=250&model=false' 
+				<a href='/CASSA/login.php?height=110&width=250&modal=false' 
 				class='thickbox'><div class='menuUserColor'>Login</div></a>
 			</li>
 
