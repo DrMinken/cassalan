@@ -3,122 +3,62 @@
 	include("includes/conn.php"); 						// Include the database con
 
 
-	// IF SOMEONE CLICKED TO BOOK A SEAT
-	if (isset($_POST['seatID']))
+
+// GET CURRENT SEAT STATUS
+	$get = "SELECT * FROM seat";
+	$result = $db->query($get);
+	
+	$seatNumber = Array();
+	$seatStatus = Array();
+	$client = Array();
+	for ($i=0; $i<$result->num_rows; $i++)
 	{
-		// CHECK IF USER IS LOGGED ON
-		if (!isset($_SESSION['isAdmin']))
+		$row = $result->fetch_assoc();
+		$seatNumber[$i] = $row['seatID'];
+		$seatStatus[$i] = $row['status'];
+
+		if ($row['status'] != 'Y')
 		{
-			// Ask user to login
-			echo '<script type="text/javascript">';
-			echo 'alert("You must be logged in to book a seat");';
-			echo 'window.location.href="seatMap.php"';
-			echo '</script>';
+			// GET [this] CLIENT ID
+			$getClient = "SELECT clientID FROM attendee WHERE seatID = '".$seatNumber[$i]."'";
+			$resultClient = $db->query($getClient);
+			$row = $resultClient->fetch_assoc();
+			
+			$clientID = $row['clientID'];
+
+			// GET [this] CLIENT DETAILS
+			$getName = "SELECT * FROM client WHERE clientID = '".$clientID."'";
+			$resultName = $db->query($getName);
+			$row = $resultName->fetch_assoc();
+
+			$name = ucwords($row['first_name']. ' ' .$row['last_name']);
+			// echo $name.'<br/>';
+			$client[$i] = $name;
 		}
 		else
 		{
-			// GET [this] USERS CLIENT DETAILS
-			/*$get = "SELECT `clientID` FROM client WHERE username='".$_SESSION['username']."'";
-			$result = $db->query($get);
-			$row = $result->fetch_assoc();
-			$clientID = $row['clientID'];*/
-
-
-			// CHECK IF USER HAS ALREADY RESERVED A SEAT
-			$check = "SELECT * FROM attendee WHERE clientID='".$_SESSION['userID']."'";
-			$result = $db->query($check);
-			$row = $result->fetch_assoc();
-
-
-			// USER HAS NOT BOOKED A SEAT YET
-			if (empty($row['seatID']))
-			{
-				// BOOK SEAT
-				$update = "UPDATE attendee SET seatID='".$_POST['seatID']."' WHERE clientID='".$_SESSION['userID']."'";
-				$result = $db->query($update);
-
-				// UPDATE SEAT STATUS
-				$update = "UPDATE seat SET status='N' WHERE seatID='".$_POST['seatID']."'";
-				$result = $db->query($update);
-
-				// DISPLAY CONFIRMATION 
-				echo '<script type="text/javascript">';
-				echo 'alert("Your seat booking has been made\nThank you");';
-				echo 'window.location.href="client_summary.php"';
-				echo '</script>';
-
-				// SEND EMAIL CONFIRMATION
-				/*
-				*
-				*
-				*/
-			}
-			// USER HAS ALREADY BOOKED A SEAT
-			else
-			{
-				echo '<script type="text/javascript">alert("You have already booked a seat");</script>';
-			}
+			$client[$i] = '';
 		}
 	}
 
+	// SET IMAGE VARIABLE
+	$src = '/cassa/images/seatPlan/seat';
 
-	// GET CURRENT SEAT STATUS
-		$get = "SELECT * FROM seat";
-		$result = $db->query($get);
-		
-		$seatNumber = Array();
-		$seatStatus = Array();
-		$client = Array();
-		for ($i=0; $i<$result->num_rows; $i++)
-		{
-			$row = $result->fetch_assoc();
-			$seatNumber[$i] = $row['seatID'];
-			$seatStatus[$i] = $row['status'];
+		// SET TOP/BOTTOM VIEW SEATS
+		$top = "Top_";
+		$bot = "Bot_";
 
-			// DISPLAY ALL SEAT STATUS
-			//echo $seatNumber[$i] = $row['seat_number'] . ' | ' .$seatStatus[$i] = $row['status'].'<br/>';
+		// SET EXTENSION
+		$ext = ".png' />";
 
-			if ($row['status'] != 'Y')
-			{
-				// GET [this] CLIENT ID
-				$getClient = "SELECT clientID FROM attendee WHERE seatID = '".$seatNumber[$i]."'";
-				$resultClient = $db->query($getClient);
-				$row = $resultClient->fetch_assoc();
-				
-				$clientID = $row['clientID'];
-
-				// GET [this] CLIENT DETAILS
-				$getName = "SELECT * FROM client WHERE clientID = '".$clientID."'";
-				$resultName = $db->query($getName);
-				$row = $resultName->fetch_assoc();
-
-				$name = ucwords($row['first_name']. ' ' .$row['last_name']);
-				// echo $name.'<br/>';
-				$client[$i] = $name;
-			}
-			else
-			{
-				$client[$i] = '';
-			}
-		}
-
-		// SET IMAGE VARIABLE
-		$src = '/cassa/images/seatPlan/seat';
-
-			// SET TOP/BOTTOM VIEW SEATS
-			$top = "Top_";
-			$bot = "Bot_";
-
-			// SET EXTENSION
-			$ext = ".png' />";
-
-		// SET MOUSE EVENTS
-		$mover = " onmouseover='showName(this.id)'";
-		$mout = " onmouseout='hideName()'";
-		$onclick = " onclick='bookSeat(this.id)'";
+	// SET MOUSE EVENTS
+	$mover = " onmouseover='showName(this.id)'";
+	$mout = " onmouseout='hideName()'";
+	$onclick = " onclick='bookSeat(this.id)'";
 ?>
 
-
+<html>
+<head>
 <script type='text/javascript'>
 	function showName(seat)
 	{
@@ -143,8 +83,36 @@
 
 			if (answer == true)
 			{
-				document.bookThisSeat['seatID'].value = seat;
-				document.bookThisSeat.submit();
+				//document.bookThisSeat['seatID'].value = seat;
+				//document.forms['bookThisSeat'].submit();
+
+				if (window.XMLHttpRequest)
+				{	
+					// code for mainstream browsers
+					xmlhttp=new XMLHttpRequest();
+				}
+				else
+				{
+					// code for earlier IE versions
+					xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+				}
+
+				xmlhttp.onreadystatechange=function()
+				{
+					if (xmlhttp.readyState==4 && xmlhttp.status==200)
+					{	
+						document.getElementById("seatReturn").innerHTML=xmlhttp.responseText;
+					}
+				}
+			
+				//Now we have the xmlhttp object, get the data using AJAX.
+				var params = "seatID=" + seat;		
+				
+				xmlhttp.open("POST","seatMapServer.php",true);
+				xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xmlhttp.setRequestHeader("Content-length", params.length);
+				xmlhttp.setRequestHeader("Connection", "close");
+				xmlhttp.send(params);
 			}
 		}
 		else
@@ -153,24 +121,33 @@
 		}
 	}
 </script>
+</head>
+
+
+
+
+<body>
+
+
+
+<div id='seatReturn'></div>
 
 
 
 
 
 
+
+<div id='inline_content'>
 <!-- FORM IN WHICH GETS POSTED IF A USER CLICKS TO BOOK A SEAT -->
-<form name='bookThisSeat' method='POST' action='seatMapLayout.php'>
+<form name='bookThisSeat' method='POST' action='seatMapLayoutServer.php'>
 	<input type='hidden' name='seatID' id='seatID' value='' />
 </form>
 
 
 
-
-
-
 <!-- SEAT PLAN LAYOUT -->
-<img src='/cassa/images/seatPlan/layout.png' border='0' />
+<img src='/cassa/images/seatPlan/layout_940.png' border='0' />
 
 
 
@@ -190,8 +167,8 @@
 	<!-- BOTTOM SEAT DETAIL -->
 	<div id='seatDetails'>
 	<br />
-	Seat Number: 
-		<input type='text' name='seatNumber' id='seatNumber' value='' size='2' readonly='readonly' />
+		<!-- Seat Number: -->
+		<input type='hidden' name='seatNumber' id='seatNumber' value='' size='2' readonly='readonly' />
 	
 	&nbsp;&nbsp;&nbsp;
 	
@@ -200,8 +177,8 @@
 
 	&nbsp;&nbsp;&nbsp;
 	
-	Good to book?: 
-		<input type='text' name='seatReady' id='seatReady' value='' size='3' readonly='readonly' />
+		<!-- Good to book?: -->
+		<input type='hidden' name='seatReady' id='seatReady' value='' size='3' readonly='readonly' />
 	</div><!-- end of: SEAT DETAIL -->
 
 
@@ -222,12 +199,17 @@
 
 				// [this] SEAT 
 				echo "<td id='".($i+1)."' ".$mover.$mout.$onclick.">";
-					
+	
+	
+	//echo "<a href='seatMapServer.php?seatID=".($i+1)."' class='ajax' title='testing'>";
 					// [this] SEAT NUMBER
-					echo "<div class='seatNumberTop'>".($i+1)."</div>";
+					echo "<div class='seatNumber numberTop'>".($i+1)."</div>";
 
 					// [this] SEAT IMAGE
 					echo "<img class='seat_sm pointer' src='".$src.$top.$seatStatus[$i].$ext;
+	//echo "</a>";
+
+
 				echo "</td>";
 			}
 		?>
@@ -247,7 +229,7 @@
 					echo "<img class='seat_sm pointer' src='".$src.$bot.$seatStatus[$i].$ext;
 
 					// [this] SEAT IMAGE
-					echo "<div class='seatNumberBot'>".($i+1)."</div>";
+					echo "<div class='seatNumber numberBot'>".($i+1)."</div>";
 				echo "</td>";
 			}
 		?>		
@@ -347,3 +329,9 @@
 			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
 		</tr>
 	</table>
+</div>
+
+
+
+</body>
+</html>

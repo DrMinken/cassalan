@@ -7,14 +7,16 @@
 	// REGISTRATION FORM SUBMISSION
 	if (isset($_POST['submit']))
 	{
+
 	// SECURE AND ASSIGN POST VARIABLES 
 		// TRIM all posted values
 		$_POST = array_map('trim', $_POST);
-
+		
 		// REJECT all real escape strings (security)
 		$_POST = array_map('mysql_real_escape_string', $_POST);
 		
-		// SET REGISTRATION VARIABLES
+
+	// SET REGISTRATION VARIABLES
 		//print_r($_POST);
 		$firstName = $_POST['firstName'];
 		$lastName = $_POST['lastName'];
@@ -23,18 +25,50 @@
 		$mobile = $_POST['mobile'];
 		$userType = $_POST['userType'];
 
-		$teamName = $_POST['teamName'];
+		/*$teamName = $_POST['teamName'];
 		$teamPassword = $_POST['teamPassword'];
 
 		$selectTeam = $_POST['selectTeam'];
-		$selectPassword = $_POST['selectPassword'];
+		$selectPassword = $_POST['selectPassword'];*/
 
 		$username = $email;
 		$password = $_POST['password'];
 		$passwordConfirm = $_POST['passwordConfirm'];
 
-	// CHECK IF ANY INPUT ARE EMPTY
 
+	// SET ERROR ARRAY
+		//$_SESSION['errMsg'][] = '';
+
+
+	// CHECK IF ANY INPUT ARE EMPTY OR DO NOT COMPLY
+		if ($firstName == '' || $firstName == 'Enter Text')
+		{
+			$_SESSION['errMsg'][0] = '<font class="error">*</font>';
+		}
+		if ($lastName == '' || $lastName == 'Enter Text')
+		{
+			$_SESSION['errMsg'][1] = '<font class="error">*</font>';
+		}
+		if ($email == '' || $email == 'Enter Text')
+		{
+			$_SESSION['errMsg'][2] = '<font class="error">*</font>';
+		}
+		if ($mobile == '' || $mobile == 'Enter Text')
+		{
+			$_SESSION['errMsg'][3] = '<font class="error">*</font>';
+		}
+		if ($password == '')
+		{
+			$_SESSION['errMsg'][4] = '<font class="error">*</font>';
+		}
+			else if (strlen($password) < 8)
+			{
+				$_SESSION['errMsg'][5] = '<font class="error">Minimum 8 characters</font>';
+			}
+		if ($passwordConfirm != $password)
+		{
+			$_SESSION['errMsg'][6] = '<font class="error">Does not match</font>';
+		}
 	// ^^^ end of empty checking
 
 
@@ -44,11 +78,35 @@
 
 		if ($result->num_rows > 0)
 		{
-			$_SESSION['regError'] = '*Your email already exists in our system!'; 
+			$_SESSION['errMsg'][7] = '<font class="error">Email already exists in our system</font>'; 
 		}
-	
+
+
+	// IF NO ERRORS, ADD TO DATABASE
+		if (!isset($_SESSION['errMsg']))
+		{
+			// INSERT TO DATABASE
+			$stmt = $db->prepare("INSERT INTO client (username, password, first_name, last_name, mobile, email, admin, active) VALUES (?, ?, ?, ?, ?, ?, 0, 0");
+			$stmt->bind_param('sssss', $email, $password, $first_name, $last_name, $mobile, $email);
+			$stmt->execute();
+			$stmt->close();
+
+			// SEND EMAIL
+			$to			= $email;
+			$subject	= 'MegaLAN - Registration';
+			$message	= '<div class="">';
+			$message	.= '';
+			
+			$headers	= 'MIME-Version: 1.0' . "\r\n";
+			$headers	.= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+			$headers	.= 'From: webmaster@megalan.com' . "\r\n";
+			//$mail ($to, $subject, $message, $headers);
+		}
+
+
+
 	// CHECK IF NEW TEAM IS [on]
-		if (isset($_POST['newTeam']))
+		/*if (isset($_POST['newTeam']))
 		{
 			// NEW TEAM [on]
 			if ($_POST['newTeam'] == 'on')
@@ -90,7 +148,7 @@
 					$_SESSION['regError'] = '*That Password is incorrect!'; 
 				}
 			}
-		}
+		}*/
 	}
 
 ?>
@@ -120,7 +178,7 @@
 	{
 
 	}
-	function revealTeamName()
+	/*function revealTeamName()
 	{
 		if (change == 1)
 		{
@@ -155,10 +213,6 @@
 			document.getElementById('teamPassword').value = '';
 			change = 1;
 		}
-	}
-	function updateUsername(email)
-	{
-		document.getElementById('username').value = email;
 	}
 	function closeNewTeam(index)
 	{
@@ -195,31 +249,38 @@
 			// CHECK THE BOX
 			document.getElementById('newTeam').checked = true;
 		}
+	}*/
+	function updateUsername(email)
+	{
+		document.getElementById('username').value = email;
 	}
 	function checkPassword(value)
 	{
 		if (value.length < 8)
 		{
-			document.getElementById('passError').src = "images/layers/cross.png";
+			document.getElementById('passError').style.visibility = 'visible';
+ 			document.getElementById('passError').src = "/cassa/images/layers/cross.png";
 		}
 		else
 		{
-			document.getElementById('passError').src = "images/layers/tick.png";
+			document.getElementById('passError').src = "/cassa/images/layers/tick.png";
 		}
 	}
 	function checkConPassword(confirm)
 	{
 		if (confirm != document.getElementById('password').value)
 		{
-			document.getElementById('conPassError').src = "images/layers/cross.png";
+			document.getElementById('conPassError').style.visibility = 'visible';		
+			document.getElementById('conPassError').src = "/cassa/images/layers/cross.png";
 		}
 		else if (confirm.length < 1)
 		{
-			document.getElementById('conPassError').src = "images/layers/cross.png";
+			document.getElementById('conPassError').style.visibility = 'visible';
+			document.getElementById('conPassError').src = "/cassa/images/layers/cross.png";
 		}
 		else
 		{
-			document.getElementById('conPassError').src = "images/layers/tick.png";
+			document.getElementById('conPassError').src = "/cassa/images/layers/tick.png";
 		}
 	}
 </script>
@@ -237,8 +298,12 @@
 
 
 
+	<br />
+
+
+
 	<!-- FORM: Registration -->
-	<table id='registrationTable' border='0' width='500px' cellspacing='3px'>
+	<table id='registrationTable' border='0' width='630px' cellspacing='3px'>
 	<form name='registration' method='POST' onsubmit='return regVal()' action='register.php'>
 
 	<?php if (isset($_SESSION['regError']))
@@ -253,22 +318,24 @@
 
 	<tr><td colspan='2' align='left'><b>Participant Details</b></td></tr>
 	<tr>
-		<td width='150px' align='right'>First Name</td>
+		<td width='150px' align='right'><?php if (isset($_SESSION['errMsg'][0])) echo $_SESSION['errMsg'][0]; ?> First Name</td>
 		<td><input type='text' name='firstName' value='Enter Text' size='30' maxlength='32' 
 				   onclick='this.value=""' /></td>
 	</tr>
 	<tr>
-		<td width='150px' align='right'>Last Name</td>
+		<td width='150px' align='right'><?php if (isset($_SESSION['errMsg'][1])) echo $_SESSION['errMsg'][1]; ?> Last Name</td>
 		<td><input type='text' name='lastName' value='Enter Text' size='30' maxlength='32' 
 				   onclick='this.value=""' /></td>
 	</tr>
 	<tr>
-		<td width='150px' align='right'>Email</td>
+		<td width='150px' align='right'><?php if (isset($_SESSION['errMsg'][2]))  echo $_SESSION['errMsg'][2]; ?> Email</td>
 		<td><input type='text' name='email' value='Enter Text' size='30' maxlength='256' 
-				   onclick='this.value=""' onkeyup='updateUsername(this.value)' /></td>
+				   onclick='this.value=""' onkeyup='updateUsername(this.value)' />
+				   <?php if (isset($_SESSION['errMsg'][7]))  echo $_SESSION['errMsg'][7]; ?>
+		</td>
 	</tr>
 	<tr>
-		<td width='150px' align='right'>Mobile</td>
+		<td width='150px' align='right'><?php if (isset($_SESSION['errMsg'][3])) echo $_SESSION['errMsg'][3]; ?> Mobile</td>
 		<td><input type='text' name='mobile' value='Enter Text' size='30' maxlength='128' 
 				   onclick='this.value=""' /></td>
 	</tr>
@@ -283,6 +350,41 @@
 	</tr>
 
 
+
+
+	<!-- tr><td colspan='2'><hr /></td></tr>
+
+
+
+	<tr>
+		<td width='150px' align='right'>Select Team</td>
+		<td>
+			<select name='selectTeam' id='selectTeam' onclick='closeNewTeam(selectedIndex)'>
+				<option value='0' selected='selected'>-- NO TEAM --</option>
+				
+				<?php
+					// GET ALL TEAMS FROM DATABASE
+					$get = "SELECT * FROM teams";
+					$result = $db->query($get);
+					
+					for ($i=0; $i<$result->num_rows; $i++)
+					{
+						$row = $result->fetch_assoc();
+						$teamID = $row['teamID'];
+						$team_name = $row['team_name'];
+
+						echo '<option value='.$teamID.'>'.$team_name.'</option>';
+					}
+				?>
+			</select>
+		</td>
+	</tr>
+
+	<tr>
+		<td width='150px' align='right'>Password</td>
+		<td><input type='text' name='selectPassword' id='selectPassword' value='' size='30' maxlength='32'
+					readonly='readonly' class='muteInput' /></td>
+	</tr>
 
 	<tr><td colspan='2'><hr /></td></tr>
 
@@ -307,43 +409,12 @@
 
 
 
-	<tr><td colspan='2'><hr /></td></tr>
 
 
 
-	<tr>
-		<td width='150px' align='right'>Select Team</td>
-		<td>
-			<select name='selectTeam' id='selectTeam' onclick='closeNewTeam(selectedIndex)'>
-				<option value='0' selected='selected'>-- NO TEAM --</option>
-				
-				<!-- GET ALL TEAMS FROM DATABASE -->
-				<?php
-					$get = "SELECT * FROM teams";
-					$result = $db->query($get);
-					
-					for ($i=0; $i<$result->num_rows; $i++)
-					{
-						$row = $result->fetch_assoc();
-						$teamID = $row['teamID'];
-						$team_name = $row['team_name'];
-
-						echo '<option value='.$teamID.'>'.$team_name.'</option>';
-					}
-				?>
-			</select>
-		</td>
-	</tr>
-
-	<tr>
-		<td width='150px' align='right'>Password</td>
-		<td><input type='text' name='selectPassword' id='selectPassword' value='' size='30' maxlength='32'
-					readonly='readonly' class='muteInput' /></td>
-	</tr>
+	<tr><td colspan='2'>&nbsp;</td></tr -->
 
 
-
-	<tr><td colspan='2'><hr /></td></tr>
 
 
 
@@ -353,15 +424,23 @@
 	</tr>
 
 	<tr>
-		<td width='150px' align='right'>Password</td>
-		<td><input type='password' name='password' id='password' size='30' maxlength='30' onkeyup='checkPassword(this.value)' /> <img id='passError' src='' border='0' /></td>
+		<td width='150px' align='right'><?php if (isset($_SESSION['errMsg'][4])) echo $_SESSION['errMsg'][4]; ?> Password</td>
+		<td><input type='password' name='password' id='password' size='30' maxlength='30' onkeyup='checkPassword(this.value)' />
+			<?php if (isset($_SESSION['errMsg'][5])) echo $_SESSION['errMsg'][5]; ?> 
+			<img id='passError' src='' border='0' style='visibility: hidden;' />
+		</td>
 	</tr>
 
 	<tr>
 		<td width='150px' align='right'>Re-enter Password</td>
-		<td><input type='password' name='passwordConfirm' id='passwordConfirm' size='30' maxlength='30' onkeyup='checkConPassword(this.value)' /> <img id='conPassError' src='' border='0' /></td>
+		<td><input type='password' name='passwordConfirm' id='passwordConfirm' size='30' maxlength='30' onkeyup='checkConPassword(this.value)' /> 
+			<?php if (isset($_SESSION['errMsg'][6])) echo $_SESSION['errMsg'][6]; ?> 
+			<img id='conPassError' src='' border='0' style='visibility: hidden;' />
+		</td>
 	</tr>
 	
+
+	<?php if (isset($_SESSION['errMsg'])) unset($_SESSION['errMsg']); ?>
 
 	<tr><td colspan='2' align='center'><br />
 		<input type='submit' name='submit' value='Submit' />

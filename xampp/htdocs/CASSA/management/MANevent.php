@@ -12,7 +12,6 @@
 	}
 
 	$_SESSION['title'] = "Event Management | MegaLAN"; 					// Declare this page's Title
-
 	include("../includes/template.php"); 								// Include the template page
 	include("../includes/conn.php"); 									// Include the db connection
 
