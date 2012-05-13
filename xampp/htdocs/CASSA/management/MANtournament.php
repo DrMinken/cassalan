@@ -16,7 +16,7 @@
     include("../includes/template.php");                                 // Include the template page
     include("../includes/conn.php");                                     // Include the db connection
 
-    $username = $_SESSION['username'];
+  //  $username = $_SESSION['username'];
     $query = "SELECT * FROM tournament";
     $result = $db->query($query);
     $row = $result->fetch_array(MYSQLI_BOTH);    
@@ -125,6 +125,38 @@ function getTournament(tournID)
  //Now we have the xmlhttp object, get the data using AJAX.
         var params = "tournID=" + tournID + "&queryType=0";        
                 xmlhttp.open("POST","SELtournament.php",true);
+                    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                        xmlhttp.setRequestHeader("Content-length", params.length);
+                    xmlhttp.setRequestHeader("Connection", "close");
+                xmlhttp.send(params);
+}
+ ////////////////////////////////////////////////////////////////
+function createTournament(tournID)
+{
+    if (tournID=="")
+        
+          {
+              document.getElementById("tournamentTable").innerHTML="";
+              return;
+          } 
+    if (window.XMLHttpRequest)
+                  {    // code for mainstream browsers
+                      xmlhttp=new XMLHttpRequest();
+                  }
+                    else
+                          {// code for earlier IE versions
+                              xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                          }
+                    xmlhttp.onreadystatechange=function()
+                          {
+                              if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                                  {
+                                document.getElementById("tournamentTable").innerHTML=xmlhttp.responseText;
+                                }
+                        }
+ //Now we have the xmlhttp object, get the data using AJAX.
+        var params = "tournID=" + tournID + "&queryType=1";        
+                xmlhttp.open("POST","CreateTournament.php",true);
                     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                         xmlhttp.setRequestHeader("Content-length", params.length);
                     xmlhttp.setRequestHeader("Connection", "close");
