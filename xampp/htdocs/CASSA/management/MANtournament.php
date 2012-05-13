@@ -14,7 +14,7 @@
     $_SESSION['title'] = "Tournament Management | MegaLAN";                     // Declare this page's Title
 
     include("../includes/template.php");                                 // Include the template page
-    include("../includes/conn.php");                                     // Include the db connection
+    include("../includes/conn.php");                                  // Include the db connection
 
    // $username = $_SESSION['username'];
     $query = "SELECT * FROM tournament";
