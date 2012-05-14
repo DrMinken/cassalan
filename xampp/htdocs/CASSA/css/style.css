@@ -714,16 +714,46 @@ p
 	font-weight: bold; 
 	font-size: 18px; 
 	color: #FFFFFF;
+	background-color: #000000;
+	text-align: left;
+	padding-left: 10px;
 	font-family: Arial, Helvetica, sans-serif;
-	broder:0px
+	border:0px
+	width:650px;
+	border-collapse: collapse;
+	border-spacing: 0px;
+	height: 32px;
 	}
 .labelText {
 	color: #FFFFFF;
+	background-color: #3333FF;
 	font-family: Arial, Helvetica, sans-serif;
 	font-weight: bold;
 	font-size: 14px;
 	border: 0px;
+	text-align: right;
+	padding-right: 20px;
+	width:150px;
+	height: 40px;
 }
+
+.detailText {
+	color: #000000;
+	font-family: Arial, Helvetica, sans-serif;
+	background-color: #CCCCFF;
+	font-weight: normal;
+	font-size: 12px;
+	text-align: left;
+	border: 0px;
+	width:495px;
+	height: 40px;
+}
+.detailPad {
+	background-color: #CCCCFF;	
+	border: 0px;
+	width:5px;
+	height: 40px;		
+
 
 
 
