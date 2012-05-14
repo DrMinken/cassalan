@@ -60,12 +60,27 @@
 elseif ($queryType == 3)
 			{
 				
- 				ajax_event_table_edit($db, $eventID);												//Then Execute the Query then move on
+ 				ajax_event_table_edit($db, $eventID);												
  					
 			}												
-												//re-execute the query to populate the table
+elseif ($queryType == 4)
+			{
+				
+ 				ajax_event_table_save($db, $eventID);												
+ 				
+			}																								
  	
-//****************************************************************//Some HTML to format the table	
+ 
+ 	
+ 	
+//********************* Functions Below *************************************************
+function ajax_event_table_save ($db, $eventID) 
+{
+		echo 'YOU ARE THROUGH';
+		die();
+}
+
+	
 function ajax_event_table_basic($db, $eventID)
 {
 			
@@ -132,9 +147,7 @@ function ajax_event_table_basic($db, $eventID)
 			 elseif ($row['event_started'] == 2)
 			// If the event has completed or been stopped. 
 			  		{
-			  			$on = 'this.src="../images/buttons/start_dwn.png"';
-			  			$off = 'this.src="../images/buttons/start.png"';
-			  			
+			  				
 			  			echo '<tr><td id="titleCell">Event Started: </td><td id="detailCell">Finished</td>';
 			  			echo '<td id ="pad"></td></tr>';
 			  		} 	
@@ -153,57 +166,82 @@ function ajax_event_table_edit($db, $eventID)
 			$query = "SELECT * FROM event WHERE eventID =" . $eventID; 				//Create the general select query.
  			$result = $db->query($query); 											
  			$row1 = $result->fetch_array(MYSQLI_BOTH);								//use it first for the title
+ 			
+ 			$eName= $row1['event_name'];
+ 			$eLocation = $row1['event_location'];
+ 			$eStartTime = $row1['startTime'];
+ 			$eEventDate = $row1['startDate'];
+ 			$eServerIP = $row1['server_IP_address'];
+ 			$eSeatNum = $row1['seatQuantity'];
  			 	
 
-echo' <br />';
-echo' <form name="eventEdit" method="POST" onsubmit="return eventValidate()" action="/CASSA/selectEvent.php">';
-echo'	<div style="text-align: left">';
-echo'	<table border="0" cellpadding="5" cellspacing="0" bordercolor="#000000" id="eventBox">';
-echo' <tr bordercolor="#FFFFFF">';
-echo'	<td height="42" colspan="2" bgcolor="#000000" ><div align="center">';
-echo'	<span class="headText">Event Details </span></div>';
-echo'	</td></tr><tr><td  width="200" height="34" valign="top" bgcolor="#000066"><div align="right">';
-echo'	<span class="labelText">Event Name: </span></div></td>';
-echo'	<td  width="326" bgcolor="#999999"><div align="right">';
 
-echo'	<textarea name="eventName" cols="50">' . $row1['event_name'] . '</textarea></div></td>';
-echo' </tr><tr><td  width="200" height="33" bgcolor="#000066"><div align="right"><span class="labelText">Event Location: </span>
-		  </div></td><td bgcolor="#999999"><div align="left"><input name="eventLocation" 
-		  		type="text" size="50" maxlength="64" value="' .$row1['event_location'] .'" ></div></td>';
-echo'</tr><tr><td  width="200" height="33" bgcolor="#000066"><div align="right"><span class="labelText">Event Date: </span>
-		  </div></td><td bgcolor="#999999"><div align="left">'; 
+echo '<br />';
+echo '<form name="eventEdit" method="POST" onsubmit="updateEvent(this.form)" action="">';
+						
+echo' <table cellspacing="0" class="editTable" width="650">';
+echo' <tr>';
+	echo' <th class="headText" colspan=3>Event Details</th>';
+echo' </tr>';
+echo' <tr>';
+	echo' <td class="labelText" >Event Name:</td>';
+	echo'	<td class="detailPad"></td>';
+	echo' <td class="detailText" ><input type="textarea" rows="4" cols="40" cellpadding ="10" id="event_name" name="event_name" value="' . $eName . ' "size="50" maxlength="100" /></td>';
+echo' </tr>';
+echo' <tr>';
+	echo' <td class="labelText" >Event Location: </td>';
+	echo'	<td class="detailPad"></td>';
+	echo' <td class="detailText" ><input type="text" name="event_location" id="event_location" value="' . $eLocation . '" size="50" maxlength="100" /></td>';
+echo' </tr>';
+echo' <tr>';
+	echo' <td class="labelText" >Event Date:</td>';
+	echo'	<td class="detailPad"></td>';
+	echo' <td class="detailText" ><input type="text" name="startDate" id="startDate" value="' . $eEventDate . '" size="50" maxlength="30" /></td>';
+echo' </tr>';
+echo' <tr>';
+	echo' <td class="labelText" >Event Time:</td>';
+	echo'	<td class="detailPad"></td>';
+	echo' <td class="detailText" ><input type="text" name="startTime" id="startTime" value="' . $eStartTime . '" size="50" maxlength="30" /></td>';
+echo' </tr>';
+echo' <tr>';
+	echo' <td class="labelText" >Server IP Address: </td>';
+	echo'	<td class="detailPad"></td>';
+	echo' <td class="detailText" ><input type="text" name="server_IP_address" id="server_IP_address" value="' .$eServerIP . '" size="50" maxlength="40" /></td>';
+echo' </tr>';
+echo' <tr>';
+	echo' <td class="labelText" >Seat Quantity: </td>';
+	echo'	<td class="detailPad"></td>';
+	echo' <td class="detailText" ><input type="text" name="seatQuantity" id="seatQuantity" value="' .$eSeatNum . '" size="50" maxlength="2" /></td>';
+echo' </tr>';
+echo' <tr bgcolor="#3300CC">';	
+	echo' <td align="right" height="40" colspan="3">';
+			echo' <div align="right">';
+						
+			  			$on = 'this.src="../images/buttons/save_dwn.png"';
+			  			$off = 'this.src="../images/buttons/save_up.png"';
+			  			
+			  			$cancelDwn = 'this.src="../images/buttons/delete_dwn.png"';
+			  			$cancelUp = 'this.src="../images/buttons/delete_up.png"';
+			  			
+				echo '<img src="../images/buttons/save_dwn.png" width="30" height="30"';
+				echo 'alt="" onclick="document.eventEdit.submit()"';
+				echo 'onmouseover='.$off.' onmouseout='.$on.' />';
+			  	
+				echo' <img src="../images/buttons/delete_dwn.png" width="30" height="30"';
+				echo' alt="" onclick="getEvent(' . $row1['eventID'] . ')" ';
+			  	echo 'onmouseover='.$cancelUp.' onmouseout='.$cancelDwn.' />';
+			echo' </div>';
+	echo' </td>';
+echo' </tr>';
+echo'<input type="hidden" name="eventID" id="eventID" value="' .$row1['eventID'] . '"/>';
 
-echo'<input name="eventDate" type="text" size="30" maxlength="12" value="' . $row1['startDate'] .'">';
 
-echo '</div></td></tr><tr><td  width="200" height="32" bgcolor="#000066"><div align="right"><span class="labelText">Event Start Time</span>: 
-					</span></div></td><td bgcolor="#999999"><div align="left">';
-					
-echo'<input name="startTime" type="text" size="30" maxlength="12"value="' . $row1['startTime'] . '"></div></td>';
 
-echo'</tr><tr><td  width="200" height="30" bgcolor="#000066"><div align="right"><span class="labelText">Server IP Address: 
-		  		</span></div></td><td bgcolor="#999999"><div align="left">';
-		  		
-echo'<input name="serverIPaddress" type="text" size="30" maxlength="15" value="'. $row1['server_IP_address']. '">';
-echo'</div></td></tr><tr><td  width="200" height="35" bgcolor="#000066"><div align="right">
-				<span class="labelText">Number of Seats: </span></div></td><td bgcolor="#999999">';
-				
-echo'<div align="left">';
-echo'<input name="numberOFseats" type="text" size="20" maxlength="2" value="'. $row1['seatQuantity']. '">';
-		    	    
-echo'</div></td></tr>';
-		
-echo'<tr bgcolor="#333333">	<td height="38" colspan="2"><div align="right">
-				<img src="../images/buttons/edit_dwn.png" width="30" height="30">';
-echo'<img src="../images/buttons/delete_dwn.png" width="30" height="30">';
-echo'</div></td>';
-echo'</tr>';
-
-		
-echo'</table>';
-echo'</div>';
-echo'</form>';
+echo' </form>';
 
 }
+
+
 
 //Return back to the MANevent.php page.
 ?>
