@@ -10,6 +10,8 @@
 		if (!isset($_SESSION['isAdmin']))
 		{
 			echo "You must be logged in to book a seat";
+			die();
+			//header('Location: eventRegistration.php');
 		}
 		else
 		{
@@ -22,14 +24,17 @@
 			// DIRECT THEM TO EVENT REGISTRATION PAGE
 			if (!isset($row))
 			{
-				echo 'User has not registered for an event';
+				echo 'You must register for an event first';
 				die();
+				//header('Location: eventRegistration.php');
 			}
 
 
 		// IF USER HAS NOT BOOKED A SEAT
 			if (empty($row['seatID']))
 			{
+				echo 'Your seat has been booked';
+
 				// BOOK SEAT
 				$update = "UPDATE attendee SET seatID='".$_POST['seatID']."' WHERE clientID='".$_SESSION['userID']."'";
 				$result = $db->query($update);
@@ -41,7 +46,7 @@
 				// DISPLAY CONFIRMATION 
 				echo '<script type="text/javascript">';
 				echo 'alert("Your seat booking has been made\nThank you");';
-				echo 'window.location.href="client_summary.php"';
+				echo 'window.location.href="/cassa/client_summary.php"';
 				echo '</script>';
 
 				// SEND EMAIL CONFIRMATION
@@ -54,6 +59,8 @@
 		// ELSE IF USER HAS ALREADY BOOKED A SEAT
 			else
 			{
+				echo 'Your seat has been booked';
+
 				// CLEAR [this] CURRENT SEAT STATUS @ SEAT
 				$clear = "UPDATE seat SET status=1 WHERE seatID='".$row['seatID']."'";
 				$result = $db->query($clear);
@@ -72,22 +79,3 @@
 		}
 	}
 ?>
-
-
-
-<html>
-<head></head>
-
-<body>
-
-
-
-
-
-
-<!-- FORM: Book a NEW seat -->
-<form name='reBook' method='POST' action='seatMapServer.php'>
-	<input type='hidden' name='newSeat' id='newSeat' value='' />
-</form>
-</body>
-</html>

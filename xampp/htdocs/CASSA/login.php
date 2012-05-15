@@ -1,9 +1,6 @@
 <?php
-	// Inialise session
-	session_start(); // Start/resume THIS session
-
-	// Include database connection settings
-	include('includes/conn.php');
+	session_start();							// Start/resume THIS session
+	include('includes/conn.php');				// Include database connection settings
 ?>
 
 <!-- ******************************************************
@@ -59,7 +56,7 @@ if ($thisLogin == 1)//user exists in database & credentials are correct
 								//close connection
 								$db->close();
 								$_SESSION['errMsg'] = "";
-								header('Location: /CASSA/management/client_summary.php?msg="4"');
+								header('Location: /CASSA/management/clientBoard.php?msg="4"');
 							}
 						else
 							{
@@ -271,9 +268,10 @@ function login_user($db)
 
 
 
+
+
 <!-- Form: for user login -->
 <form name="login" method="POST" onsubmit="return loginValidate();" action="/CASSA/login.php">
-
 <div style='text-align: center'>
 	<table id='loginThickBox'>
 		
@@ -300,5 +298,4 @@ function login_user($db)
 		</tr>
 	</table>
 </div>
-
 </form>

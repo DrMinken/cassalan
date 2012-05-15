@@ -214,7 +214,7 @@
 		<?php
 			if (!isset($_SESSION['username']))
 			{
-			?>
+		?>
 
 			<li	onmouseover='this.style.backgroundColor="#333333"' 
 				onmouseout='this.style.backgroundColor="black"'>
@@ -222,9 +222,9 @@
 				class='thickbox'><div class='menuUserColor'>Login</div></a>
 			</li>
 
-			<?php
+		<?php
 			}
-			?>
+		?>
 
 
 
@@ -300,29 +300,24 @@
 								document.getElementById("participant").style.display="block"' 
 					onmouseout='this.style.backgroundColor="black";
 								document.getElementById("participant").style.display="none"'
-					onclick='window.location.href="#.php"'>
-					<a href='#.php'><div class='menuUserColor'><?php echo $_SESSION['fullName']; ?></div></a>
+					onclick='window.location.href="/cassa/management/clientBoard.php"'>
+					<a href='/cassa/management/clientBoard.php'><div class='menuUserColor'><?php echo $_SESSION['fullName']; ?></div></a>
 					
 					<!-- CHILD LIST -->
 					<ul class='children' id='participant'>
 						<!-- MANAGE Registration -->
-						<li onclick='window.location.href="/cassa/management/MANregistration.php"'>
-							<a href='/cassa/management/MANregistration.php'>Manage Registration</a>
+						<li onclick='window.location.href="/cassa/management/MANdetails.php"'>
+							<a href='/cassa/management/MANdetails.php'>Manage Details</a>
 						</li>
 
-						<!-- SELECT Tournaments -->
-						<li onclick='window.location.href="SELtournament.php"'>
-							<a href='SELtournament.php'>Select Tournament</a>
+						<!-- EVENT REGISTRATION -->
+						<li onclick='window.location.href="/cassa/management/eventRegistration.php"'>
+							<a href='/cassa/management/eventRegistration.php'>Event Registration</a>
 						</li>
 
-						<!-- SELECT Pizza -->
+						<!-- ORDER PIZZA -->
 						<li onclick='window.location.href="SELpizza.php"'>
-							<a href='SELpizza.php'>Select Pizza</a>
-						</li>
-
-						<!-- SELECT Seat -->
-						<li onclick='window.location.href="SELseat.php"'>
-							<a href='SELseat.php'>Select Seat</a>
+							<a href='SELpizza.php'>Order Pizza</a>
 						</li>
 					</ul>
 				</li>
