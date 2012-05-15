@@ -242,10 +242,10 @@ body
 {
 	font-size: 9pt;
 }
-
 #eventThickBox
 {
 	font-size: 9pt;
+	
 	width:600px;
 	
 }
@@ -276,6 +276,10 @@ body
 
 
 /* SOLO OBJECTS */
+.backgroundA
+{
+	background: url('/CASSA/images/background/background1.jpg') center bottom no-repeat;
+}
 .blueLine940
 {
 	background-color: #014C74;
@@ -504,15 +508,14 @@ p
 	font-size: 10pt;
 	text-align: left;
 	position: relative;
-	top: 0px;
+	top: 15px;
 }
-.legend
+#legend
 {
 	font-size: 10pt;
-	text-align: right;
+	float: right;
 	position: relative;
-	top: 20px;
-	right: 200px;
+	left: -20px;
 }
 .seat
 {
@@ -620,7 +623,9 @@ p
 { 
 	width:700px;
 	    
+	
 	border-collapse: collapse;
+	
 	border-spacing: 0px;
   
 		
@@ -764,3 +769,89 @@ p
 	height: 800px;
 
 }
+
+
+.displayTable
+{
+	border: 0px solid black collapse;
+	font-size: 10pt;
+	width: 600px;
+}
+	.displayRow
+	{
+		font-weight: bold;
+		width: 120px;
+		line-height: 17pt;
+	}
+	.displayTableChildren
+	{
+		width: 300px;
+		font-size: 10pt;
+		vertical-align: top;
+	}
+	.chair
+	{
+		background: url('/cassa/images/layers/chair.png') right bottom no-repeat;
+		width: 500px;
+		height: 232px;
+	}
+
+
+
+/* EVENT REGISTRATION */
+#eventSlider
+{
+	border: 0px solid black;
+	height: 288px;
+	width: 880px
+	padding: 0;
+	margin: 0;
+}
+/* AJAX DIV */
+#event
+{
+	width: 890px;
+	height: 288px;
+	float: left;
+	background: url('/cassa/images/layers/eventDIV1.png') top right no-repeat;
+}
+	#ajaxDIV
+	{
+		position: relative;
+		top: 30px;
+		left: 100px;
+	}
+/* LEFT SIDE CONTROLS */
+#eventBAR
+{
+	float: left;
+	position: relative;
+	top: -270px;
+}
+	.eBAR
+	{
+		width: 250px;
+		height: 62px;
+		background: url('/cassa/images/layers/eventBAR.png') no-repeat;
+	}
+	.eBAR_ON
+	{
+		width: 250px;
+		height: 62px;
+		background: url('/cassa/images/layers/eventBAR_on.png') no-repeat;
+	}
+		.eFONT
+		{
+			font-size: 14pt;
+			font-family: "Century Gothic";
+			text-align: left;
+			position: relative;
+			top: 20px;
+			left: 15px;
+		}
+		.eSTATUS
+		{
+			float: right;
+			position: relative;
+			right: 45px;
+		}

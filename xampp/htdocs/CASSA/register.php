@@ -1,8 +1,8 @@
 <?php 
-	session_start();							// Start/resume THIS session
+	session_start();								// Start/resume THIS session
 	$_SESSION['title'] = "Registration | MegaLAN"; 	// Declare this page's Title
-	include("includes/template.php"); 			// Include the template page
-	include("includes/conn.php"); 				// Include the database connection
+	include("includes/template.php"); 				// Include the template page
+	include("includes/conn.php"); 					// Include the database connection
 
 	// REGISTRATION FORM SUBMISSION
 	if (isset($_POST['submit']))
@@ -57,6 +57,14 @@
 		{
 			$_SESSION['errMsg'][3] = '<font class="error">*</font>';
 		}
+			else if (!is_numeric($mobile))
+			{
+				$_SESSION['errMsg'][3] = '<font class="error">*</font>';
+			}
+			else if (strlen($mobile) < 10)
+			{
+				$_SESSION['errMsg'][3] = '<font class="error">* Must be 10 digits</font>';
+			}
 		if ($password == '')
 		{
 			$_SESSION['errMsg'][4] = '<font class="error">*</font>';
@@ -86,10 +94,14 @@
 		if (!isset($_SESSION['errMsg']))
 		{
 			// INSERT TO DATABASE
-			$stmt = $db->prepare("INSERT INTO client (username, password, first_name, last_name, mobile, email, admin, active) VALUES (?, ?, ?, ?, ?, ?, 0, 0");
-			$stmt->bind_param('sssss', $email, $password, $first_name, $last_name, $mobile, $email);
+			/*$stmt = $db->prepare("INSERT INTO client (clientID, username, password, first_name, last_name, mobile, email) VALUES (null, ?, ?, ?, ?, ?, ?");
+			$stmt->bind_param('ssssss', $email, $password, $first_name, $last_name, $mobile, $email);
 			$stmt->execute();
-			$stmt->close();
+			$stmt->close();*/
+
+			$insert = "INSERT INTO client (username, password, first_name, last_name, mobile, email) VALUES ('".$email."', '".$password."', '".$firstName."', '".$lastName."', '".$mobile."', '".$email."')";
+			$result = $db->query($insert);
+
 
 			// SEND EMAIL
 			$to			= $email;
