@@ -606,7 +606,7 @@ p
 #deletePizza
 {
 	width: 400px;
-	table.cellpadding: 30px;
+	padding: 30px;
 	border: 3px solid black;
 	text-align: left;
 
@@ -645,7 +645,8 @@ p
 	text-align:left;
 	height: 40px;
 	width: 6500px;
-	padding:0px,0px,0px,10px;
+	padding:0;
+	padding-right: 10px;
 	
 	
 	
@@ -676,10 +677,11 @@ p
 {
 	background-color: blue;
 	color:white;
-	font-style: bold;
+	font-weight: bold;
 	height: 30px;
 	width: 300px;
-	padding:0px,0px,0px,10px;
+	padding:0;
+	padding-right: 10px;
 }	
 
 
@@ -723,7 +725,7 @@ p
 	text-align: left;
 	padding-left: 10px;
 	font-family: Arial, Helvetica, sans-serif;
-	border:0px
+	border:0px;
 	width:650px;
 	border-collapse: collapse;
 	border-spacing: 0px;
@@ -758,9 +760,7 @@ p
 	border: 0px;
 	width:5px;
 	height: 40px;		
-
-
-
+}
 
 .email
 {
@@ -773,7 +773,6 @@ p
 
 .displayTable
 {
-	border: 0px solid black collapse;
 	font-size: 10pt;
 	width: 600px;
 }
@@ -782,12 +781,6 @@ p
 		font-weight: bold;
 		width: 120px;
 		line-height: 17pt;
-	}
-	.displayTableChildren
-	{
-		width: 300px;
-		font-size: 10pt;
-		vertical-align: top;
 	}
 	.chair
 	{
@@ -799,59 +792,63 @@ p
 
 
 /* EVENT REGISTRATION */
-#eventSlider
+.eventSlider
 {
-	border: 0px solid black;
+	width: 880px;
 	height: 288px;
-	width: 880px
 	padding: 0;
 	margin: 0;
 }
-/* AJAX DIV */
-#event
-{
-	width: 890px;
-	height: 288px;
-	float: left;
-	background: url('/cassa/images/layers/eventDIV1.png') top right no-repeat;
-}
-	#ajaxDIV
+	/* AJAX DIV */
+	.event
 	{
+		width: 890px;
+		height: 288px;
+		padding: 0;
+		margin: 0;
+		float: left;
+		background: url('/cassa/images/layers/eventDIV1.png') top right no-repeat;
+	}
+		#ajaxDIV
+		{
+			position: relative;
+			top: 30px;
+			left: 100px;
+			width: 890px;
+			height: 288px;
+		}
+
+	/* LEFT SIDE CONTROLS */
+	.eventBAR
+	{
+		float: left;
 		position: relative;
-		top: 30px;
-		left: 100px;
+		top: -270px;
 	}
-/* LEFT SIDE CONTROLS */
-#eventBAR
-{
-	float: left;
-	position: relative;
-	top: -270px;
-}
-	.eBAR
-	{
-		width: 250px;
-		height: 62px;
-		background: url('/cassa/images/layers/eventBAR.png') no-repeat;
-	}
-	.eBAR_ON
-	{
-		width: 250px;
-		height: 62px;
-		background: url('/cassa/images/layers/eventBAR_on.png') no-repeat;
-	}
-		.eFONT
+		.eBAR
 		{
-			font-size: 14pt;
-			font-family: "Century Gothic";
-			text-align: left;
-			position: relative;
-			top: 20px;
-			left: 15px;
+			width: 250px;
+			height: 62px;
+			background: url('/cassa/images/layers/eventBAR.png') no-repeat;
 		}
-		.eSTATUS
+		.eBAR_ON
 		{
-			float: right;
-			position: relative;
-			right: 45px;
+			width: 250px;
+			height: 62px;
+			background: url('/cassa/images/layers/eventBAR_on.png') no-repeat;
 		}
+			.eFONT
+			{
+				font-size: 14pt;
+				font-family: "Century Gothic";
+				text-align: left;
+				position: relative;
+				top: 20px;
+				left: 15px;
+			}
+			.eSTATUS
+			{
+				float: right;
+				position: relative;
+				right: 45px;
+			}

@@ -94,8 +94,6 @@
 		*		-BOOK PIZZA (optional)
 		*/
 	}
-
-
 ?>
 
 
@@ -218,6 +216,7 @@ function cancelSeat(seatID, attendeeID)
 
 
 
+
 <!-- GET [this] USERS BOOKED EVENTS -->
 <?php
 	// GET ATTENDEE DETAILS
@@ -248,10 +247,10 @@ function cancelSeat(seatID, attendeeID)
 
 
 
-<div id='eventSlider' align='center'>
+<div class='eventSlider' align='center'>
 
 	<!-- AJAX DYNAMIC DIV -->
-	<div id='event'><div id='ajaxDIV'></div></div>
+	<div class='event'><div id='ajaxDIV'></div></div>
 
 
 	<?php 
@@ -264,7 +263,7 @@ function cancelSeat(seatID, attendeeID)
 		// 3 = SEAT
 		// 4 = PIZZA
 		// DEFAULT = 1
-		$eBAR1 = 'eBAR_ON'; $eBAR2 = 'eBAR';$eBAR3 = 'eBAR'; $eBAR4 = 'eBAR';
+		$eBAR1 = 'eBAR_ON'; $eBAR2 = 'eBAR'; $eBAR3 = 'eBAR'; $eBAR4 = 'eBAR';
 		if(isset($_GET['t']))
 		{
 			if ($_GET['t'] == 1){$eBAR1 = 'eBAR_ON';}else{$eBAR1 = 'eBAR';}
@@ -276,7 +275,7 @@ function cancelSeat(seatID, attendeeID)
 
 
 	<!-- LEFT CONTROL PANEL -->
-	<div id='eventBAR'>
+	<div class='eventBAR'>
 		<div id='eventBUT' class='pointer; <?php echo $eBAR1; ?>' 
 			 onclick='getEvent("t=1"); <?php echo $onclick; ?>'>
 			<div class='eFONT'><font size='2'>1-</font> EVENT</div>
@@ -326,9 +325,6 @@ function cancelSeat(seatID, attendeeID)
 		</div>
 	</div>
 </div>
-
-
-
 
 
 

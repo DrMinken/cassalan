@@ -156,7 +156,6 @@
 
 				// RE-DIRECT TO CLIENT SUMMARY PAGE
 				echo '<script type="text/javascript">';
-				echo 'alert("Your seat booking has been made\nThank you");';
 				echo 'window.location.href="/cassa/management/eventRegistration.php?t=3"';
 				echo '</script>';
 
