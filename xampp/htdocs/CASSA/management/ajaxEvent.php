@@ -1,6 +1,6 @@
 <?php 
 	session_start();
-	include("../includes/conn.php");		// Include the db connection
+	include("../includes/conn.php");					// Include the db connection
 
 	// PAGE SECURITY
 	if (!isset($_SESSION['isAdmin']))
@@ -60,6 +60,7 @@ if (isset($_POST['t']))
 			display_all_booked_tournaments($db);
 		}
 	}
+
 // SEAT TRIGGER
 	else if ($_POST['t'] == 3)
 	{
@@ -110,8 +111,14 @@ if (isset($_POST['t']))
 			}
 		}
 	}
+
+// PIZZA TRIGGER
+	else if ($_POST['t'] == 4)
+	{
+		// GET ALL OF THIS EVENTS PIZZAS
+
+	}
 }
-	
 
 
 
@@ -128,9 +135,6 @@ function display_all_events($db)
 	$query = "SELECT * FROM event ORDER BY 'desc'";
 	$result = $db->query($query);
 ?>
-
-	<div class='backgroundVersus'></div>
-
 	<table class='displayTable' name='eventRegistration' cellspacing='10px'>
 	<caption><?php if(isset($_SESSION['errMsg'])){echo $_SESSION['errMsg'];unset($_SESSION['errMsg']);}?></caption>
 	<tr>
@@ -196,23 +200,18 @@ function display_all_booked_events($db)
 	$query = "SELECT * FROM attendee WHERE clientID='".$_SESSION['userID']."' ORDER BY 'desc'";
 	$result = $db->query($query);
 ?>
-	<div class='backgroundVersus'></div>
-
 	<table class='displayTable' name='eventRegistration' cellspacing='10px'>
 	<caption><?php if(isset($_SESSION['errMsg'])){echo $_SESSION['errMsg'];unset($_SESSION['errMsg']);}?></caption>
-
 <?php
 	for ($i=0; $i<$result->num_rows; $i++)
 	{
 		// GET ASSOCIATED ROW @ ATTENDEE
 		$row = $result->fetch_assoc();
 
-
 		// GET ASSOCIATED ROW @ EVENT
 		$get = "SELECT * FROM event WHERE eventID = '".$row['eventID']."'";
 		$result = $db->query($get);
 		$rowEvent = $result->fetch_assoc();
-
 
 		// SETUP [this] ROW DETAILS
 		$name = $rowEvent['event_name'];
@@ -222,10 +221,8 @@ function display_all_booked_events($db)
 		$startTime = $rowEvent['startTime'];
 		$seatQuantity = $rowEvent['seatQuantity'];
 		
-
 		// SETUP MOUSE EVENTS
 		$onclick = "book(".$row['eventID'].")";
-
 
 		echo '<tr><td class="displayRow">Event Name</td><td>'.$name.'</td></tr>';
 		echo '<tr><td class="displayRow">Location</td><td>'.$location.'</td></tr>';
