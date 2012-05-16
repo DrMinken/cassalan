@@ -70,11 +70,11 @@ function getEvent(eventID)
    					 }
  //Now we have the xmlhttp object, get the data using AJAX.
 		var params = "eventID=" + eventID + "&queryType=0";		
-				xmlhttp.open("POST","selectEvent.php",true);
-					xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-						xmlhttp.setRequestHeader("Content-length", params.length);
-					xmlhttp.setRequestHeader("Connection", "close");
-				xmlhttp.send(params);
+			xmlhttp.open("POST","selectEvent.php",true);
+			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xmlhttp.setRequestHeader("Content-length", params.length);
+			xmlhttp.setRequestHeader("Connection", "close");
+			xmlhttp.send(params);
 }
 
 //***************************************************************
@@ -98,26 +98,26 @@ function startEvent(eventID)
   			return;
   		} 
 	if (window.XMLHttpRequest)
-  				{	// code for mainstream browsers
-  					xmlhttp=new XMLHttpRequest();
- 				 }
-					else
-  						{// code for earlier IE versions
-  							xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  						}
-							xmlhttp.onreadystatechange=function()
-		  						{
-		  							if (xmlhttp.readyState==4 && xmlhttp.status==200)
-		  								{
-		    							document.getElementById("eventTable").innerHTML=xmlhttp.responseText;
-		   					 		}
-		   					 }
+		{	// code for mainstream browsers
+			xmlhttp=new XMLHttpRequest();
+		 }
+			else
+				{// code for earlier IE versions
+					xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+				}
+					xmlhttp.onreadystatechange=function()
+						{
+							if (xmlhttp.readyState==4 && xmlhttp.status==200)
+								{
+								document.getElementById("eventTable").innerHTML=xmlhttp.responseText;
+							}
+					 }
  //Now we have the xmlhttp object, get the data using AJAX.
 		var params = "eventID=" + eventID + "&queryType=1";		
 				xmlhttp.open("POST","selectEvent.php",true);
-					xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-						xmlhttp.setRequestHeader("Content-length", params.length);
-					xmlhttp.setRequestHeader("Connection", "close");
+				xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xmlhttp.setRequestHeader("Content-length", params.length);
+				xmlhttp.setRequestHeader("Connection", "close");
 				xmlhttp.send(params);
 		
 	}
@@ -160,11 +160,11 @@ function stopEvent(eventID)
 		   					 }
  //Now we have the xmlhttp object, get the data using AJAX.
 		var params = "eventID=" + eventID + "&queryType=2";		
-				xmlhttp.open("POST","selectEvent.php",true);
-					xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-						xmlhttp.setRequestHeader("Content-length", params.length);
-					xmlhttp.setRequestHeader("Connection", "close");
-				xmlhttp.send(params);
+			xmlhttp.open("POST","selectEvent.php",true);
+			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xmlhttp.setRequestHeader("Content-length", params.length);
+			xmlhttp.setRequestHeader("Connection", "close");
+			xmlhttp.send(params);
 		
 	}
 	
@@ -172,7 +172,7 @@ function stopEvent(eventID)
 
 //***************************************************************
 //
-// Ajax Function to stop / end an event.
+// Ajax Function to edit an event.
 //
 //****************************************************************
 function editEvent(eventID)
@@ -190,27 +190,27 @@ function editEvent(eventID)
   			return;
   		} 
 	if (window.XMLHttpRequest)
-  				{	// code for mainstream browsers
-  					xmlhttp=new XMLHttpRequest();
- 				 }
-					else
-  						{// code for earlier IE versions
-  							xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  						}
-							xmlhttp.onreadystatechange=function()
-		  						{
-		  							if (xmlhttp.readyState==4 && xmlhttp.status==200)
-		  								{
-		    							document.getElementById("eventTable").innerHTML=xmlhttp.responseText;
-		   					 		}
-		   					 }
+		{	// code for mainstream browsers
+			xmlhttp=new XMLHttpRequest();
+		 }
+			else
+				{// code for earlier IE versions
+					xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+				}
+					xmlhttp.onreadystatechange=function()
+						{
+							if (xmlhttp.readyState==4 && xmlhttp.status==200)
+								{
+								document.getElementById("eventTable").innerHTML=xmlhttp.responseText;
+							}
+						}
  //Now we have the xmlhttp object, get the data using AJAX.
 		var params = "eventID=" + eventID + "&queryType=3";		
-				xmlhttp.open("POST","selectEvent.php",true);
-					xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-						xmlhttp.setRequestHeader("Content-length", params.length);
-					xmlhttp.setRequestHeader("Connection", "close");
-				xmlhttp.send(params);
+			xmlhttp.open("POST","selectEvent.php",true);
+			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xmlhttp.setRequestHeader("Content-length", params.length);
+			xmlhttp.setRequestHeader("Connection", "close");
+			xmlhttp.send(params);
 		
 	}
 	else{ return;}
@@ -223,53 +223,56 @@ function editEvent(eventID)
 // Ajax Function to save the edits on the page.
 //
 //*************************************************************************************************
-			
 function updateEvent(form)
 {	
-		eventID = form.eventID.value;
-		event_name = form.event_name.value;
-		event_location form.event_location.value;
-		startDate = form.startDate.value;
-		startTime = form.startTime.value;
-		server_IP_address = form.server_IP_address.value;
-		seatQuantity = form.seatQuantity.value;
+   					
+   					
+	eventID = form.elements["eventID"].value;
+	alert(eventID);
+	event_name = form.elements["event_name"].value;
+	event_location = form.elements["event_location"].value;
+	startDate = form.elements["startDate"].value;
+	startTime = form.elements["startTime"].value;
+	server_IP_address = form.elements["server_IP_address"].value;
+	seatQuantity = form.elements["seatQuantity"].value;;
 
-	if (eventID=="")
+if (eventID=="")
   		{
 						
   			document.getElementById("eventTable").innerHTML="";
   			return;
   		}
 	if (window.XMLHttpRequest)
-  				{	// code for mainstream browsers
-  					xmlhttp=new XMLHttpRequest();
- 				 }
-					else
-  						{// code for earlier IE versions
-  							xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  						}
+			{	// code for mainstream browsers
+				xmlhttp=new XMLHttpRequest();
+			 }
+				else
+					{// code for earlier IE versions
+						xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+					}
 
-					xmlhttp.onreadystatechange=function()
-  						{
-  							if (xmlhttp.readyState==4 && xmlhttp.status==200)
-  								{
-    							document.getElementById("eventTable").innerHTML=xmlhttp.responseText;
-   					 		}
-   					 }
- //Now we have the xmlhttp object, get the data using AJAX.
-			var params = "eventID=" + eventID + "&queryType=4" + "&event_name=" + event_name + 
-							 "&event_location=" + event_location + "&startDate=" + startDate + 
-							 "&startTime=" + startTime + "&server_IP_address=" + server_IP_address +
-							 "&seatQuantity=" + seatQuantity;				
+				xmlhttp.onreadystatechange=function()
+					{
+						if (xmlhttp.readyState==4 && xmlhttp.status==200)
+							{
+						document.getElementById("eventTable").innerHTML=xmlhttp.responseText;
+						}
+				 }
+				//Now we have the xmlhttp object, get the data using AJAX.
 				
-				xmlhttp.open("POST","selectEvent.php",true);
-					xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-						xmlhttp.setRequestHeader("Content-length", params.length);
-					xmlhttp.setRequestHeader("Connection", "close");
-				xmlhttp.send(params);
+
+						var params = "eventID=" + eventID + "&queryType=4" + "&event_name=" + event_name + 
+						"&event_location=" + event_location + "&startDate=" + startDate + 
+						"&startTime=" + startTime + "&server_IP_address=" + server_IP_address +
+						"&seatQuantity=" + seatQuantity;			
+			
+		xmlhttp.open("POST","selectEvent.php",true);
+			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xmlhttp.setRequestHeader("Content-length", params.length);
+			xmlhttp.setRequestHeader("Connection", "close");
+		xmlhttp.send(params);
 }
-
-
+	
 
 
 //************************************************************************************************
@@ -278,7 +281,8 @@ function updateEvent(form)
 </script>
 		</head>
 		
-			<body onload="getEvent( <?php echo $eventID; $result->close();?>  ); ">
+			<body onload="getEvent(<?php echo $eventID; 
+												$result->close();?>)">
 			
 		<center>
 	<div id='shell'>
@@ -293,9 +297,9 @@ function updateEvent(form)
 
 	echo '<hr />';
 		echo '<p><h2>Current Events</h2></p>';
-			echo '<FORM>';
-				echo '<P>';
-			echo '<SELECT size="6" name="selectEvent" onchange = getEvent(this.value)>';
+		echo '<FORM>';
+		echo '<P>';
+		echo '<SELECT size="6" name="selectEvent" onchange = getEvent(this.value)>';
 	
 	
 	$result = $db->query($query);
@@ -325,7 +329,7 @@ for ($i = 0; $i < $result->num_rows;$i++)
 <!-- INCLUDE THIS AFTER 'MAIN CONTENT' -->
 <!-- ********************************* -->
 <!--This is where the summary table ends up.-->
-			<div id="eventTable"></div>
+<div id="eventTable"></div>
 <!--**************************************** -->
 
 </div><!-- end of: Content -->
