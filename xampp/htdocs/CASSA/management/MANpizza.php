@@ -11,18 +11,13 @@
 		}
 	}
 
-	$_SESSION['title'] = "Manage Tournament | MegaLAN";		// Declare this page's Title
+	$_SESSION['title'] = "Manage Pizzas | MegaLAN";		// Declare this page's Title
 	include("../includes/template.php"); 					// Include the template page
 	include("../includes/conn.php"); 
 	
 
 	print_r($_POST);
 
-//if (!isset($_SESSION['username']))
-//	{
-//		echo '<script type="text/javascript">history.back()</script>';
-	//	die();
-	//} 
 
 	if (isset($_POST['pizza_nameDEL'])) // Delete pizza from database
 	{
@@ -36,8 +31,8 @@
 	{
 		echo "done";
 		$pizzaID = $_POST['pizzaIDADD'];
-		$menuID = $GET_['selectMenu'];
-		$query3 = "INSERT INTO menu_items (menuID, pizzaID) VALUES ( 2 , '".$_POST['pizzaIDADD']."')"; // still needs doing.
+		$menuID = $POST_['selectMenu'];
+		$query3 = "INSERT INTO menu_items (menuID, pizzaID) VALUES ('".$_POST['selectMenu']."' , '".$_POST['pizzaIDADD']."')"; // still needs doing.
 
 		$result3 = $db->query($query3);
 	}
@@ -58,7 +53,7 @@
 	{
 		echo "done";
 		$pizzaID = $_POST['pizzaID1'];
-		$query3 = "DELETE FROM menu_items WHERE pizzaID='".$_POST['pizzaID1']."'";
+		$query3 = "DELETE FROM menu_items WHERE pizzaID='".$_POST['pizzaID1']."' AND menuID='".$_POST['menuID']."'  ";
 		$result3 = $db->query($query3);
 	}
 ?>
@@ -126,7 +121,7 @@ function addtomenuRow(x)
 	}
 }
 
-/*function getMenuID(menuID)
+function getMenuID(menuID)
 {
 if (menuID=="")
   {
@@ -150,9 +145,9 @@ xmlhttp.onreadystatechange=function()
   }
 
 
-xmlhttp.open("GET","MANevent.php?menuID="+menuID,true);
+xmlhttp.open("POST","MANpizza.php",true);
 xmlhttp.send();
-}*/
+}
 
 </script>
 
@@ -263,7 +258,7 @@ for ($i = 0; $i < $result5->num_rows;$i++)
 ?>
 
 	<?php 
-	$query1 = "SELECT * FROM menu_items WHERE menuID='".$_GET['selectMenu']."'";
+	$query1 = "SELECT * FROM menu_items WHERE menuID='".$_POST['selectMenu']."'";
 	$result1 = $db->query($query1);
 
 for ($i=0; $i<$result1->num_rows; $i++) // create a list of all pizza's in the database
