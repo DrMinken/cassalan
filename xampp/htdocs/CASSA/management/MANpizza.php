@@ -258,7 +258,7 @@ for ($i = 0; $i < $result5->num_rows;$i++)
 ?>
 
 	<?php 
-	$query1 = "SELECT * FROM menu_items WHERE menuID='".$_POST['selectMenu']."'";
+	$query1 = "SELECT * FROM menu_items WHERE menuID='".$_POST['MenuID']."'";
 	$result1 = $db->query($query1);
 
 for ($i=0; $i<$result1->num_rows; $i++) // create a list of all pizza's in the database
