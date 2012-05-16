@@ -12,8 +12,8 @@
 	}
 
 	$_SESSION['title'] = "Client Summary | MegaLAN";		// Declare this page's Title
-	include("includes/template.php"); 					// Include the template page
-	include("includes/conn.php"); 	
+	include("../includes/template.php"); 					// Include the template page
+	include("../includes/conn.php"); 	
 
 	if (!isset($_SESSION['username'])) 
 	{
@@ -118,12 +118,12 @@
 
 
 <!-- INSERT: rightPanel -->
-<?php include('includes/rightPanel.html'); ?>
+<?php include('../includes/rightPanel.html'); ?>
 
 
 <!-- INSERT: footer -->
 <div id="footer">
-	<?php include('includes/footer.html'); ?>
+	<?php include('../includes/footer.html'); ?>
 </div>
 
 
