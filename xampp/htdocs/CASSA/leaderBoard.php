@@ -1,7 +1,8 @@
 <?php 
 	session_start();								// Start/resume THIS session
-	$_SESSION['title'] = "Leader Board | MegaLAN"; 		// Declare this page's Title
+	$_SESSION['title'] = "Leader Board | MegaLAN"; 	// Declare this page's Title
 	include("includes/template.php"); 				// Include the template page
+	include("includes/conn.php");
 ?>
 
 
@@ -28,8 +29,31 @@
 
 <!-- Main Content [left] -->
 <div id="content">
-	<h1>Leader Board</h1>
+	<h1>Leader Board</h1><br />
 
+
+
+
+
+<?php
+	// GET ALL CURRENT ACTIVE TOURNAMENTS
+	$get = "SELECT * FROM tournament WHERE started=1 AND finished=0 ORDER BY date DESC, start_time ASC";
+	$result = $db->query($get);
+	
+	for ($i=0; $i<$result->num_rows; $i++)
+	{
+		$row = $result->fetch_assoc();
+
+		echo '<div class="tournDIV"';
+			echo '<b><h2>'.$row['name'].'</h2></b>';
+			echo 'Run Time: '.$row['start_time'].' - '.$row['end_time'].'<br />';
+			echo 'Winner: '.$row['winner'].'<br />';
+		echo '</div>';
+
+		echo '<br /><br />';
+	}
+
+?>
 
 
 
