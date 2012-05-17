@@ -16,9 +16,6 @@
 	include("../includes/conn.php"); 
 	
 
-	print_r($_POST);
-
-
 	if (isset($_POST['pizza_nameDEL'])) // Delete pizza from database
 	{
 		echo "done";
@@ -49,12 +46,10 @@
 		echo "update completed.";
 	}
 
-	if (isset($_POST['pizzaID1'])) // Delete pizza from menu
+	if (isset($_POST['menuID']) && isset($_POST['pizzaID'])) // Delete pizza from menu
 	{
-		echo "done";
-		$pizzaID = $_POST['pizzaID1'];
-		$query3 = "DELETE FROM menu_items WHERE pizzaID='".$_POST['pizzaID1']."' AND menuID='".$_POST['menuID']."'  ";
-		$result3 = $db->query($query3);
+		$query = "DELETE FROM menu_items WHERE pizzaID='".$_POST['pizzaID']."' AND menuID='".$_POST['menuID']."'";
+		$result = $db->query($query);
 	}
 ?>
 
@@ -101,13 +96,17 @@ function deleteRow(x)
 	}
 }
 
-function deletemenuRow(x)
+function deletemenuRow(menuID, pizzaID)
 {
 	var answer = confirm("Are you sure you want to delete this item from the menu?");
 	if (answer == true)
 	{
+		// SETUP FORM WITH INPUTS TO SEND TO SERVER
+		document.deletePizzaFromMenu['menuID'].value = menuID;
+		document.deletePizzaFromMenu['pizzaID'].value = pizzaID;
+
 		// SEND [this] FORM TO SERVER
-		document.forms[x+"_formDELmenu"].submit();
+		document.forms['deletePizzaFromMenu'].submit();
 	}
 }
 
@@ -123,36 +122,36 @@ function addtomenuRow(x)
 
 function getMenuID(menuID)
 {
-if (menuID=="")
-  {
-  document.getElementById("pizza_menuTable").innerHTML="";
-  return;
-  } 
-if (window.XMLHttpRequest)
-  {// code for IE7+, Firefox, Chrome, Opera, Safari
-  xmlhttp=new XMLHttpRequest();
-  }
-else
-  {// code for IE6, IE5
-  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  }
-xmlhttp.onreadystatechange=function()
-  {
-  if (xmlhttp.readyState==4 && xmlhttp.status==200)
-    {
-    document.getElementById("pizza_menuTable").innerHTML=xmlhttp.responseText;
-    }
-  }
-
-
-xmlhttp.open("POST","MANpizza.php",true);
-xmlhttp.send();
+	if (window.XMLHttpRequest)
+	{	
+		// code for mainstream browsers
+		xmlhttp=new XMLHttpRequest();
+	}
+	else
+	{
+		// code for earlier IE versions
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xmlhttp.onreadystatechange=function()
+	{
+		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			document.getElementById("pizza_menuTable").innerHTML=xmlhttp.responseText;
+		}
+	}
+	//Now we have the xmlhttp object, get the data using AJAX.
+	var params = "menuID=" + menuID;		
+	xmlhttp.open("POST","selectPizza.php",true);
+	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xmlhttp.setRequestHeader("Content-length", params.length);
+	xmlhttp.setRequestHeader("Connection", "close");
+	xmlhttp.send(params);
 }
 
 </script>
 
 </head>
-<body>
+<body onload="getMenuID(document.getElementById('currentMenu').value)">
 <center>
 <div id='shell'>
 
@@ -160,7 +159,7 @@ xmlhttp.send();
 
 <!-- Main Content [left] -->
 <div id="content">
-	<h1>Manage Pizza</h1>
+	<h1>Manage Pizza</h1><br /><br />
 
 
 
@@ -169,7 +168,7 @@ xmlhttp.send();
 
 
 <table rules='rows' cellpadding='5px'>
-<caption>Pizza's</caption>
+<caption align='left'>Pizza's</caption>
 <th>
 	<td>ID</td>
 	<td>Pizza Name</td>
@@ -232,48 +231,58 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 </table>
 
 
-<?php
-	$query5 = "SELECT * FROM pizza_menu";
-	$result5 = $db->query($query5);
 
-echo '<hr />';
-echo '<p><h2>Current Menu</h2></p>';
-echo '<FORM>';
-echo '<P>';
-echo '<SELECT size="6" name="MenuID" onchange = getMenuID(this.value)>';
 
-// Now we can output the option fields to populate the list box.
-for ($i = 0; $i < $result5->num_rows;$i++) 
-	{
-		$row5 = $result5->fetch_array(MYSQLI_BOTH);    
-    echo '<OPTION value="' . $row5['menuID']. '">' . $row5['menu_name'] . '</OPTION><br />';
-	}
+<br/><hr /><br />
 
-		echo '</SELECT>';
-			echo '<br />';
-   		echo '<INPUT type="submit" value="Send">';
-   			echo '</P>';
-				echo '</FORM>';
-						echo '<hr />';
+
+
+
+<!-- DISPLAY CURRENT MENU -->
+<div>
+<h2>Current Menu</h2>
+<br />
+
+	<div style='float: left;'>
+		<select size="6" name="currentMenu" id="currentMenu" onchange="getMenuID(this.value)">
+		<?php
+			$query = "SELECT * FROM pizza_menu";
+			$result = $db->query($query);
+
+			for ($i=0; $i<$result->num_rows; $i++) 
+			{	
+				// Now we can output the option fields to populate the list box
+				$row = $result->fetch_assoc();
+				
+				if ($i==0)
+				{
+					echo '<option value="'.$row['menuID'].'" selected="selected">' .$row['menu_name']. '</option>';
+				}
+				else
+				{
+					echo '<option value="'.$row['menuID'].'">' .$row['menu_name']. '</option>';
+				}
+			}
+		?>
+		<select>
+	</div>
+
+	<!-- DISPLAY AJAX: [this] PIZZA MENU -->
+	<div id='pizza_menuTable' style='clear: right;'></div>
+</div>
+
+
+<form name='deletePizzaFromMenu' method='POST' action='MANpizza.php'>
+<input type='hidden' name='menuID' id='menuID' value='' />
+<input type='hidden' name='pizzaID' id='pizzaID' value='' />
+</form>
 ?>
 
-	<?php 
-	$query1 = "SELECT * FROM menu_items WHERE menuID='".$_POST['MenuID']."'";
-	$result1 = $db->query($query1);
 
-for ($i=0; $i<$result1->num_rows; $i++) // create a list of all pizza's in the database
-{
-	$row1 = $result1->fetch_assoc();
 
-			echo "<form name='".$i."_formDELmenu' method='POST' action='MANpizza.php' >";
-			echo "<img class='pointer' src='../images/buttons/delete_60.png' alt='Delete' onclick='deletemenuRow(".$i.")' />";
-			echo $row1['pizzaID'];
-			echo "<input type='hidden' name='pizzaID1' id='pizzaID1' value='".$row1['pizzaID']."' /><br />";
-			echo "</form>";
-}
 
-$db->close();
-?>
+
+
 
 
 <!-- INCLUDE THIS AFTER 'MAIN CONTENT' -->
