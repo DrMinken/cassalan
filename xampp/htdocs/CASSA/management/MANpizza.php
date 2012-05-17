@@ -276,7 +276,7 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 <input type='hidden' name='menuID' id='menuID' value='' />
 <input type='hidden' name='pizzaID' id='pizzaID' value='' />
 </form>
-?>
+
 
 
 
