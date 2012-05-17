@@ -589,6 +589,30 @@ p
 }
 
 
+/* GAME SERVER DETAILS */
+.serverDIV
+{
+	border: 2px solid black;
+	padding: 20px;
+	line-height: 20pt;
+}
+
+/* LEADER BOARD */
+.tournDIV
+{
+	border: 2px solid black;
+	padding: 20px;
+	line-height: 20pt;
+}
+
+
+
+
+
+
+
+
+
 
 /* CREATE PIZZA */
 #createPizza
