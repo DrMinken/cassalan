@@ -31,8 +31,8 @@
 	{
 		echo "done";
 		$pizzaID = $_POST['pizzaIDADD'];
-		$menuID = $POST_['selectMenu'];
-		$query3 = "INSERT INTO menu_items (menuID, pizzaID) VALUES ('".$_POST['selectMenu']."' , '".$_POST['pizzaIDADD']."')"; // still needs doing.
+		$menuID = $POST_['MenuID'];
+		$query3 = "INSERT INTO menu_items (menuID, pizzaID) VALUES ('".$_POST['MenuID']."' , '".$_POST['pizzaIDADD']."')"; // still needs doing.
 
 		$result3 = $db->query($query3);
 	}
@@ -240,7 +240,7 @@ echo '<hr />';
 echo '<p><h2>Current Menu</h2></p>';
 echo '<FORM>';
 echo '<P>';
-echo '<SELECT size="6" name="selectMenu" onchange = getMenuID(this.value)>';
+echo '<SELECT size="6" name="MenuID" onchange = getMenuID(this.value)>';
 
 // Now we can output the option fields to populate the list box.
 for ($i = 0; $i < $result5->num_rows;$i++) 
