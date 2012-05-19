@@ -245,6 +245,7 @@ for ($i = 0; $i < $result->num_rows;$i++)
 		echo '</SELECT>';
                 echo '<br />';
                 echo '<INPUT type="submit" value="Refresh List">';
+                echo ''
                 echo '</P>';
                 echo '</FORM>';
 		echo '<hr />';
