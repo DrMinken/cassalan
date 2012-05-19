@@ -16,11 +16,11 @@
     include("../includes/template.php");                                 // Include the template page
     include("../includes/conn.php");                                     // Include the db connection
 
-  //  $username = $_SESSION['username'];
+   // $username = $_SESSION['username'];
     $query = "SELECT * FROM tournament";
     $result = $db->query($query);
     $row = $result->fetch_array(MYSQLI_BOTH);    
-    $tourID = $row['tournID'];
+    $tournID = $row['tournID'];
 ?>
 
 
@@ -37,61 +37,6 @@
 //********** Start of MANAGE CONTACTS PAGE ************** -->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
-<!-- //******************************************************
-
-// Name of File: index.php
-// Revision: 1.0
-// Date: 30/04/2012
-// Author: Tinashe
-// Modified: 5/05/2012
-
-//************************************************************ -->
-
-<h1>Create New Tournament</h1>
-
-<form action ='CreateTournament.php' method ='POST'>
-    <table>
-    <tr>
-    <td>
-Enter Tournament Name:
-    </td>
-    <td>
-    <input type='text' name='name'>
-    </td>
-    </tr>
-    <tr>
-    <td>
-Enter Tournament Date yyyy/mm/dd:
-    </td>
-    <td>
-    <input type='date' name='date'>
-    </td>
-    </tr>
-    <tr>
-    <td>
-Enter Start Time hh:mm:ss:
-    </td>
-    <td>
-    <input type='time' name='start_time'>
-    </td>
-    </tr>
-    <tr>
-    <td>    
-Enter End Time:    
-    </td>
-    <td>
-    <input type='time' name='end_time'>
-    </td>
-    </tr>
-    </table>
-<p>
-<input type='submit' name='submit' value='Create'>
-
-
-</form>
-
-
-
 <head>
 <script type="text/javascript">
 //***************************************************************
@@ -130,10 +75,22 @@ function getTournament(tournID)
                     xmlhttp.setRequestHeader("Connection", "close");
                 xmlhttp.send(params);
 }
- ////////////////////////////////////////////////////////////////
-function createTournament(tournID)
+
+//***************************************************************
+//
+// Ajax Function to start an event.
+//
+//****************************************************************
+/*function startTournament(tournID)
 {
-    if (tournID=="")
+    var message = "The selected event is about to be ";
+        message += "started. All other started events will";
+        message += " be stopped. Proceed?";
+    
+    var answer = confirm(message );
+    if (answer == true)
+    {
+        if (tournID=="")
         
           {
               document.getElementById("tournamentTable").innerHTML="";
@@ -147,33 +104,124 @@ function createTournament(tournID)
                           {// code for earlier IE versions
                               xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
                           }
-                    xmlhttp.onreadystatechange=function()
-                          {
-                              if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                            xmlhttp.onreadystatechange=function()
                                   {
-                                document.getElementById("tournamentTable").innerHTML=xmlhttp.responseText;
+                                      if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                                          {
+                                        document.getElementById("tournamentTable").innerHTML=xmlhttp.responseText;
+                                        }
                                 }
-                        }
  //Now we have the xmlhttp object, get the data using AJAX.
         var params = "tournID=" + tournID + "&queryType=1";        
-                xmlhttp.open("POST","CreateTournament.php",true);
+                xmlhttp.open("POST","SELtournament.php",true);
                     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                         xmlhttp.setRequestHeader("Content-length", params.length);
                     xmlhttp.setRequestHeader("Connection", "close");
                 xmlhttp.send(params);
-}
-
-
+        
+    }
+    else{ return;}
+}                 */
+//***************************************************************
+//
+// Ajax Function to stop / end an event.
+//
+//****************************************************************
+/*function stopTournament(tournID)
+{
+    var message = "The selected event is about to be ";
+        message += "stopped. It cannot be re-started. Proceed?";
+    
+    var answer = confirm(message );
+    if (answer == true)
+    {
+        if (tournID=="")
+        
+          {
+              document.getElementById("tournamentTable").innerHTML="";
+              return;
+          } 
+    if (window.XMLHttpRequest)
+                  {    // code for mainstream browsers
+                      xmlhttp=new XMLHttpRequest();
+                  }
+                    else
+                          {// code for earlier IE versions
+                              xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                          }
+                            xmlhttp.onreadystatechange=function()
+                                  {
+                                      if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                                          {
+                                        document.getElementById("tournamentTable").innerHTML=xmlhttp.responseText;
+                                        }
+                                }
+ //Now we have the xmlhttp object, get the data using AJAX.
+        var params = "tournID=" + tournID + "&queryType=2";        
+                xmlhttp.open("POST","SELtournament.php",true);
+                    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                        xmlhttp.setRequestHeader("Content-length", params.length);
+                    xmlhttp.setRequestHeader("Connection", "close");
+                xmlhttp.send(params);
+        
+    }
+    else{ return;}
+}                 */
 
 //***************************************************************
-
+//
+// Ajax Function to stop / end an event.
+//
+//****************************************************************
+/*function editTournament(tournID)
+{
+    var message = "The selected event is about to be ";
+        message += "edited. Proceed?";
+    
+    var answer = confirm(message );
+    if (answer == true)
+    {
+        if (tournID=="")
+        
+          {
+              document.getElementById("tournamentTable").innerHTML="";
+              return;
+          } 
+    if (window.XMLHttpRequest)
+                  {    // code for mainstream browsers
+                      xmlhttp=new XMLHttpRequest();
+                  }
+                    else
+                          {// code for earlier IE versions
+                              xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                          }
+                            xmlhttp.onreadystatechange=function()
+                                  {
+                                      if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                                          {
+                                        document.getElementById("tournamentTable").innerHTML=xmlhttp.responseText;
+                                        }
+                                }
+ //Now we have the xmlhttp object, get the data using AJAX.
+        var params = "tournID=" + tournID + "&queryType=3";        
+                xmlhttp.open("POST","SELtournament.php",true);
+                    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                        xmlhttp.setRequestHeader("Content-length", params.length);
+                    xmlhttp.setRequestHeader("Connection", "close");
+                xmlhttp.send(params);
+        
+        
+        
+    }
+    else{ return;}
+}              */
 
 //********************************************************************************************************
 
 </script>
         </head>
         
-            <body onload="getTournament( <?php echo $tourntID; $result->close();?>  )">
+            <body onload="getTournament( <?php echo $tournID; $result->close();?>  )">
             
         <center>
     <div id='shell'>
@@ -187,7 +235,7 @@ function createTournament(tournID)
 
 
     echo '<hr />';
-        echo '<p><h2>Current Tournament</h2></p>';
+        echo '<p><h2>Current Tournaments</h2></p>';
             echo '<FORM>';
                 echo '<P>';
             echo '<SELECT size="6" name="selectTournament" onchange = getTournament(this.value)>';
@@ -211,7 +259,7 @@ for ($i = 0; $i < $result->num_rows;$i++)
 
         echo '</SELECT>';
             echo '<br />';
-               echo '<INPUT type="submit" value="Send"><INPUT type="reset">';
+               echo '<INPUT type="submit" value="Create"><INPUT type="reset">';
                echo '</P>';
             echo '</FORM>';
         echo '<hr />';
