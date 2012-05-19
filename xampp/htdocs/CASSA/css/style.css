@@ -670,7 +670,7 @@ p
 	height: 40px;
 	width: 6500px;
 	padding:0;
-	padding-right: 10px;
+	padding-left: 10px;
 	
 	
 	
@@ -695,7 +695,7 @@ p
 	width: 40px;
 	
 	text-align: right;
-	padding:0px,0px,0px,5px;
+	padding-right:5px;
 }
 #titleCell
 {
@@ -704,8 +704,8 @@ p
 	font-weight: bold;
 	height: 30px;
 	width: 300px;
-	padding:0;
-	padding-right: 10px;
+	
+	padding-left: 10px;
 }	
 
 
