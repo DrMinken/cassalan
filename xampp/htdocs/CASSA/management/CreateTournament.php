@@ -1,4 +1,5 @@
-<!-- //******************************************************
+
+ <!-- //******************************************************
 
 // Name of File: CreateTournament.php
 // Revision: 1.0
@@ -11,61 +12,130 @@
 //it acts as partner script and provides the details of the event
 //selected in the list box. 
 //********** Start of select event script **************--> 
-<?php
+ 
+ 
 
-include("../includes/conn.php");
-session_start();
-  if (!isset($_SESSION['username']))
-{
-    echo '<script type="text/javascript">history.back()</script>';
-    die();
-}
-//get form data
-$tourntID = $_POST['tournID'];                                                // Retrieve the search value.    
-    $queryType = $_POST['queryType'];
-                                         // Retrieve the query Identifier.
-                                                                                    
-    if($queryType == 0)
-            {
-                $query = "SELECT * FROM tournament WHERE tournID =" . $tourntID;        //Create the general select query.
-                ajax_tournament_table_basic($db, $tourntID);
-            }
-$name = strip_tags( $_POST ['name']);
-$date = strip_tags( $_POST ['date']);
-$start_time = strip_tags ($_POST ['start_time']);
-$end_time = strip_tags($_POST ['end_time']);
 
-if ($submit)
-{
-    
-    // check for existance
-    if($name&&$date&&$start_time&&$end_time)
-        {
-   
-            if($name == $name)
-            {
-                // checking for tournament name length 
-                if ( strlen($name)>32)
-                {
-                    echo "Max limit for Tournament Length is 32 characters";
-                }
-    
-                    else
-                    {
-                        // Create the tournament
-                         $queryreg = mysql_query("
-                         INSERT INTO tournament VALUES ('','2','$name','$date','$start_time','$end_time','0','0','0')
-                         ");
-                         die("You have succefully created a tournament");
-                          
-                         
-       
-                    }
-      $db->close(); //close database 
-                }
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<script type="text/javascript">
+//***************************************************************
+//
+
+
+</script>
+        </head>
         
-            }    
-      else
-    echo "Please fill in <b>all</b> fields!";
-    }
-   ?>
+            <body 
+           
+            
+            
+            >
+            
+        <center>
+    <div id='shell'>
+<!-- Main Content [left] -->
+    <div id="content">
+        <h1>Tournament Management</h1>
+
+<!-- INCLUDE THIS AFTER 'MAIN CONTENT' -->
+<!-- ********************************* -->
+<!--This is where the summary table ends up.-->
+            <div 
+              <br>
+    <br>
+         <p><h2>Create and Edit Tournament</h2></p> 
+     
+     <form name="Tournament" action = 'contact.php' method='POST'>
+     <br>
+     <table border="1" width="400">
+    <tr>
+    <td>Enter Tournament Name:</td>
+    <td><input type='text' name='name' size='64'></td>
+    </tr>
+    <tr>
+    <td>Enter Tournament Date:</td>
+    <td><input type='text' name='date'></td>
+    </tr>
+    <tr>
+    <td>Enter Start Time:</td>
+    <td><input type='time' name='start_time'></td>
+    </tr>
+    <tr>
+    <td>Enter End Time:</td>
+    <td><input type='time' name='end_time'></td>
+    </tr>
+    </table>
+<p><input type='submit' name='submit' value='Create Tournament'>
+  </form>
+            
+      </div>
+<!--**************************************** -->
+
+</div><!-- end of: Content -->
+<!-- INSERT: rightPanel -->
+<?php include('../includes/rightPanel.html'); ?>
+<!-- INSERT: footer -->
+<div id="footer">
+    <?php include('../includes/footer.html'); ?>
+</div>
+
+
+</div><!-- end of: Shell -->
+
+</center>
+</body>
+</html>
+
+<!-- ********************************* -->
+<!-- INCLUDE THIS AFTER 'MAIN CONTENT' -->
+
+ <?php 
+  //  session_start();                                                    // Start/resume THIS session
+
+    // PAGE SECURITY
+    //if (!isset($_SESSION['isAdmin']))
+    //{
+        //if ($_SESSION['isAdmin'] == 0)
+        //{
+            //echo '<script type="text/javascript">history.back()</script>';
+        //    die();
+        //}
+//    }
+
+   
+
+    include("../includes/template.php");                                 // Include the template page
+    include("../includes/conn.php");                                     // Include the db connection
+
+    //$username = $_SESSION['username'];
+    $query = "SELECT * FROM tournament";
+   $result = $db->query($query);
+    $row = $result->fetch_array(MYSQLI_BOTH);    
+    $tournID = $row['tournID'];
+    
+    // check to see if tournament table exists, if not create it
+    
+  //  $check = mysql_query("SELECT * FROM 'tournament' LIMIT 0,1");
+    //if ($check){
+        
+        
+        
+    //}
+    //else {
+        // create the tournament
+    //}
+    
+    // query all the in the tournament table
+    
+    //$query = "SELECT * FROM tournament";
+    //$result = mysql_query($query);
+    //mysql_close();
+      
+    
+?>
+ 
+
+
