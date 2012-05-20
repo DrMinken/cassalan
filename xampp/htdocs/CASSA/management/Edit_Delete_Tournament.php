@@ -34,13 +34,26 @@
    
 
     include("../includes/template.php");                                 // Include the template page
-    include("../includes/conn.php");                                     // Include the db connection
+    include("../includes/conn.php");
+      $tournID = $_POST['tournID'];                                                // Retrieve the search value.    
+    $queryType = $_POST['queryType'];                                      // Include the db connection
 
-   // $username = $_SESSION['username'];
+    //$username = $_SESSION['username'];
+    // query the tournament table
   //  $query = "SELECT * FROM tournament";
-   // $result = $db->query($query);
-   // $row = $result->fetch_array(MYSQLI_BOTH);    
-    //$tournID = $row['tournID'];
+    //$result = $db->query($query);
+                                         // Retrieve the query Identifier.
+                                                                                    
+    //if($queryType == 1)
+      //      {
+        //        $query = "SELECT * FROM tournament WHERE tournID =" . $tournID;        //Create the general select query.
+          //      ajax_tournament_table_edit($db, $tournID);
+            //}
+            
+            
+    //function ajax_tournament_table_edit($db, $tournID)
+    //{
+    
 ?>
 
 
@@ -48,6 +61,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <script type="text/javascript">
+
+
+                 
 //***************************************************************
 //
 
@@ -57,7 +73,7 @@
         
             <body 
            
-            
+                
             
             >
             
@@ -73,30 +89,9 @@
             <div 
               <br>
     <br>
-         <p><h2>Create Tournament</h2></p> 
+         <p><h2>Edit Tournament</h2></p> 
      
-   <form name="Tournament" action = 'contact.php' method='POST'>
-     <br>
-     <table border="1" width="400">
-    <tr>
-    <td>Enter Tournament Name:</td>
-    <td><input type='text' name='name' size='64'></td>
-    </tr>
-    <tr>
-    <td>Enter Tournament Date:</td>
-    <td><input type='text' name='date'></td>
-    </tr>
-    <tr>
-    <td>Enter Start Time:</td>
-    <td><input type='time' name='start_time'></td>
-    </tr>
-    <tr>
-    <td>Enter End Time:</td>
-    <td><input type='time' name='end_time'></td>
-    </tr>
-    </table>
-<p><input type='submit' name='submit' value='Create Tournament'>
-  </form>
+ 
             </div>
 <!--**************************************** -->
 
