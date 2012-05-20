@@ -11,9 +11,31 @@
 //This script works in conjuction with the MANtournament.php script.
 //it acts as partner script and provides the details of the event
 //selected in the list box. 
-//********** Start of select event script **************--> 
- 
- 
+//********** Start of Create Tournament script **************--> 
+   
+   
+<?php 
+  //  session_start();                                                    // Start/resume THIS session
+
+    // PAGE SECURITY
+    //if (!isset($_SESSION['isAdmin']))
+    //{
+        //if ($_SESSION['isAdmin'] == 0)
+        //{
+            //echo '<script type="text/javascript">history.back()</script>';
+        //    die();
+        //}
+//    }
+
+   
+
+    include("../includes/template.php");                                 // Include the template page
+    include("../includes/conn.php");                                     // Include the db connection
+
+   
+    
+?>
+  
 
 
 
@@ -53,7 +75,7 @@
      <table border="1" width="400">
     <tr>
     <td>Enter Tournament Name:</td>
-    <td><input type='text' name='name' size='64'></td>
+    <td><input type='text' name='name'></td>
     </tr>
     <tr>
     <td>Enter Tournament Date:</td>
@@ -70,51 +92,12 @@
     </table>
 <p><input type='submit' name='submit' value='Create Tournament'>
   </form>
-            
-      </div>
-<!--**************************************** -->
-
-</div><!-- end of: Content -->
-<!-- INSERT: rightPanel -->
-<?php include('../includes/rightPanel.html'); ?>
-<!-- INSERT: footer -->
-<div id="footer">
-    <?php include('../includes/footer.html'); ?>
-</div>
-
-
-</div><!-- end of: Shell -->
-
-</center>
-</body>
-</html>
-
-<!-- ********************************* -->
-<!-- INCLUDE THIS AFTER 'MAIN CONTENT' -->
-
- <?php 
-  //  session_start();                                                    // Start/resume THIS session
-
-    // PAGE SECURITY
-    //if (!isset($_SESSION['isAdmin']))
-    //{
-        //if ($_SESSION['isAdmin'] == 0)
-        //{
-            //echo '<script type="text/javascript">history.back()</script>';
-        //    die();
-        //}
-//    }
-
-   
-
-    include("../includes/template.php");                                 // Include the template page
-    include("../includes/conn.php");                                     // Include the db connection
-
-    //$username = $_SESSION['username'];
+            <?php
+                  //$username = $_SESSION['username'];
     $query = "SELECT * FROM tournament";
    $result = $db->query($query);
     $row = $result->fetch_array(MYSQLI_BOTH);    
-    $tournID = $row['tournID'];
+   // $tournID = $row['tournID'];
     
     // check to see if tournament table exists, if not create it
     
@@ -133,9 +116,86 @@
     //$query = "SELECT * FROM tournament";
     //$result = mysql_query($query);
     //mysql_close();
-      
     
-?>
+    // $query = "SELECT * FROM tournament";// WHERE tournID =" . $tournID;                 //Create the general select query.
+      //       $result = $db->query($query);                                             
+        //     $row1 = $result->fetch_array(MYSQLI_BOTH);                                //use it first for the title
+          //   $result->close();                                                                //then close it ready for the next execution
+            // $result = $db->query($query);   
+ //  mysql_close();
+   // $row = $result->fetch_array(MYSQLI_BOTH);    
+    //$tournID = $row['tournID'];
+    // first row
+    
+   echo "<br><h1> Created Tournaments</h1>";
+    echo "<table border='1' CELLPADDING = 5 width= '400' STYLE='font-size:13px'>";
+    echo "<tr><td><H4> Name</h3></td>";
+    echo '<td colspan="2"><H3> Date</h3></td>';
+      echo "<td><H4> start time</h3></td>";
+       echo "<td><H4> end time</h3></td>";
+        echo "<td><H4> winner</h3></td>";
+         echo "<td><H4> started</h3></td>";
+          echo "<td><H4> finished</h3></td></tr>";
+          
+    // second row
+    while($row = $result->fetch_array(MYSQLI_BOTH)) 
+    {
+        // Put all the contents of each row into table
+        
+        echo '<tr><td colspan="1" id="detailCell">';
+         echo  $row['name'];
+        echo '</td><td>';
+        echo $row['date'];
+        echo "</td><td>";
+        echo $row['start_time'];
+        echo "</td><td>";
+        echo $row['end_time'];
+        echo "</td><td>";
+        echo $row['winner'];
+        echo "</td><td>";
+        echo $row['started'];
+        echo "</td><td>";
+        echo $row['finished'];
+        echo "</td><td>";
+        echo '<a href="edit.php?id=' .$row['tournID'].'">Edit</a>';
+		 echo "</td><td>";
+		 echo '<a href="deleteTournament.php?id=' .$row['tournID'].'">Delete</a>';
+        echo "</td></tr>";
+    }     
+    echo "</table>";
+
+	
+    echo '<br><a href = MANtournament.php?> Return To Tournament Management Page</a>';
+  
+    
+      
+             ?>
+      </div>
+<!--**************************************** -->
+
+</div><!-- end of: Content -->
+<?php
+     
+ ?>
+<!-- INSERT: rightPanel -->
+<?php include('../includes/rightPanel.html'); ?>
+<!-- INSERT: footer -->
+<div id="footer">
+    <?php include('../includes/footer.html'); ?>
+</div>
+
+
+</div><!-- end of: Shell -->
+
+</center>
+</body>
+</html>
+
+<!-- ********************************* -->
+<!-- INCLUDE THIS AFTER 'MAIN CONTENT' -->
+
+
  
+
 
 
