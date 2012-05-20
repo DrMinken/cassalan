@@ -24,12 +24,12 @@
 		$result3 = $db->query($query3);
 	}
 
-    if(isset($_POST['pizzaIDADD'])) // add pizza to menu
+    if(isset($_POST['pizzaIDADD'])  && isset($_POST['menuID']) ) // add pizza to menu
 	{
 		echo "done";
 		$pizzaID = $_POST['pizzaIDADD'];
-		$menuID = $POST_['MenuID'];
-		$query3 = "INSERT INTO menu_items (menuID, pizzaID) VALUES ('".$_POST['MenuID']."' , '".$_POST['pizzaIDADD']."')"; // still needs doing.
+		$menuID = $_POST['menuID'];
+		$query3 = "INSERT INTO menu_items (menuID, pizzaID) VALUES ('".$_POST['menuID']."' , '".$_POST['pizzaIDADD']."')"; // still needs doing.
 
 		$result3 = $db->query($query3);
 	}
@@ -41,9 +41,58 @@
 		$description = $_POST['description'];
 		$price = $_POST['price'];
 
+		$errors = array();
+
+
+		if (empty($pizza_name) || empty($price) || empty($description)) // check if fields are empty
+		{
+			$errors[] = 'All fields must contain values';
+		}
+
+		else
+		{
+			// check if pizza_name is over 32 chars
+			if (strlen($pizza_name) > 32)
+			{
+				$errors[] = 'Name is too long, 32 characters only';
+			}
+	
+			//check if the price is a number
+			if (!is_numeric($price))
+			{
+				$errors[] = 'Price must be a number.';
+			}
+			else
+			{
+				// check if it is above 0
+				if ($price <= 0) 
+				{
+					$errors[] = 'Price must be above $0';
+				}
+			}
+
+			// check is description is over 128
+			if (strlen($description) > 128) 
+			{
+				$errors[] = 'Description is too long, 128 characters only';
+			}
+		}
+		// end of validation - if no errors
+		if (empty($errors)) 
+		{
 		$query4 = "UPDATE pizza_type SET pizza_name='".$_POST['pizza_name']."', description='".$_POST['description']."', price='".$_POST['price']."' WHERE pizzaID='".$_POST['pizzaIDedit']."'";
 		$result4 = $db->query($query4);
 		echo "update completed.";
+		}
+
+		if (($errors))
+		{
+			echo "<script type='text/javascript'> var answer = confirm('$errors')</script>"; 
+		}
+
+
+
+
 	}
 
 	if (isset($_POST['menuID']) && isset($_POST['pizzaID'])) // Delete pizza from menu
@@ -83,7 +132,7 @@ function saveRow(x)
 	if (answer == true)
 	{
 		// SEND [this] FORM TO SERVER
-		document.forms["f"+x+"_formSR"].submit();
+		document.forms["formSR"].submit();
 	}
 }
 function deleteRow(x)
@@ -92,7 +141,7 @@ function deleteRow(x)
 	if (answer == true)
 	{
 		// SEND [this] FORM TO SERVER
-		document.forms[x+"_formDEL"].submit();
+		document.forms["formDEL"].submit();
 	}
 }
 
@@ -115,8 +164,12 @@ function addtomenuRow(x)
 	var answer = confirm("Are you sure you want to add this item from the menu?");
 	if (answer == true)
 	{
+		// SETUP FORM WITH INPUTS TO SEND TO SERVER
+		document.formADD['menuID'].value = menuID;
+		document.formADD['pizzaID'].value = pizzaID;
+
 		// SEND [this] FORM TO SERVER
-		document.forms["f"+x+"_formADD"].submit();
+		document.forms['fromADD'].submit();
 	}
 }
 
@@ -192,13 +245,14 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 	echo "<tr id='".$i."_normal'>";
 
 		echo "<td>";
-		echo "<form name='f".$i."_formADD' method='POST' action='MANpizza.php' >"; // add pizza to menu
+		echo "<form name='formADD' method='POST' action='MANpizza.php' >"; // add pizza to menu
 		echo "<img class='pointer' src='../images/buttons/add_60.png' alt='Add' onclick='addtomenuRow(".$i.")' />"; 
-		echo "<input type='hidden' name='pizzaIDADD' id='pizzaIDADD' value='".$row['pizzaID']."' />";
+		echo "<input type='hidden' name='pizzaIDADD' id='pizzaIDADD' value='' />";
+		echo "<input type='hidden' name='menuID' id='menuID' value='' />";
 		echo "</form>";
 
 		echo "<img class='pointer' src='../images/buttons/edit_60.png' alt='Edit' onclick='editRow(".$i.", ".$result->num_rows.")' />"; // unhide rows
-		echo "<form name='".$i."_formDEL' method='POST' action='MANpizza.php' >"; // delete pizza from database
+		echo "<form name='formDEL' method='POST' action='MANpizza.php' >"; // delete pizza from database
 		echo "<img src='../images/buttons/delete_60.png' alt='Delete' onclick='deleteRow(".$i.")' />";
 		echo "<input type='hidden' name='pizza_nameDEL' id='pizza_nameDEL' value='".$row['pizza_name']."' />";
 		echo "</form>";
@@ -215,9 +269,9 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 	echo "<tr id='".$i."_edit' style='display: none;'>";
 		
 			echo "<td>";
-			echo "<form name='f".$i."_formSR' method='POST' action='MANpizza.php' >";
-				echo "&nbsp;&nbsp;&nbsp;<img src='../images/layers/tick.png' alt='Save' onclick='saveRow(".$i.")' />";
-				echo "<td><input type='hidden' name='pizzaIDedit' id='pizzaIDedit' value='".$row['pizzaID']."' /></td>";
+			echo "<form name='formSR' method='POST' action='MANpizza.php' >";
+			echo "&nbsp;&nbsp;&nbsp;<img src='../images/layers/tick.png' alt='Save' onclick='saveRow(".$i.")' />";
+			echo "<td><input type='hidden' name='pizzaIDedit' id='pizzaIDedit' value='".$row['pizzaID']."' /></td>";
 			echo "</td>";
 
 			echo "<td>" . $row['pizzaID'] . "</td>";
