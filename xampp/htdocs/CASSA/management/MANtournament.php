@@ -70,6 +70,8 @@ function getTournament(tournID)
  //Now we have the xmlhttp object, get the data using AJAX.
         var params = "tournID=" + tournID + "&queryType=0";        
                 xmlhttp.open("POST","SELtournament.php",true);
+                  
+                
                     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                         xmlhttp.setRequestHeader("Content-length", params.length);
                     xmlhttp.setRequestHeader("Connection", "close");
@@ -77,144 +79,9 @@ function getTournament(tournID)
 }
 
 //***************************************************************
-//
-// Ajax Function to start an event.
-//
-//****************************************************************
-/*function startTournament(tournID)
-{
-    var message = "The selected event is about to be ";
-        message += "started. All other started events will";
-        message += " be stopped. Proceed?";
-    
-    var answer = confirm(message );
-    if (answer == true)
-    {
-        if (tournID=="")
-        
-          {
-              document.getElementById("tournamentTable").innerHTML="";
-              return;
-          } 
-    if (window.XMLHttpRequest)
-                  {    // code for mainstream browsers
-                      xmlhttp=new XMLHttpRequest();
-                  }
-                    else
-                          {// code for earlier IE versions
-                              xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-                          }
-                            xmlhttp.onreadystatechange=function()
-                                  {
-                                      if (xmlhttp.readyState==4 && xmlhttp.status==200)
-                                          {
-                                        document.getElementById("tournamentTable").innerHTML=xmlhttp.responseText;
-                                        }
-                                }
- //Now we have the xmlhttp object, get the data using AJAX.
-        var params = "tournID=" + tournID + "&queryType=1";        
-                xmlhttp.open("POST","SELtournament.php",true);
-                    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                        xmlhttp.setRequestHeader("Content-length", params.length);
-                    xmlhttp.setRequestHeader("Connection", "close");
-                xmlhttp.send(params);
-        
-    }
-    else{ return;}
-}                 */
-//***************************************************************
-//
-// Ajax Function to stop / end an event.
-//
-//****************************************************************
-/*function stopTournament(tournID)
-{
-    var message = "The selected event is about to be ";
-        message += "stopped. It cannot be re-started. Proceed?";
-    
-    var answer = confirm(message );
-    if (answer == true)
-    {
-        if (tournID=="")
-        
-          {
-              document.getElementById("tournamentTable").innerHTML="";
-              return;
-          } 
-    if (window.XMLHttpRequest)
-                  {    // code for mainstream browsers
-                      xmlhttp=new XMLHttpRequest();
-                  }
-                    else
-                          {// code for earlier IE versions
-                              xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-                          }
-                            xmlhttp.onreadystatechange=function()
-                                  {
-                                      if (xmlhttp.readyState==4 && xmlhttp.status==200)
-                                          {
-                                        document.getElementById("tournamentTable").innerHTML=xmlhttp.responseText;
-                                        }
-                                }
- //Now we have the xmlhttp object, get the data using AJAX.
-        var params = "tournID=" + tournID + "&queryType=2";        
-                xmlhttp.open("POST","SELtournament.php",true);
-                    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                        xmlhttp.setRequestHeader("Content-length", params.length);
-                    xmlhttp.setRequestHeader("Connection", "close");
-                xmlhttp.send(params);
-        
-    }
-    else{ return;}
-}                 */
+
 
 //***************************************************************
-//
-// Ajax Function to stop / end an event.
-//
-//****************************************************************
-/*function editTournament(tournID)
-{
-    var message = "The selected event is about to be ";
-        message += "edited. Proceed?";
-    
-    var answer = confirm(message );
-    if (answer == true)
-    {
-        if (tournID=="")
-        
-          {
-              document.getElementById("tournamentTable").innerHTML="";
-              return;
-          } 
-    if (window.XMLHttpRequest)
-                  {    // code for mainstream browsers
-                      xmlhttp=new XMLHttpRequest();
-                  }
-                    else
-                          {// code for earlier IE versions
-                              xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-                          }
-                            xmlhttp.onreadystatechange=function()
-                                  {
-                                      if (xmlhttp.readyState==4 && xmlhttp.status==200)
-                                          {
-                                        document.getElementById("tournamentTable").innerHTML=xmlhttp.responseText;
-                                        }
-                                }
- //Now we have the xmlhttp object, get the data using AJAX.
-        var params = "tournID=" + tournID + "&queryType=3";        
-                xmlhttp.open("POST","SELtournament.php",true);
-                    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                        xmlhttp.setRequestHeader("Content-length", params.length);
-                    xmlhttp.setRequestHeader("Connection", "close");
-                xmlhttp.send(params);
-        
-        
-        
-    }
-    else{ return;}
-}              */
 
 //********************************************************************************************************
 
@@ -236,6 +103,7 @@ function getTournament(tournID)
 
     echo '<hr />';
         echo '<p><h2>Current Tournaments</h2></p>';
+		
             echo '<FORM>';
                 echo '<P>';
             echo '<SELECT size="6" name="selectTournament" onchange = getTournament(this.value)>';
@@ -259,7 +127,7 @@ for ($i = 0; $i < $result->num_rows;$i++)
 
         echo '</SELECT>';
             echo '<br />';
-               echo '<INPUT type="submit" value="Create"><INPUT type="reset">';
+               echo '<INPUT type="reset">';
                echo '</P>';
             echo '</FORM>';
         echo '<hr />';
