@@ -50,6 +50,7 @@ function createRequest (eventID, params)
     if (eventID=="")
 		
             {
+                
                 document.getElementById("eventTable").innerHTML="";
                 return;
             } 
@@ -92,21 +93,44 @@ createRequest(eventID,params);
 			
 }
 
-//***************************************************************
+
 //***************************************************************
 //
 // Ajax Function to insert a new event.
 //
 //****************************************************************
-function addEvent(eventID)
+function checkaddEvent()
 {
-	var message = "This event is about to be ";
+	var eventID="0";
+        //var eventID = document.getElementById('eventID').value;
+	var event_name = document.getElementById('event_name').value;
+	var event_location = document.getElementById('event_location').value;
+	var startDate = document.getElementById('startDate').value;
+	var startTime = document.getElementById('startTime').value;
+	var server_IP_address = document.getElementById('server_IP_address').value;
+	var seatQuantity = document.getElementById('seatQuantity').value;
+
+               var params = "eventID=" + eventID + "&queryType=6" + "&event_name=" + event_name
+                            + "&event_location=" + event_location + "&startDate=" + startDate 
+                            + "&startTime=" + startTime + "&server_IP_address=" + server_IP_address
+                            + "&seatQuantity=" + seatQuantity;			
+		createRequest(eventID,params);
+}
+//***************************************************************
+//
+// Ajax Function to insert a new event.
+//
+//****************************************************************
+function addEvent()
+{
+	var message = "An event is about to be ";
 	    message += "added.Proceed?";
 	
         var answer = confirm(message );
 	if (answer == true)
 	{
 		
+               var eventID ="0";
 		var params = "eventID=" + eventID + "&queryType=5";		
                     createRequest(eventID,params);
 	}
@@ -203,6 +227,19 @@ function updateEvent()
 
 //************************************************************************************************
 
+//************************************************************************************************
+//
+// Refresh Event List Box
+//
+//*************************************************************************************************
+function refreshEvent()
+{	
+  	document.forms["frm1"].submit(); 
+	
+}
+
+
+//************************************************************************************************
 
 </script>
 </head>
@@ -244,11 +281,33 @@ for ($i = 0; $i < $result->num_rows;$i++)
 
 		echo '</SELECT>';
                 echo '<br />';
-                echo '<INPUT type="submit" value="Refresh List">';
-                echo ''
-                echo '</P>';
-                echo '</FORM>';
-		echo '<hr />';
+                //echo '<INPUT type="submit" value="Refresh List">';
+                
+                 $refreshDwn = 'this.src="../images/buttons/refresh_dwn.png"';
+                $refreshUp = 'this.src="../images/buttons/refresh_up.png"';
+                
+                $newDwn = 'this.src="../images/buttons/new_dwn.png"';
+                $newUp = 'this.src="../images/buttons/new_up.png"';
+
+                $deleteDwn = 'this.src="../images/buttons/delete_dwn.png"';
+                $deleteUp = 'this.src="../images/buttons/delete_up.png"';
+			  			
+        echo' <img src="../images/buttons/refresh_dwn.png" width="30" height="30"';
+        echo' alt="" onclick="refreshEvent()" ';
+        echo 'onmouseover='.$refreshUp.' onmouseout='. $refreshDwn .' />';
+        
+                
+        echo ' <img src="../images/buttons/new_dwn.png" width="30" height="30"';
+        echo ' alt="" onclick="addEvent()" ';
+        
+        echo 'onmouseover='.$newUp.' onmouseout='.$newDwn.' />';
+
+        echo' <img src="../images/buttons/delete_dwn.png" width="30" height="30"';
+        echo' alt="" onclick="deleteEvent(' . $eventID . ')" ';
+        echo 'onmouseover='.$deleteUp.' onmouseout='. $deleteDwn .' />';
+        echo '</P>';
+        echo '</FORM>';
+        echo '<hr />';
 
 ?>
 <!-- INCLUDE THIS AFTER 'MAIN CONTENT' -->
@@ -256,7 +315,7 @@ for ($i = 0; $i < $result->num_rows;$i++)
 <!--This is where the summary table ends up.-->
 <div id="eventTable"></div>
 <!--**************************************** -->
-
+<br /><br />
 </div><!-- end of: Content -->
 <!-- INSERT: rightPanel -->
 <?php include('../includes/rightPanel.html'); ?>
