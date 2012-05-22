@@ -12,6 +12,8 @@
 	}
 
 	include("../includes/conn.php"); 
+	
+	print_r($_POST);
 
 ?>
 
