@@ -29,23 +29,25 @@
   // REJECT all real escape strings (security)
   $_POST = array_map('mysql_real_escape_string', $_POST);
 
-        
+     
         $eventID = $_POST['eventID'];												// Retrieve the search value.	
 	$queryType = $_POST['queryType'];
+        //$_SESSION['errMsg'] = "";
         
 //Start checking what action is required and what shall be placed into the div in
 // the man event page.
         
 if($queryType == 0)
             {
-                $query = "SELECT * FROM event WHERE eventID =" . $eventID;		//Create the general select query.
+                $_SESSION['errMsg'] = "";
+                $query = "SELECT * FROM event WHERE eventID =" . $eventID . ";";		//Create the general select query.
                 ajax_event_table_basic($db, $eventID);
             }
 //If querytype = 1 then change the event to started and stop all other
 //events.           
    elseif ($queryType == 1)
     {
-
+        $_SESSION['errMsg'] = "";
         $query =    "UPDATE event "; 
         $query.=    "SET event_started = 2 ";
         $query.=    "WHERE event_started =1 ";
@@ -63,6 +65,7 @@ if($queryType == 0)
     
     elseif ($queryType == 2)
     {
+        $_SESSION['errMsg'] = "";
         $query2  = "UPDATE event "; 
         $query2 .=	"SET event_started = 2 ";
         $query2 .=	"WHERE eventID =" . $eventID;
@@ -74,7 +77,7 @@ if($queryType == 0)
 //If querytype = 3 then display the current record in the edit form.
     elseif ($queryType == 3)
     {
-
+      
         ajax_event_table_edit($db, $eventID);												
 
     }												
@@ -110,7 +113,7 @@ elseif ($queryType == 5)
  elseif ($queryType == 6)
     {
         
-      
+       
         $event_location = $_POST['event_location'];
         $event_name = $_POST['event_name'];
         $startDate = $_POST['startDate'];
@@ -126,7 +129,34 @@ elseif ($queryType == 5)
         											
         ajax_event_table_AddNew ($db, $eventID, $postData, $postNames);
     } 
- 	
+  elseif ($queryType == 7)
+     
+    {
+      $_SESSION['errMsg'] = ""; 
+      $query1 = "SELECT * FROM event Where eventID =" . $eventID . ";";
+       $result = $db->query($query1);
+       $row = $result->fetch_array(MYSQLI_BOTH);
+         if($row['event_started']== 1)
+
+         {
+             $_SESSION['errMsg'] = "An event that is running cannot be deleted";
+             ajax_event_table_basic($db, $eventID);
+         }
+
+         else
+             {
+                    $db->autocommit(TRUE);
+                    $query2  = "DELETE from event "; 
+                    $query2 .=	"WHERE eventID =" . $eventID . ";";
+                    $result = $db->query($query2);
+
+                    $query2 = "SELECT * from event order by eventID DESC";
+                    $result = $db->query($query2);
+                    $row = $result->fetch_array(MYSQLI_BOTH);
+                    $eventID = $row['eventID'];
+                    ajax_event_table_basic($db, $eventID);												//Then Execute the Query then move on
+             }   
+    }	
  	
 //********************* Functions Below *************************************************
 //
@@ -327,7 +357,7 @@ function ajax_event_table_AddNew ($db, $eventID, $postData, $postNames)
             else{  
                         
                         mysqli_commit($db);
-                        mysqli_autocommit($db,TRUE);
+                        $db->autocommit(TRUE);
                         $query = "SELECT * FROM event WHERE event_name='" . $_POST['event_name'] . "';";
                         $result = $db->query($query);
                        
@@ -405,7 +435,10 @@ function ajax_event_table_basic($db, $eventID)
     $result->close();					//then close it ready for the next execution
     $result = $db->query($query); 	
 
-
+    if(isset($_SESSION['errMsg']));
+    {
+       echo "<br /><p class='redAstrix'>" . $_SESSION['errMsg'] . "</p>";
+    }
     echo '<br /><br />';
 
     echo '<table  id="tableEventDetail">';
