@@ -14,6 +14,7 @@
 	$_SESSION['title'] = "Event Management | MegaLAN";  // Declare this page's Title
 	include("../includes/template.php");                // Include the template page
 	include("../includes/conn.php");                    // Include the db connection
+        unset($_SESSION['errMsg']);
 
 	$username = $_SESSION['username'];
 	$query = "SELECT * FROM event order by startDate DESC";
@@ -139,12 +140,41 @@ function addEvent()
 
 //***************************************************************
 //
+// Ajax Function to delete an event.
+//
+//****************************************************************
+function deleteEvent()
+{
+	
+        //var eventName = selectEvent.options[selectEvent.selectedIndex].text;
+
+
+        eventID = document.getElementById("selectEvent").value;
+        eventName = document.getElementById("option" + eventID).text;
+       
+        message = "You have chosen to delete the ";
+	    message += eventName + " event. Proceed?";
+	
+        var answer = confirm(message );
+	if (answer == true)
+	{
+            var params = "eventID=" + eventID + "&queryType=7";		
+             createRequest(eventID,params);
+	}
+	else{ return;}
+}
+//***************************************************************
+//
 // Ajax Function to start an event.
 //
 //****************************************************************
 function startEvent(eventID)
 {
-	var message = "The selected event is about to be ";
+	
+        eventID = document.getElementById("selectEvent").value;
+        eventName = document.getElementById("option" + eventID).text;
+        
+        var message = "The " + eventName + " event is about to be ";
 	    message += "started. All other started events will";
 	    message += " be stopped. Proceed?";
 	
@@ -165,7 +195,10 @@ function startEvent(eventID)
 //****************************************************************
 function stopEvent(eventID)
 {
-	var message = "The selected event is about to be ";
+	
+        eventName = document.getElementById("option" + eventID).text;
+        
+        var message = "The " + eventName + " event is about to be ";
 	    message += "stopped. It cannot be re-started. Proceed?";
 	
 	var answer = confirm(message );
@@ -185,7 +218,8 @@ function stopEvent(eventID)
 //****************************************************************
 function editEvent(eventID)
 {
-	var message = "The selected event is about to be ";
+	eventName = document.getElementById("option" + eventID).text;
+        var message = "The " + eventName +" event is about to be ";
 	    message += "edited. Proceed?";
 	
 	var answer = confirm(message );
@@ -261,7 +295,7 @@ echo '<hr />';
 echo '<p><h2>Current Events</h2></p>';
 echo '<FORM id="frm1">';
 echo '<P>';
-echo '<SELECT size="6" name="selectEvent" onchange = getEvent(this.value)>';
+echo '<SELECT size="6" id="selectEvent" name="selectEvent" onchange = getEvent(this.value)>';
 	
 $result = $db->query($query);
 // Now we can output the option fields to populate the list box.
@@ -271,11 +305,11 @@ for ($i = 0; $i < $result->num_rows;$i++)
 
             if ($i==0)
                 {
-                    echo '<OPTION value="'.$row['eventID'].'" selected="selected">' . $row['event_name'] . '</OPTION><br />';			
+                    echo '<OPTION id="option' . $row['eventID']. '" value="'.$row['eventID'].'" selected="selected">' . $row['event_name'] . '</OPTION><br />';			
                 }
             else
                 {
-                    echo '<OPTION value="'.$row['eventID'].'">' . $row['event_name'] . '</OPTION><br />';
+                    echo '<OPTION id="option' . $row['eventID']. '" value="'.$row['eventID'].'">' . $row['event_name'] . '</OPTION><br />';
                 }
 	}
 
@@ -303,7 +337,7 @@ for ($i = 0; $i < $result->num_rows;$i++)
         echo 'onmouseover='.$newUp.' onmouseout='.$newDwn.' />';
 
         echo' <img src="../images/buttons/delete_dwn.png" width="30" height="30"';
-        echo' alt="" onclick="deleteEvent(' . $eventID . ')" ';
+        echo' alt="" onclick="deleteEvent()" ';
         echo 'onmouseover='.$deleteUp.' onmouseout='. $deleteDwn .' />';
         echo '</P>';
         echo '</FORM>';
