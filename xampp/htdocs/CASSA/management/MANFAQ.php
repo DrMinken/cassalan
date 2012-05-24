@@ -19,13 +19,19 @@
 
 
 
-	if(isset($_POST['question'])  && isset($_POST['answer']) ) // add pizza to menu
+	if(isset($_POST['question'])  && isset($_POST['answer']) ) 
 	{
 		$query = "INSERT INTO faq (question, answer) VALUES ('".$_POST['question']."' , '".$_POST['answer']."')";
 		//var_dump($query);
 		$result = $db->query($query);
 	}
 
+	if(isset($_POST['FAQID']))
+	{
+		$query = "SELECT * FROM faq WHERE FAQID = '".$_POST['FAQID']."'";
+		var_dump($query);
+		$FAQID = $_POST['FAQID'];
+	}
 
 
 
@@ -134,7 +140,7 @@
 	<tr><td colspan="2">&nbsp;</td></tr>
 
 	<!-- ENSURES TO THE SERVER THERE EITHER IS OR IS NOT A FILE TO BE SAVED-->
-	<input type='hidden' name='FAQID' value='<' />
+	<input type='hidden' name='FAQID' value='' />
 
 	</table>
 </form>

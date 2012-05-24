@@ -32,8 +32,8 @@
 <script type='text/javascript'>
 function editArticle(x)
 {
-	document.getElementById('editNewsID').value=x;
-	document.forms['editNewsArticle'].submit();
+	document.getElementById('FAQID').value=x;
+	document.forms['editQuestion'].submit();
 }
 function deleteQuestion(x)
 {
@@ -125,8 +125,8 @@ echo '</div>';
 
 
 <!-- FORM - for posting [this] article to be edited -->
-<form name='editNewsArticle' method='POST' action='/cassa/management/MANfaq.php'>
-<input type='hidden' name='editNewsID' id='editNewsID' value='' />
+<form name='editQuestion' method='POST' action='/cassa/management/editFAQ.php'>
+<input type='hidden' name='FAQID' id='FAQID' value='' />
 </form>
 
 
