@@ -8,7 +8,7 @@
 
 <!-- //******************************************************
 
-// Name of File:
+// Name of File: pizzasummary.php
 // Revision: 1.0
 // Date: 
 // Author: 
@@ -29,10 +29,10 @@
 <div id="content">
 
 
-<div id='summaryPizza'>
+<div id='createPizza'>
 <?php 
 	// GET EVENT WHERE EVENT IS NEXT TO START
-	$get = "SELECT * FROM event WHERE event_completed=0 ORDER BY eventDate ASC";
+	$get = "SELECT * FROM event WHERE event_completed=0 ORDER BY startDate ASC";
 	$result = $db->query($get);
 	$row = $result->fetch_assoc();
 	$eventID = $row['eventID'];
@@ -69,7 +69,7 @@
 	}
 ?>
 
-<table class='pizzaOrder'>
+<table class='summaryPizza'>
 <tr>
 	<td class='MANheader'>Name</td>
 	<td class='MANheader'>QTY</td>
@@ -104,7 +104,7 @@
 		echo '</tr>';
 	}
 	echo '<tr><td colspan="4"><hr /></td></tr>';
-	echo '<tr><td colspan="4" align="right"><b>GRAND TOTAL: $'.$grandTotal.'</b></td></tr>';
+	echo '<tr><td colspan="4">Grand Total: $'.$grandTotal.'</td></tr>';
 ?>
 </table>
 </div>
