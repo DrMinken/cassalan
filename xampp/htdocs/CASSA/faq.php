@@ -1,7 +1,15 @@
-<?php 
-	session_start();							// Start/resume THIS session
-	$_SESSION['title'] = "FAQ | MegaLAN"; 		// Declare this page's Title
-	include("includes/template.php"); 			// Include the template page
+<?php
+	session_start();									// Start/resume THIS session
+	$_SESSION['title'] = "MegaLAN Management System | FAQs"; 	// Declare this page's Title
+	include("includes/template.php"); 					// Include the template page
+	include("includes/conn.php"); 						// Include the database connection
+
+	if (isset($_POST['FAQID']))
+	{
+	// Delete a Question
+	$query = "DELETE FROM faq WHERE FAQID = '".$_POST['FAQID']."'";
+	$result = $db->query($query) or die(mysql_error());
+	}
 ?>
 
 
@@ -9,17 +17,37 @@
 
 // Name of File: faq.php
 // Revision: 1.0
-// Date: 15/04/2012
+// Date: 07/04/2012
 // Author: Quintin M
-// Modified: 
+// Modified: Luke Spartalis 22/04/2012
 
 //***********************************************************
 
-//*************** Start of FAQ PAGE ******************* -->
+//*************** Start of HOME PAGE ******************* -->
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head></head>
+<head>
+
+<script type='text/javascript'>
+function editArticle(x)
+{
+	document.getElementById('FAQID').value=x;
+	document.forms['editQuestion'].submit();
+}
+function deleteQuestion(x)
+{
+	var answer = confirm("Are you sure you want to delete this Question?");
+	if (answer == true)
+	{
+		// Delete [x]
+		document.deleteQuestionForm['FAQID'].value = x;
+		document.forms['deleteQuestionForm'].submit();
+	}
+}
+</script>
+
+</head>
 <body>
 <center>
 <div id='shell'>
@@ -28,22 +56,84 @@
 
 <!-- Main Content [left] -->
 <div id="content">
-	<h1>Frequently Asked Questions</h1>
 
 
-<!-- FAQ -->
-<div id='faqDIV'>
-	<b>Can I bring my own lunch of Dinner?</b><br />
-	Yes you can bring any food and drinks you wish to the event.<br /><br />
+<!-- FETCH RECENT NEWS FROM DATABASE -->
+<?php
 
-	<b>Do I need to bring a sleeping bag?</b><br />
-	You can bring a sleeping bag, however the purpose of the MegaLAN is to stay up past your parents enforces bed time, so no sleeping!<br /><br />
+echo '<div id="article">';
+	// FETCH ALL NEWS
+	$query = "SELECT * FROM `faq`";
+	$result = $db->query($query);
 
-	<b><u>More questions to be asked here</u></b><br />
+	for ($i=0; $i<$result->num_rows; $i++)
+	{
+		$row = $result->fetch_assoc();
+		$FAQID = $row['FAQID'];
+		$question = $row['question'];
+		$answer = $row['answer'];
 
 
-</div><!-- end of: FAQ -->
+	// DISPLAY [THIS] QUESTION
+		// TITLE
+		echo '<div class="articleTitle" style="border: 0px solid black;">'.$question.'<br /></div>';
 
+
+		// IF USER = STAFF, ADD TOOLBOX [EDIT/DELETE]
+		if (isset($_SESSION['isAdmin']))
+		{
+			if ($_SESSION['isAdmin'] == 1)
+			{
+				// TOOLBOX
+				echo '<div class="articleToolBox">';
+					// EDIT [this]
+					echo '<img class="pointer" src="images/buttons/edit_60.png" title="Edit" onclick="editArticle('.$FAQID.')" />';
+
+					// DELETE [this]
+					echo '<img class="pointer" src="images/buttons/delete_60.png" title="Delete" onclick="deleteQuestion('.$FAQID.')"/>';
+				echo '</div>';
+				echo '<br /><br />';
+			}
+		}
+
+
+		// MESSAGE
+		echo '<div class="articleMessage">'.$answer.'<br /><br /></div>';
+
+
+		// IF THERE IS ANOTHER ARTICLE -add a blue line spacer
+		if ($i+1 < $result->num_rows)
+		{
+			// ADD BLUE LINE
+			echo '<br /><br />';
+			echo '<div class="blueLine700"></div>';
+			echo '<br /><br />';
+		}
+		// ELSE -add blank space
+		else
+		{
+			// ADD BLANK SPACES
+			echo '<br /><br />';
+		}
+	}
+echo '</div>';
+?>
+<!-- end of: RECENT NEWS -->
+
+
+
+
+
+<!-- FORM - for posting [this] article to be edited -->
+<form name='editQuestion' method='POST' action='/cassa/management/editFAQ.php'>
+<input type='hidden' name='FAQID' id='FAQID' value='' />
+</form>
+
+
+<!-- FORM - for posting [this] article to be deleted -->
+<form name='deleteQuestionForm' method='POST' action='/cassa/faq.php'>
+<input type='hidden' name='FAQID' id='FAQID' value='' />
+</form>
 
 
 
