@@ -671,9 +671,11 @@ p
 }
 .pizzaOrder
 {
-	width: 680px;
-	padding: 30px;
+	width: 650px;
+	padding: 50px;
 	text-align: left;
+	border-collapse: collapse;
+	line-height: 25pt;
 }
 
 

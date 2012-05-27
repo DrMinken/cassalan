@@ -104,7 +104,7 @@
 		echo '</tr>';
 	}
 	echo '<tr><td colspan="4"><hr /></td></tr>';
-	echo '<tr><td colspan="4">Grand Total: $'.$grandTotal.'</td></tr>';
+	echo '<tr><td colspan="4" align="right"><b>GRAND TOTAL: $'.$grandTotal.'</b></td></tr>';
 ?>
 </table>
 </div>
