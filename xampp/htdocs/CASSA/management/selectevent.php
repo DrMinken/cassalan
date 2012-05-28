@@ -688,7 +688,7 @@ echo' <tr bgcolor="#3300CC">';
         echo 'onmouseover='.$off.' onmouseout='.$on.' />';
 
         echo' <img src="../images/buttons/delete_dwn.png" width="30" height="30"';
-        echo' alt="Cancel Current Update" onclick="MANevent.php" ';
+        echo' alt="Cancel Current Update" onclick="getEvent()" ';
         echo 'onmouseover='.$cancelUp.' onmouseout='.$cancelDwn.' />';
         echo' </div>';
 	echo' </td>';
