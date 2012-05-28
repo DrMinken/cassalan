@@ -229,7 +229,7 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 <!-- DISPLAY CURRENT MENU -->
 <?php
 	// GET EVENT WHERE EVENT IS NEXT TO START
-	$get = "SELECT * FROM event WHERE event_completed=0 ORDER BY eventDate ASC";
+	$get = "SELECT * FROM event WHERE event_completed=0 ORDER BY startDate ASC";
 	$result = $db->query($get);
 	$row = $result->fetch_assoc();
 	$eventID = $row['eventID'];
