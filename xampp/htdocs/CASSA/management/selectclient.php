@@ -32,6 +32,7 @@
      
         $clientID = $_POST['clientID'];												// Retrieve the search value.	
 	$queryType = $_POST['queryType'];
+        $startRow = $_POST['startRow'];
    
         //$_SESSION['errMsg'] = "";
         
@@ -59,7 +60,8 @@ if($queryType == 0)
          
    elseif ($queryType == 1)
     {
-        ajax_client_Summary_table($db, $startRow, $clientID);
+       //params = "clientID=" + clientID + "&queryType=1&startRow=0"; 
+       ajax_client_Summary_table($db, $startRow, $clientID);
     }
     
      elseif ($queryType == 2)
@@ -68,6 +70,8 @@ if($queryType == 0)
          $query = "Delete from client WHERE clientID = ";
          $query .= $clientID;
          $result1 = $db->query($query);
+         $rowsAffected = $db->affected_rows;
+        echo $rowsAffected. ' Record was successfully deleted.';
          $startRow = 0;
          $surname = "";
          ajax_client_table_basic($db, $startRow, $surname);
@@ -129,7 +133,7 @@ function ajax_client_table_basic($db, $startRow,$surname)
             echo '<td id="phoneCell">' . $row1['mobile'] . '</td>';
             echo '<td id="userName">' . $row1['username'] . '</td>';
             echo '<td id="Buttons"><img align ="left" src="../images/buttons/query.png" width="18" height="18"';
-            echo 'alt="Retrieve data for this item" onclick="" />';
+            echo 'alt="Retrieve data for this item" onclick="getClientInfo(' . $row1['clientID']. ')" />';
             echo '<img align ="left" src="../images/buttons/delete_up.png" width="18" height="18"';
             echo 'alt="Delete This User" onclick="deleteUser(' . $row1['clientID'] .')" />';
             echo '<img align ="left" src="../images/buttons/addto.png" width="18" height="18"';
@@ -198,53 +202,45 @@ function ajax_client_Summary_table($db, $startRow, $clientID)
  
     $query = "SELECT * FROM client WHERE clientID =" . $clientID . ";";
     $result1 = $db->query($query);
-    $numClients = $result1->num_rows;
+    $numClient = $result1->num_rows;
     
-    $query = "SELECT * FROM client ORDER by last_name ASC LIMIT " . $startRow . ",5;";   //Create the general select query.
-    $result = $db->query($query);
-   
+    if($numClient == 1)
+        {
+            $row1 = $result1->fetch_array(MYSQLI_BOTH);
             echo '<table id= "clientTableList">';
+            echo '<tr id="' . $row1['clientID'] . '">';
+            echo '<td id="R1" >Client ID Number </th>';
+             echo '<td id="clientID">' . $row1['clientID'] .'</td>';
+            echo '</tr>';
             echo '<tr>';
-            echo '<th id="h" >Client Name </th>';
-            echo '<th id="h">Client Email </th>';
-            echo '<th id="h">Client Phone </th>';
-            echo '<th id="h" >Username</th>';
+            echo '<td id="R1" >First Name </th>';
+            echo '<td id="firstName">' . $row1['first_name'] .'</td>';
             echo '</tr>';
-  	
-//While Loop starts here - 
-// Retrieve the data for the table. There should only be one row.
-        while($row1 = $result->fetch_array(MYSQLI_BOTH))							
-        {
-            
-            echo '<tr id=' . $row1['clientID'] . '">';
-            echo '<td id="nameCell">' . $row1['first_name'] . " " . $row1['last_name'] . '</td>';
-            echo '<td id="emailCell">' . $row1['email'] . '</td>';
-            echo '<td id="phoneCell">' . $row1['mobile'] . '</td>';
-            echo '<td id="userName">' . $row1['username'] . '</td>';
+            echo '<tr>';
+            echo '<td id="R1" >Last Name </th>';
+            echo '<td id="lastName">'. $row1['last_name'] . '</td>';
             echo '</tr>';
+            echo '<tr>';
+            echo '<td id="R1">Client Email </th>';
+            echo '<td id="email">' . $row1['email'] . '</td>';
+            echo '</tr>';
+            echo '<tr>';
+            echo '<td id="R1">Client Phone </th>';
+            echo '<td id="phone">' . $row1['mobile'] . '</td>';
+            echo '</tr>';
+            echo '<tr>';
+            echo '<td id="R1" >Username</th>';
+            echo '<td id="userName1">' . $row1['username'] . '</td>';
+            echo '</tr>';
+            echo '<tr>';
+            echo '<td id="R1" >Active</th>';
+            echo '<td id="userActive">' . $row1['username'] . '</td>';
+            echo '</tr>';
+            echo '</table>';
+            echo '<br />';
         }
-//While Loop ends here.
-
-
-        echo '</table>';
-        echo '<br />';
-        $startRowF = $startRow + 5;
-        $backStartRow = $startRow - 5;
+        else {echo 'No data available';}
         
-        if($startRowF >= $numClients)
-        {
-            $startRowF = $numClients - 1;
-        }
-        
-        if ($backStartRow < 0)
-        {
-            $backStartRow = 0;
-        }
-        echo '<a href="#" onclick="getClientNext5(' . $backStartRow . ')">Prev</a> &nbsp&nbsp&nbsp';
-        echo '<a href="#" onclick="getClientNext5(0)">Beginning</a> &nbsp&nbsp&nbsp';
-        echo '<a href="#" onclick="getClientNext5(' . $startRowF . ')">Next</a>';
-
- 
 }
 
 
