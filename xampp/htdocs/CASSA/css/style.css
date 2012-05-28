@@ -294,11 +294,6 @@ body
 	height: 1px;
 	font-size: 2px;
 }
-.button
-{
-	height: 30px;
-	width: 30px;
-}
 .error
 {
 	color: red;
@@ -615,26 +610,7 @@ p
 
 
 
-/* PIZZA TABLE */
-.pizzaTable
-{
-	border: 1px solid black;
-	width: 680px;
-	border-collapse: collapse;
-	line-height: 22pt;
-}
-.pizzaTable caption
-{
-	font-size: 15pt;
-	font-weight: bold;
-	text-align: center;
-}
-.MANheader
-{
-	font-weight: bold;
-	background-color: black;
-	color: white;
-}
+
 
 
 
@@ -659,33 +635,66 @@ p
 
 	position: relative;
 	left: 200px;
-}
 
-/* PIZZA SUMMARY */
-#summaryPizza
-{
-	width: 680px;
-	padding: 30px;
-	border: 3px solid black;
-	text-align: left;
 }
-.pizzaOrder
-{
-	width: 650px;
-	padding: 50px;
-	text-align: left;
-	border-collapse: collapse;
-	line-height: 25pt;
-}
-
-
 
 /* Event Page */
+
+
+
 #tableEventDetail
 { 
 	width:700px;
+	    
+	
 	border-collapse: collapse;
+	
 	border-spacing: 0px;
+  
+		
+}
+
+#tableEventDetail td 
+
+{ 
+} 
+
+
+#headCell_left
+{
+	background-color: black;
+	color:white;
+	font-weight: bold;
+	text-align:left;
+	height: 40px;
+	width: 6500px;
+	padding:0;
+	padding-left: 10px;
+	
+	
+	
+	
+}
+
+#headCell_middle
+{
+	background-color: black;
+	color:white;
+	height: 40px;
+	width: 10px;
+	
+}		
+
+
+#headCell_right
+{
+	background-color: black;
+	color:white;
+	height: 40px;
+	width: 40px;
+	
+	text-align: right;
+	padding-right:5px;
 }
 #titleCell
 {
@@ -696,36 +705,10 @@ p
 	width: 300px;
 	
 	padding-left: 10px;
-}
-	#headCell_left
-	{
-		background-color: black;
-		color:white;
-		font-weight: bold;
-		text-align:left;
-		height: 40px;
-		width: 6500px;
-		padding:0;
-		padding-left: 10px;
-	}
-	#headCell_middle
-	{
-		background-color: black;
-		color:white;
-		height: 40px;
-		width: 10px;
-		
-	}		
-	#headCell_right
-	{
-		background-color: black;
-		color:white;
-		height: 40px;
-		width: 40px;
-		
-		text-align: right;
-		padding-right:5px;
-	}
+}	
+
+
+
 #detailCell
 {
 	background-color: #D0D0D0;
@@ -735,6 +718,8 @@ p
 	text-align: left;
 	padding:0px,0px,0px,10px;
 }
+
+
 #pad
 {
 	background-color: #D0D0D0;
@@ -745,12 +730,14 @@ p
 }
 
 
+
 #eventDetail
 {
 	width: 700px;
 	border: 1px solid blue;
 	border-spacing: 0px;
 	padding:5px;
+	
 }
 
 .headText {
@@ -888,3 +875,41 @@ p
 				position: relative;
 				right: 45px;
 			}
+                        
+ #clientTableList
+ {
+     width:700px;
+     padding:10;
+     border-collapse: collapse;
+     
+ }
+ 
+ #clientTableList th
+ {
+        font-weight: bold; 
+	font-size: 12px; 
+	color: #FFFFFF;
+	background-color: #000000;
+	text-align: left;
+	padding-left: 10px;
+	font-family: Arial, Helvetica, sans-serif;
+	border-spacing: 10px;
+	height: 25px;
+ }
+ 
+#nameCell, #emailCell, #phoneCell, #userName
+ {
+        text-align: left;
+	padding-left: 10px;
+        
+	font-family: Arial, Helvetica, sans-serif;
+	height: 20px;
+        padding-top:5px;
+        padding-bottom:5px;
+        border-color:black;
+        border-bottom-style: solid;
+        border-bottom-width:1px;
+        border-bottom-color: #ccccff;  
+ }       
+         
+
