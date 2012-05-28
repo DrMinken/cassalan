@@ -137,8 +137,6 @@ function searchFunction()
 //************************************************************************************************
 function deleteUser(clientID)
 {
-  
-   
     var divID = document.getElementById("clientTable");
     var params = "clientID=" + clientID + "&queryType=2&startRow=0";
     var message = "About to delete one user record. Proceed?"
@@ -150,6 +148,22 @@ function deleteUser(clientID)
      else{
          createRequest(clientID , params, divID);
         }
+}
+
+//*************************************************************************************************
+
+//************************************************************************************************
+// Function to find a client
+//
+//************************************************************************************************
+function getClientInfo(clientID)
+{
+  
+   
+    var divID = document.getElementById("clientDetails");
+    var params = "clientID=" + clientID + "&queryType=1&startRow=0";
+    createRequest(clientID , params, divID);
+        
 }
 
 //*************************************************************************************************
