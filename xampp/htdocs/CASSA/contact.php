@@ -2,6 +2,7 @@
 	session_start();							// Start/resume THIS session
 	$_SESSION['title'] = "Contact | MegaLAN"; 		// Declare this page's Title
 	include("includes/template.php"); 					// Include the template page
+	include("includes/conn.php"); 	
 ?>
 
 
@@ -43,30 +44,60 @@
 		<img src='images/layers/clubroom.jpg' width='120px' height='146px' />
 		<br />
 	</div>
-	<div style='float: right; width: 500px; margin-left: 15px; word-spacing: 2px; border: 0px solid black'>
-		We are located on ECU Mt. Lawley campus, room 03.202 (upstairs next to the lecture theatre). We have the screen on top of our door so you won’t miss us.<br /><br />
-		 
-		We aim to be open most of the day during university hours. You can buy drinks and candy from us here.
+<div style='float: right; width: 500px; margin-left: 15px; word-spacing: 2px; border: 0px solid black'>
+<br/>
+<br/>
+	
+<?php
+
+	// FETCH ALL NEWS
+	$query = "SELECT * FROM `contact`";
+	$result = $db->query($query);
+
+	for ($i=0; $i<$result->num_rows; $i++)
+	{
+		$row = $result->fetch_assoc();
+		$contactID = $row['contactID'];
+		$blur = $row['blur'];
+		$president = $row['president'];
+		$pre_irc = $row['pre_irc'];
+		$v_president = $row['v_president'];
+		$vpre_irc = $row['vpre_irc'];
+		$secretary = $row['secretary'];
+		$sec_irc = $row['sec_irc'];
+		$treasurer = $row['treasurer'];
+		$tre_irc = $row['tre_irc'];
+		$tech_admin = $row['tech_admin'];
+		$tec_irc = $row['tec_irc'];
+		$webmaster = $row['webmaster'];
+		$web_irc = $row['web_irc'];
+		$social_events = $row['social_events'];
+		$soc_irc = $row['soc_irc'];
+
+		echo '<div style="line-height: 18pt;">'.$blur.'<br /></div>';
+	}
+
+			?>
 		<br />
-	</div>
 </div>
 
 
-
+<br />
 <br />
 
 
 
-<div style='line-height: 18pt; word-spacing: 2px;'>
+<div style='line-height: 18pt; word-spacing: 2px; float: left; ' >
 	&nbsp;<br />
-	<b>Executive Committee for 2012</b><br />
-	<b>Rob McKnight</b> President (IRC: Funkballs)<br />
-	<b>Simon Vin</b> Vice-President (IRC: rith)<br />
-	<b>Luke Spartalis</b> Secretary (IRC: Radx)<br />
-	<b>Joshua Norris</b> Treasurer (IRC: falcon)<br />
-	<b>Michael Alderman</b> Tech-Admin (IRC: Cake_Man)<br />
-	<b>Jason Baseley</b> Webmaster (IRC: Spartan101)<br />
-	<b>Alexandra Helens</b> Social Events Coordinator (IRC: Eskilla)<br />
+	<b>Executive Committee</b><br />
+	<b><?php echo $president; ?></b> President (IRC: <?php echo $pre_irc; ?>)<br />
+	<b><?php echo $v_president; ?></b> Vice-President (IRC: <?php echo $vpre_irc; ?>)<br />
+	<b><?php echo $secretary; ?></b> Secretary (IRC: <?php echo $sec_irc; ?>)<br />
+	<b><?php echo $treasurer; ?></b> Treasurer (IRC: <?php echo $tre_irc; ?>)<br />
+	<b><?php echo $tech_admin; ?></b> Tech-Admin (IRC: <?php echo $tec_irc; ?>)<br />
+	<b><?php echo $webmaster; ?></b> Webmaster (IRC: <?php echo $web_irc; ?>)<br />
+	<b><?php echo $social_events; ?></b> Social Events Coordinator (IRC: <?php echo $soc_irc; ?>)<br />
+</div>
 </div>
 
 
