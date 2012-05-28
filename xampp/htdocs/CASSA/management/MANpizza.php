@@ -244,24 +244,7 @@ $(document).ready(function(){
 	$row = $result->fetch_assoc();
 
 	echo "<input type='hidden' name='currentMenu' id='currentMenu' value='".$row['menuID']."' />";
-	/*
-	<select name="currentMenu" id="currentMenu" onchange="getRequest(this.value)">
-	for ($i=0; $i<$result->num_rows; $i++) 
-	{	
-		// Now we can output the option fields to populate the list box
-		$row = $result->fetch_assoc();
-		
-		if ($i==0)
-		{
-			echo '<option value="'.$row['menuID'].'" selected="selected">' .$row['menu_name']. '</option>';
-		}
-		else
-		{
-			echo '<option value="'.$row['menuID'].'">' .$row['menu_name']. '</option>';
-		}
-	}
-	<select>
-	*/
+
 ?>
 
 
@@ -312,9 +295,9 @@ $(document).ready(function(){
 
 <div id='orderSummaryDIV'>
 <a class='inlineB' href='#summaryPizza'>
-<img class='pointer' border='0'
+<img class='pointer' border='0' height="50" width="50"
 	 src='../images/layers/form.png' alt='Click here to see pizza order summary' 
-	 onclick='window.location.href="pizzaSummary.php"' />
+	 onclick='window.location.href="pizzaSummary.php"'  />
 	 
 	 Click here to view this events order summary</a>
 </div>
