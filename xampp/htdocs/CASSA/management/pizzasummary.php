@@ -11,8 +11,8 @@
 // Name of File: pizzasummary.php
 // Revision: 1.0
 // Date: 
-// Author: 
-// Modified: 
+// Author: Luke Spartalis
+// Modified: Quintin Maseyk
 
 //***********************************************************
 //*************** Start of PIZZA SUMMARY ******************* -->
