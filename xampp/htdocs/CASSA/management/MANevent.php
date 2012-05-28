@@ -327,17 +327,17 @@ for ($i = 0; $i < $result->num_rows;$i++)
                 $deleteUp = 'this.src="../images/buttons/delete_up.png"';
 			  			
         echo' <img src="../images/buttons/refresh_dwn.png" width="30" height="30"';
-        echo' alt="" onclick="refreshEvent()" ';
+        echo' alt="Refresh The List Box" onclick="refreshEvent()" ';
         echo 'onmouseover='.$refreshUp.' onmouseout='. $refreshDwn .' />';
         
                 
         echo ' <img src="../images/buttons/new_dwn.png" width="30" height="30"';
-        echo ' alt="" onclick="addEvent()" ';
+        echo ' alt="Add a New Event" onclick="addEvent()" ';
         
         echo 'onmouseover='.$newUp.' onmouseout='.$newDwn.' />';
 
         echo' <img src="../images/buttons/delete_dwn.png" width="30" height="30"';
-        echo' alt="" onclick="deleteEvent()" ';
+        echo' alt="Delete the selected event" onclick="deleteEvent()" ';
         echo 'onmouseover='.$deleteUp.' onmouseout='. $deleteDwn .' />';
         echo '</P>';
         echo '</FORM>';
