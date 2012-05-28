@@ -17,6 +17,50 @@
 
 
 
+		if(!isset($_POST['contactID']))
+	{
+
+
+	/*	 $query = "SELECT * FROM contact";
+		$result = $db->query($query);
+		$row = $result->fetch_assoc();
+
+		$FAQID = $_POST['contactID'];	
+		$blur = $row['blur'];
+		$president = $row['president']; */
+
+		 $blur = "";
+			
+		 $president = "";
+		 $pre_irc = "";
+
+		 $v_president = "";
+		 $vpres_irc = "";
+
+		 $secretary = "";
+		 $sec_irc = "";
+
+		 $treasurer = "";
+		 $tre_irc = "";
+
+		 $tech_admin = "";
+		 $tec_irc = "";
+
+		 $webmaster = "";
+		 $web_irc = "";
+
+		 $social_events = "";
+		 $soc_irc = "";
+
+
+
+
+
+		
+	} 
+
+	
+	 
 
 
 
@@ -98,41 +142,41 @@
 		</td>
 <td>
 			<textarea class='addNoticeBackColor addNoticeTextArea' 
-			name='blur' rows='10' maxlength='1024' /></textarea>
+			name='blur' rows='10' maxlength='1024' /><?php echo $blur; ?></textarea>
 		</td>
 	</tr>
 
 
-
+	
 
 	<table border="1" bordercolor="#000000" style="background-color:#FFFFFF" width="400" cellpadding="3" cellspacing="3">
 	<tr>
-		<td>President:				<input type='text' name='president' maxlength='64' value=''/></td>
-		<td>President IRC:			<input type='text' name='pre_irc' maxlength='64' value=''/></td>
+		<td>President:				<input type='text' name='president' maxlength='64' value='<?php echo $president; ?>'/></td>
+		<td>President IRC:			<input type='text' name='pre_irc' maxlength='64' value='<?php echo $pre_irc; ?>'/></td>
 	</tr>
 	<tr>
-		<td>Vice President:			<input type='text' name='v_president' maxlength='64' value=''/></td>
-		<td>Vice President IRC:		<input type='text' name='vpre_irc' maxlength='64' value=''/></td>
+		<td>Vice President:			<input type='text' name='v_president' maxlength='64' value='<?php echo $v_president; ?>'/></td>
+		<td>Vice President IRC:		<input type='text' name='vpre_irc' maxlength='64' value='<?php echo $vpres_irc; ?>'/></td>
 	</tr>
 	<tr>
-		<td>Secretary:				<input type='text' name='secretary' maxlength='64' value=''/></td>
-		<td>Secretary IRC:			<input type='text' name='sec_irc' maxlength='64' value=''/></td>
+		<td>Secretary:				<input type='text' name='secretary' maxlength='64' value='<?php echo $secretary; ?>'/></td>
+		<td>Secretary IRC:			<input type='text' name='sec_irc' maxlength='64' value='<?php echo $sec_irc; ?>'/></td>
 	</tr>
 	<tr>
-		<td>Treasurer:				<input type='text' name='treasurer' maxlength='64' value=''/></td>
-		<td>Treasurer IRC:			<input type='text' name='tre_irc' maxlength='64' value=''/></td>
+		<td>Treasurer:				<input type='text' name='treasurer' maxlength='64' value='<?php echo $treasurer; ?>'/></td>
+		<td>Treasurer IRC:			<input type='text' name='tre_irc' maxlength='64' value='<?php echo $tre_irc; ?>'/></td>
 	</tr>
 	<tr>
-		<td>Tech Admin:				<input type='text' name='tech_admin' maxlength='64' value=''/></td>
-		<td>Tech Admin IRC:			<input type='text' name='tec_irc' maxlength='64' value=''/></td>
+		<td>Tech Admin:				<input type='text' name='tech_admin' maxlength='64' value='<?php echo $tech_admin; ?>'/></td>
+		<td>Tech Admin IRC:			<input type='text' name='tec_irc' maxlength='64' value='<?php echo $tec_irc; ?>'/></td>
 	</tr>
 	<tr>
-		<td>Webmaster:				<input type='text' name='webmaster' maxlength='64' value=''/></td>
-		<td>Webmaster IRC:			<input type='text' name='web_irc' maxlength='64' value=''/></td>
+		<td>Webmaster:				<input type='text' name='webmaster' maxlength='64' value='<?php echo $webmaster; ?>'/></td>
+		<td>Webmaster IRC:			<input type='text' name='web_irc' maxlength='64' value='<?php echo $web_irc; ?>'/></td>
 	</tr>
 	<tr>
-		<td>Social Coordinator:		<input type='text' name='soical_events' maxlength='64' value=''/></td>
-		<td>Social Coordinator IRC:	<input type='text' name='soc_irc' maxlength='64' value=''/></td>
+		<td>Social Coordinator:		<input type='text' name='soical_events' maxlength='64' value='<?php echo $social_events; ?>'/></td>
+		<td>Social Coordinator IRC:	<input type='text' name='soc_irc' maxlength='64' value='<?php echo $soc_irc; ?>'/></td>
 	</tr>
 </table>
 
