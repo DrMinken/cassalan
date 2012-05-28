@@ -1,3 +1,6 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+
 <?php 
 	session_start();
 
@@ -14,64 +17,6 @@
 	$_SESSION['title'] = "Manage Pizzas | MegaLAN";		// Declare this page's Title
 	include("../includes/template.php"); 				// Include the template page
 	include("../includes/conn.php");					// Include database connection
-	
-
-
-	if (isset($_POST['pizzaIDedit'])) // Update menu
-	{
-		$pizzaID = $_POST['pizzaIDedit'];
-		$pizza_name = $_POST['pizza_name'];
-		$description = $_POST['description'];
-		$price = $_POST['price'];
-
-		$errors = array();
-
-
-		if (empty($pizza_name) || empty($price) || empty($description)) // check if fields are empty
-		{
-			$errors[] = 'All fields must contain values';
-		}
-
-		else
-		{
-			// check if pizza_name is over 32 chars
-			if (strlen($pizza_name) > 32)
-			{
-				$errors[] = 'Name is too long, 32 characters only';
-			}
-	
-			//check if the price is a number
-			if (!is_numeric($price))
-			{
-				$errors[] = 'Price must be a number.';
-			}
-			else
-			{
-				// check if it is above 0
-				if ($price <= 0) 
-				{
-					$errors[] = 'Price must be above $0';
-				}
-			}
-
-			// check is description is over 128
-			if (strlen($description) > 128) 
-			{
-				$errors[] = 'Description is too long, 128 characters only';
-			}
-		}
-		// end of validation - if no errors
-		if (empty($errors)) 
-		{
-			$query4 = "UPDATE pizza_type SET pizza_name='".$_POST['pizza_name']."', description='".$_POST['description']."', price='".$_POST['price']."' WHERE pizzaID='".$_POST['pizzaIDedit']."'";
-			$result4 = $db->query($query4);
-		}
-
-		if (($errors))
-		{
-			echo "<script type='text/javascript'> var answer = confirm('$errors')</script>"; 
-		}
-	}
 ?>
 
 <!-- //******************************************************
@@ -86,16 +31,9 @@
 
 //*************** Start of CREATE PIZZA ******************* -->
 
-<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 
 <script type='text/javascript'>
-
-function showCreate()
-{
-	// DISPLAY CREATE PIZZA FORM
-	document.getElementById("createPizza").style.display = 'block';
-}
 function editRow(x)
 {
 	// DISPLAY [this] ROW FROM TEXT -> EDITABLE
@@ -108,32 +46,49 @@ function closeRow(x)
 	document.getElementById(x+"_normal").style.display = 'block';
 	document.getElementById(x+"_edit").style.display = 'none';
 }
-function saveRow(x)
-{	
-	var answer = confirm("Please confirm new details");
-	if (answer == true)
-	{
-		// SEND [this] FORM TO SERVER
-		document.forms["formSR_" + x].submit();
-	}
-}
-function deleteRow(x)
+function updateRow(index, message)
 {
-	var answer = confirm("Are you sure you want to delete?");
-	if (answer == true)
-	{
-		// SEND [this] FORM TO SERVER
-		document.forms["formDEL_" + x].submit();
-	}
-}
-
-function deletemenuRow(params)
-{
-	var answer = confirm("Are you sure you want to delete this item from the menu?");
+	var answer = confirm(message);
 	if (answer == true)
 	{
 		// SETUP FORM WITH INPUTS TO SEND TO SERVER
+		var id = document.getElementById('pizzaID_'+index).value;
+		var name = document.getElementById('pizza_name_'+index).value;
+		var description = document.getElementById('description_'+index).value;
+		var price = document.getElementById('price_'+index).value;
+		var params = "i="+id+"&name="+name+"&description="+description+"&price="+price+"&action=updateRow";
 
+		if (window.XMLHttpRequest)
+		{	
+			// code for mainstream browsers
+			xmlhttp=new XMLHttpRequest();
+		}
+		else
+		{
+			// code for earlier IE versions
+			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		xmlhttp.onreadystatechange=function()
+		{
+			if (xmlhttp.readyState==4 && xmlhttp.status==200)
+			{
+				document.getElementById("pizza_menuTable").innerHTML=xmlhttp.responseText;
+			}
+		}
+
+		//Now we have the xmlhttp object, get the data using AJAX.
+		xmlhttp.open("POST","selectPizza.php",true);
+		xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xmlhttp.setRequestHeader("Content-length", params.length);
+		xmlhttp.setRequestHeader("Connection", "close");
+		xmlhttp.send(params);
+	}
+}
+function makeRequest(params, message)
+{
+	var answer = confirm(message);
+	if (answer == true)
+	{
 		if (window.XMLHttpRequest)
 		{	
 			// code for mainstream browsers
@@ -193,6 +148,50 @@ function getRequest(params, action)
 	xmlhttp.send(params);
 }
 
+
+function createPizza()
+{
+	if (window.XMLHttpRequest)
+	{	
+		// code for mainstream browsers
+		xmlhttp=new XMLHttpRequest();
+	}
+	else
+	{
+		// code for earlier IE versions
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xmlhttp.onreadystatechange=function()
+	{
+		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			document.getElementById("pizza_menuTable").innerHTML=xmlhttp.responseText;
+		}
+	}
+
+	// GET FORM OBJECTS
+	var name = document.getElementById('new_pizza_name').value;
+	var description = document.getElementById('new_description').value;
+	var price = document.getElementById('new_price').value;
+
+
+	//Now we have the xmlhttp object, get the data using AJAX.
+	params = "name=" + name + "&description=" + description + "&price=" + price + "&action=createPizza";		
+	xmlhttp.open("POST","selectPizza.php",true);
+	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xmlhttp.setRequestHeader("Content-length", params.length);
+	xmlhttp.setRequestHeader("Connection", "close");
+	xmlhttp.send(params);
+	parent.jQuery.colorbox.close();
+}
+$(document).ajaxStop(function(){
+	window.location.reload();
+});
+
+$(document).ready(function(){
+	$(".inline").colorbox({inline:true, width:"300px", height:"350px"});
+	$(".inlineB").colorbox({inline:true, width:"700px", height:"900px"});
+});
 </script>
 
 </head>
@@ -202,104 +201,30 @@ function getRequest(params, action)
 
 
 
+
+
 <!-- Main Content [left] -->
 <div id="content">
-	<h1>Manage Pizza</h1><br /><br />
 
 
 
 
 
-
-
-<table class='pizzaTable' border='0'>
-<caption align='left'>Pizza List</caption>
-<tr>
-	<td width='140px' class='MANheader'>&nbsp;</td>
-	<td width='200px' class='MANheader'>Pizza Name</td>
-	<td width='300px' class='MANheader'>Description</td>
-	<td width='80px' class='MANheader'>Price ($)</td>
-</tr>
-
-
-<?php 
-	$query = "SELECT * FROM pizza_type";
-	$result = $db->query($query);
-
-
-for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the database
-{
-	$row = $result->fetch_assoc();
-
-	echo "<tr id='".$i."_normal'>";
-		echo "<td>";
+<!-- Check for errors and print out message -->
+<?php	
+	if (isset($_SESSION['errMsg']))
+	{
+		echo $_SESSION['errMsg'];
+		unset($_SESSION['errMsg']);
+	}
 ?>
-		<!-- ADD PIZZA TO 'current menu' -->
-		<img class="pointer button" 
-			 src="../images/buttons/add.png" 
-			 alt="Add" 
-			 onclick="getRequest('<?php echo $row['pizzaID']; ?>', 'add')" />
-
-		<!-- CLICK TO MAKE THIS ROW EDITABLE -->
-		<img class='pointer button' 
-			 src='../images/buttons/edit_LSM.png' 
-			 alt='Edit' 
-			 onclick='editRow("<?php echo $i; ?>")' />
-		
-		<!-- DELETE PIZZA ENTIRELY -->
-		<img class='pointer button'
-			 src='../images/buttons/delete.png' 
-			 alt='Delete' 
-			 onclick='deletemenuRow("pizzaID=<?php echo $row['pizzaID']; ?>&action=deletePizzaType")' />
-<?php
-		echo "</td>";
-		echo "<td>"	. $row['pizza_name']."</td>";
-		echo "<td>" . $row['description'] . "</td>";
-		echo "<td>" . $row['price'] . "</td>";
-	echo "</tr>";
-
-
-
-	// [this] EDITABLE ROW
-	// CREATE FORM FOR SUBMISSION
-	echo "<tr id='".$i."_edit' style='display: none;'>";
-		echo "<form name='formSR_".$i."' method='POST' action='MANpizza.php' >";
-		echo "<td>";
-?>
-		<img class='pointer button'
-			 src='../images/buttons/save.png' 
-			 alt='Save' 
-			 onclick='saveRow("<?php echo $i; ?>")' />
-
-		<img class='pointer button'
-			 src='../images/buttons/cross.png' 
-			 alt='Cancel' 
-			 onclick='closeRow("<?php echo $i; ?>")' />
-
-<?php
-		echo "<input type='hidden' name='pizzaIDedit' id='pizzaIDedit' value='".$row['pizzaID']."' />";
-		echo "</td>";
-
-		echo "<td><input type='text' name='pizza_name' id='pizza_name' value='".$row['pizza_name']."' size='28' /></td>";
-		echo "<td><input type='text' name='description' id='description' value='".$row['description']."' size='45' /></td>";
-		echo "<td><input type='text' name='price' id='price' value='".$row['price']."' size='5' maxlength='5' /></td>";
-	echo "</tr>";
-	echo "</form>";
-}
-?>
-</table>
-
-<!-- img class='pointer button'
-	 src='../images/buttons/save.png' 
-	 alt='Create a new pizza' 
-	 onclick='showCreate()' / -->
 
 
 
 
 
-<br/><hr /><br />
-
+<!-- HREF : OPENS INLINE 'CREATE NEW PIZZA' FORM -->
+<a class='inline' href='#createPizza'>Create new pizza</a>
 
 
 
@@ -318,7 +243,6 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 	$result = $db->query($query);
 	$row = $result->fetch_assoc();
 
-	echo "<h2 align='center'>Current Menu: <font size='2'>".$row['menu_name']."</font></h2>";
 	echo "<input type='hidden' name='currentMenu' id='currentMenu' value='".$row['menuID']."' />";
 	/*
 	<select name="currentMenu" id="currentMenu" onchange="getRequest(this.value)">
@@ -344,7 +268,6 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 
 
 
-
 <!-- DISPLAY AJAX: [this] PIZZA MENU -->
 <div id='pizza_menuTable' style='clear: right;'></div>
 
@@ -352,99 +275,135 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 
 
 
+<!-- CREATE A NEW PIZZA FORM -->
+<div style='display: none;'>
+	<div id='createPizza'>
+	<h3>Create a new pizza</h3>
 
 
+	<br /><br />
 
 
-<?php
-
-// Validation
-	if (isset($_POST['pizza_nameC'] , $_POST['descriptionC'] , $_POST['priceC']))
-	{
-		$errors = array();
-
-		$pizza_name = $_POST['pizza_nameC'];
-		$description = $_POST['descriptionC'];
-		$price = $_POST['priceC'];
-
-
-		if (empty($pizza_name) || empty($price) || empty($description)) // check if fields are empty
-		{
-			$errors[] = 'All fields must contain values';
-		}
-
-		else
-		{
-			// check if pizza_name is over 32 chars
-			if (strlen($pizza_name) > 32)
-			{
-				$errors[] = 'Name is too long, 32 characters only';
-			}
+		Pizza Name:<br />
+		<input type="text" name="new_pizza_name" id="new_pizza_name" maxlength="32" size="32" />
+		<br /><br />
+		
+		Description:<br />
+		<input type="text" name="new_description" id="new_description" maxlength="128" size="32" />
+		<br /><br />
+		
+		Price $:<br />
+		<input type="text" name="new_price" id="new_price" maxlength="5" size="5" />
+		<br /><br />
 	
-			//check if the price is a number
-			if (!is_numeric($price))
-			{
-				$errors[] = 'Price must be a number.';
-			}
-			else
-			{
-				// check if it is above 0
-				if ($price <= 0) 
-				{
-					$errors[] = 'Price must be above $0';
-				}
-			}
+		<input type="button" name="submit" value="Add Pizza" onclick="createPizza()" />
+	</div>
+</div>
 
-			// check is description is over 128
-			if (strlen($description) > 128) 
-			{
-				$errors[] = 'Description is too long, 128 characters only';
-			}
-		}
-		// end of validation - if no errors
-		if (empty($errors)) 
+
+
+
+
+<br /><br/><hr /><br /><br />
+
+
+
+
+
+<div id='orderSummaryDIV'>
+<a class='inlineB' href='#summaryPizza'>
+<img class='pointer' border='0'
+	 src='../images/layers/form.png' alt='Click here to see pizza order summary' 
+	 onclick='window.location.href="pizzaSummary.php"' />
+	 
+	 Click here to view this events order summary</a>
+</div>
+
+
+
+
+
+<div style='display: none;'>
+	<div id='summaryPizza'>
+	<br />
+	<?php 
+		// GET EVENT WHERE EVENT IS NEXT TO START
+		$get = "SELECT * FROM event WHERE event_completed=0 ORDER BY eventDate ASC";
+		$result = $db->query($get);
+		$row = $result->fetch_assoc();
+		$eventID = $row['eventID'];
+
+
+		// GET [this] EVENTS MENU
+		$getmenuID = "SELECT * FROM pizza_menu WHERE eventID='".$eventID."'";
+		$result = $db->query($getmenuID);
+		$row = $result->fetch_assoc();
+		$menuID = $row['menuID'];
+
+
+		// GET [this] EVENTS MENU PIZZA ORDER SUMMARY
+		$getpizzaID = "SELECT DISTINCT pizzaID FROM pizza_order WHERE menuID='".$menuID."' ORDER BY pizzaID ASC";
+		$result = $db->query($getpizzaID);
+
+
+		// FOR EVERY 'DISTINCT' PIZZA TYPE, FETCH THE SUM OF EACH
+		for ($i=0; $i<$result->num_rows; $i++) 
 		{
-	
+			$row = $result->fetch_assoc();
+			$thisPizza = $row['pizzaID'];
+			
+			// GET THE SUM OF [this] PIZZA TYPE
+			$sum = "SELECT sum(quantity) as pizzaSum FROM pizza_order WHERE pizzaID='".$thisPizza."'";
+			$resultSum = $db->query($sum);
+			$rowSum = $resultSum->fetch_assoc();
 
-			// INSERT NEW PIZZA
-			$query = "INSERT INTO pizza_type (pizza_name, description, price) VALUES ('".$_POST['pizza_nameC']."', '".$_POST['descriptionC']."', '".$_POST['priceC']."')";
-			$result = $db->query($query);
-			$db->close();
-		}
-	}
+			// [this] PIZZA TYPE
+			$pizzaID[$i] = $thisPizza;
 
-?>
-
-
-
-
-
-<div id='createPizza' style='display: none;' >
-	<!-- Check for errors and print out message -->
-	<?php	
-		if (!empty($errors)) 
-		{	
-			foreach ($errors as $error)
-			{
-				echo '<div class="error">';
-				echo '<strong>*' . $error .  '</strong><br />';
-				echo '</div>';
-			}
+			// [this] PIZZA TYPE's QUANTITY
+			$pizzaSum[$i] = $rowSum['pizzaSum'];
 		}
 	?>
 
-	<form name="CreatePizzaForm" action="MANpizza.php" method="post">
-		Pizza Name:<br />
-		<input type="text" name="pizza_nameC" maxlength="32" size="32" /><br /><br />
-		
-		Pizza Description:<br />
-		<input type="text" name="descriptionC" maxlength="128" size="32" /><br /><br />
-		
-		Pizza Price:<br />
-		<input type="text" name="priceC" maxlength="4" size="4" /><br /><br />
-	
-		<input type="submit" name="submit" value="Add Pizza" />
-	</form> 
+	<table class='pizzaOrder'>
+	<tr>
+		<td class='MANheader' width='300px'>Name</td>
+		<td class='MANheader' width='120px'>QTY</td>
+		<td class='MANheader' width='120px'>Price ($)</td>
+		<td class='MANheader' width='140px'>Total ($)</td>
+	</tr>
+	<?php
+		$grandTotal = 0;
+		// DISPLAY SUM FOR THIS ORDER
+		for ($i=0 ; $i<sizeof($pizzaID); $i++)
+		{
+			// GET [this] PIZZA's NAME
+			$get = "SELECT `pizza_name` FROM pizza_type WHERE pizzaID='".$pizzaID[$i]."'";
+			$result = $db->query($get);
+			$row = $result->fetch_assoc();
+			$pizzaName = $row['pizza_name'];
+			
+			
+			// GET [this] PIZZA's PRICE
+			$get = "SELECT `price` FROM pizza_type WHERE pizzaID='".$pizzaID[$i]."'";
+			$result = $db->query($get);
+			$row = $result->fetch_assoc();
+			$price = $row['price'];
+			$total = $pizzaSum[$i] * $price;
+			$grandTotal = $grandTotal + $total;
+
+			echo '<tr>';
+			echo '<td>'.ucwords($pizzaName).'</td>';
+			echo '<td>'.$pizzaSum[$i].'</td>';
+			echo '<td>'.$price.'</td>';
+			echo '<td>'.$total.'</td>';
+			echo '</tr>';
+		}
+		echo '<tr><td colspan="4"><hr /></td></tr>';
+		echo '<tr><td colspan="4" align="right">GRAND TOTAL: $'.$grandTotal.'</td></tr>';
+	?>
+	</table>
+	</div>
 </div>
 
 

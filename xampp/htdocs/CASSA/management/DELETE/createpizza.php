@@ -11,9 +11,6 @@
 		}
 	}
 
-	$_SESSION['title'] = "Create Pizza | MegaLAN"; 		// Declare this page's Title
-	include("includes/template.php"); 					// Include the template page
-
 
 	// Validation
 	if (isset($_POST['pizza_name'] , $_POST['description'] , $_POST['price']))
@@ -87,17 +84,9 @@
 //*************** Start of CREATE PIZZA ******************* -->
 
 
-<html>
-<head></head>
-<body>
-<center>
-<div id='shell'>
-
-<!-- Main Content [left] -->
-<div id="content">
-
-
 <div id='createPizza'>
+<h3 align='center'>Create a new pizza</h3><br />
+
 	<!-- Check for errors and print out message -->
 	<?php	
 		if (!empty($errors)) 
@@ -110,46 +99,16 @@
 			}
 		}
 	?>
-
-	<form action="createpizza.php" method="post">
+	<form name="CreatePizzaForm" action="MANpizza.php" method="post">
 		Pizza Name:<br />
-		<input type="text" name="pizza_name" maxlength="32" size="32" /><br /><br />
+		<input type="text" name="new_pizza_name" id="new_pizza_name" maxlength="32" size="32" /><br /><br />
 		
-		Pizza Description:<br />
-		<input type="text" name="description" maxlength="128" size="32" /><br /><br />
+		Description:<br />
+		<input type="text" name="new_description" id="new_description" maxlength="128" size="32" /><br /><br />
 		
-		Pizza Price:<br />
-		<input type="text" name="price" maxlength="4" size="4" /><br /><br />
+		Price $:<br />
+		<input type="text" name="new_price" id="new_price" maxlength="5" size="5" /><br /><br />
 	
-		<input type="submit" name="submit" value="Add Pizza" />
-	</form> 
+		<input type="button" name="submit" value="Add Pizza" onclick="createPizza()" />
+	</form>
 </div>
-
-
-
-
-
-<!-- INCLUDE THIS AFTER 'MAIN CONTENT' -->
-<!-- ********************************* -->
-
-</div><!-- end of: Content -->
-
-
-<!-- INSERT: rightPanel -->
-<?php include('includes/rightPanel.html'); ?>
-
-
-<!-- INSERT: footer -->
-<div id="footer">
-	<?php include('includes/footer.html'); ?>
-</div>
-
-
-</div><!-- end of: Shell -->
-
-</center>
-</body>
-</html>
-
-<!-- ********************************* -->
-<!-- INCLUDE THIS AFTER 'MAIN CONTENT' -->
