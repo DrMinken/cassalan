@@ -70,7 +70,7 @@
 	<td width='100px;'>&nbsp;</td>
 	<td>
 		<!-- MANAGE USERS -->
-		<a href='MANuser.php'>
+		<a href='MANparticipants.php'>
 			<img class='boardButton' src='../images/buttons/user.jpg' title='Manage Users' 
 				onmouseover='this.src="../images/buttons/userO.jpg"' 
 				onmouseout='this.src="../images/buttons/user.jpg"' />
