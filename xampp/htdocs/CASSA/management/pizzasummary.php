@@ -32,7 +32,7 @@
 <div id='createPizza'>
 <?php 
 	// GET EVENT WHERE EVENT IS NEXT TO START
-	$get = "SELECT * FROM event WHERE event_completed=0 ORDER BY startDate ASC";
+	$get = "SELECT * FROM event WHERE event_completed=0 ORDER BY eventDate ASC";
 	$result = $db->query($get);
 	$row = $result->fetch_assoc();
 	$eventID = $row['eventID'];
@@ -71,10 +71,10 @@
 
 <table class='summaryPizza'>
 <tr>
-	<td class='MANheader'>Name</td>
-	<td class='MANheader'>QTY</td>
-	<td class='MANheader'>Price ($)</td>
-	<td class='MANheader'>Total</td>
+	<td class='MANheader' width='300px'>Name</td>
+	<td class='MANheader' width='120px'>QTY</td>
+	<td class='MANheader' width='120px'>Price ($)</td>
+	<td class='MANheader' width='140px'>Total ($)</td>
 </tr>
 <?php
 	$grandTotal = 0;

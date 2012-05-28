@@ -1,3 +1,6 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+
 <?php 
 	session_start();									// Start/resume THIS session
 	$_SESSION['title'] = "Seat Availability | MegaLAN"; // Declare this page's Title
@@ -182,7 +185,6 @@
 
 //*************** Start of SEAT AVAILABILITY PAGE ************ -->
 
-<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <script type='text/javascript'>
 
