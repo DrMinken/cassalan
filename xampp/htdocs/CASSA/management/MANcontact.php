@@ -17,19 +17,16 @@
 
 
 
-		if(!isset($_POST['contactID']))
-	{
 
 
-	/*	 $query = "SELECT * FROM contact";
+		$query = "SELECT * FROM contact";
 		$result = $db->query($query);
 		$row = $result->fetch_assoc();
 
-		$FAQID = $_POST['contactID'];	
-		$blur = $row['blur'];
-		$president = $row['president']; */
-
-		 $blur = "";
+		
+		if($result->num_rows == 0)
+		{
+   		 $blur = "";
 			
 		 $president = "";
 		 $pre_irc = "";
@@ -52,12 +49,36 @@
 		 $social_events = "";
 		 $soc_irc = "";
 
+		}
+	
+	if($result->num_rows > 0 )
+		{
+			$blur = $row['blur'];
+
+		$president = $row['president'];
+		 $pre_irc = $row['pre_irc'];
+
+		 $v_president = $row['v_president'];
+		 $vpres_irc = $row['vpre_irc'];
+
+		 $secretary = $row['secretary'];
+		 $sec_irc = $row['sec_irc'];
+
+		 $treasurer = $row['treasurer'];
+		 $tre_irc = $row['tre_irc'];
+
+		 $tech_admin = $row['tech_admin'];
+		 $tec_irc = $row['tec_irc'];
+
+		 $webmaster = $row['webmaster'];
+		 $web_irc = $row['web_irc'];
+
+		 $social_events = $row['social_events'];
+		 $soc_irc = $row['soc_irc'];
 
 
 
-
-		
-	} 
+		}
 
 	
 	 
@@ -131,7 +152,7 @@
 <!-- Interface Box -->
 <div id='newsBox' align='center'>
 <form name='MANcontact' enctype="multipart/form-data" method='POST' 
-	  onsubmit='return faqVal()' action='MANFAQ.php'>
+	  onsubmit='return faqVal()' action='MANcontact.php'>
 <br />
 
 	<table cellpadding='5px' border='0'>
