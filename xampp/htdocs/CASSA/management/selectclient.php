@@ -132,13 +132,13 @@ function ajax_client_table_basic($db, $startRow,$surname)
             echo '<td id="emailCell">' . $row1['email'] . '</td>';
             echo '<td id="phoneCell">' . $row1['mobile'] . '</td>';
             echo '<td id="userName">' . $row1['username'] . '</td>';
-            echo '<td id="Buttons"><img align ="left" src="../images/buttons/query.png" width="18" height="18"';
+            echo '<td id="Buttons"><img class="button" align ="left" src="../images/buttons/query.png"';
             echo 'alt="Retrieve data for this item" onclick="getClientInfo(' . $row1['clientID']. ')" />';
-            echo '<img align ="left" src="../images/buttons/delete_up.png" width="18" height="18"';
+            echo '<img class="button" align ="left" src="../images/buttons/delete_up.png"';
             echo 'alt="Delete This User" onclick="deleteUser(' . $row1['clientID'] .')" />';
-            echo '<img align ="left" src="../images/buttons/addto.png" width="18" height="18"';
+            echo '<img class="button" align ="left" src="../images/buttons/addto.png"';
             echo 'alt="Add this user to a team, tournament or event" onclick="" />';
-             echo '<img align ="left" src="../images/buttons/edit_up.png" width="18" height="18"';
+             echo '<img class="button" align ="left" src="../images/buttons/edit_up.png"';
             echo 'alt="Edit this users information" onclick="" />';
                 
 
@@ -146,7 +146,7 @@ function ajax_client_table_basic($db, $startRow,$surname)
             
             echo '</tr>';
         }
-//While Loop ends here.
+
 
 
         echo '</table>';
@@ -197,6 +197,10 @@ function ajax_client_table_basic($db, $startRow,$surname)
    
  
 }
+//***************************************************************************************
+//Table to display summary information
+//***************************************************************************************
+
 function ajax_client_Summary_table($db, $startRow, $clientID)
 {
  
@@ -204,37 +208,76 @@ function ajax_client_Summary_table($db, $startRow, $clientID)
     $result1 = $db->query($query);
     $numClient = $result1->num_rows;
     
+     $query2 = "SELECT e.event_name, a.paid_Admission FROM (event e INNER JOIN attendee a ON e.eventID = a.eventID)"; 
+     $query2 .= "WHERE a.clientID = '".$clientID."'";
+	$result2 = $db->query($query2);
+	$row2 = $result2->fetch_array(MYSQLI_BOTH);
+        
+      $query3 = "SELECT t.name FROM (tournament t INNER JOIN attendee a ON t.tournID = a.tournID)"; 
+     $query3 .= "WHERE a.clientID = '".$clientID."'";
+	$result3 = $db->query($query3);
+        
+	    
     if($numClient == 1)
         {
             $row1 = $result1->fetch_array(MYSQLI_BOTH);
-            echo '<table id= "clientTableList">';
+            echo '<table id= "clientTableData">';
+            echo '<tr><th colspan="2">Client Data Summary</th></tr>';
             echo '<tr id="' . $row1['clientID'] . '">';
-            echo '<td id="R1" >Client ID Number </th>';
-             echo '<td id="clientID">' . $row1['clientID'] .'</td>';
+            echo '<td id="td1" >Client ID Number </td>';
+            echo '<td id="td2">' . $row1['clientID'] .'</td>';
             echo '</tr>';
             echo '<tr>';
-            echo '<td id="R1" >First Name </th>';
-            echo '<td id="firstName">' . $row1['first_name'] .'</td>';
+            echo '<td id="td1" >First Name </td>';
+            echo '<td id="td2">' . $row1['first_name'] .'</td>';
             echo '</tr>';
             echo '<tr>';
-            echo '<td id="R1" >Last Name </th>';
-            echo '<td id="lastName">'. $row1['last_name'] . '</td>';
+            echo '<td id="td1" >Last Name </td>';
+            echo '<td id="td2">'. $row1['last_name'] . '</td>';
             echo '</tr>';
             echo '<tr>';
-            echo '<td id="R1">Client Email </th>';
-            echo '<td id="email">' . $row1['email'] . '</td>';
+            echo '<td id="td1">Client Email </td>';
+            echo '<td id="td2">' . $row1['email'] . '</td>';
             echo '</tr>';
             echo '<tr>';
-            echo '<td id="R1">Client Phone </th>';
-            echo '<td id="phone">' . $row1['mobile'] . '</td>';
+            echo '<td id="td1">Client Phone </td>';
+            echo '<td id="td2">' . $row1['mobile'] . '</td>';
             echo '</tr>';
             echo '<tr>';
-            echo '<td id="R1" >Username</th>';
-            echo '<td id="userName1">' . $row1['username'] . '</td>';
+            echo '<td id="td1" >Username</td>';
+            echo '<td id="td2">' . $row1['username'] . '</td>';
             echo '</tr>';
             echo '<tr>';
-            echo '<td id="R1" >Active</th>';
-            echo '<td id="userActive">' . $row1['username'] . '</td>';
+            echo '<td id="td1" >Active</td>';
+            if ($row1['active']== 1)
+                {
+                  echo '<td id="td2">Yes</td>';
+                }
+            else {echo '<td id="td2">No</td>';}
+            echo '</tr>';
+            echo '<tr><th colspan="2">Client Participation Summary</th></tr>';
+            echo '<tr>';
+            echo '<td id="td1">Events Registered For</td>';
+            echo '<td id="td2">' . $row2['event_name'] . '</td>';
+            echo '</tr>';
+            echo '<tr>';
+            echo '<td id="td1">Registration Fee Paid:</td>';
+            echo '<td id="td2">' . $row2['paid_Admission'] . '</td>';
+            echo '</tr>';
+            echo '<tr>';
+            if(!$result3)
+                {
+                    echo '<td id="td1">Tournaments In:</td>';
+                    echo '<td id="td2">None</td>';
+                }
+            else
+                {
+                    $row3 = $result3->fetch_array(MYSQLI_BOTH);
+                    echo '<td id="td1">Tournaments In:</td>';
+                    echo '<td id="td2">' . $row3['name'] . '</td>';
+                }
+	
+            
             echo '</tr>';
             echo '</table>';
             echo '<br />';
