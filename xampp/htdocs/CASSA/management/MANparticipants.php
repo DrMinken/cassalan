@@ -18,7 +18,7 @@
         unset($_SESSION['errMsg']);
 
 	$username = $_SESSION['username'];
-	$query = "SELECT * FROM client order by last_name DESC";
+	$query = "SELECT * FROM client order by last_name ASC";
 	$result = $db->query($query);
 	$row = $result->fetch_array(MYSQLI_BOTH);
 	$clientID = $row['clientID'];
@@ -42,6 +42,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <script type="text/javascript">
+        
+ 
+ 
 //***************************************************************
 //
 // Calling this function creates a http request object and response
@@ -77,6 +80,8 @@ function createRequest (clientID, params, divName)
                                 }
                         }
                         //Now we have the xmlhttp object, get the data using AJAX.
+                        
+                        
 
 			xmlhttp.open("POST","selectclient.php",true);
 			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -95,10 +100,13 @@ function createRequest (clientID, params, divName)
 function getClientData()
 {
     var clientID ="0";
+   
     var divID = document.getElementById("clientTable");
     var params = "clientID=" + clientID + "&queryType=0&startRow=0";
 
-		createRequest(clientID , params, divID);
+		document.getElementById("clientDetails").innerHTML="";
+                createRequest(clientID , params, divID);
+     
 }
 
 //*************************************************************************************************
@@ -113,6 +121,8 @@ function getClientNext5(startRow)
     var params = "clientID=" + clientID + "&queryType=0&startRow=" + startRow;
 
 		createRequest(clientID , params, divID);
+                clientID=""
+                getClientInfo(clientID);
 }
 
 //*************************************************************************************************
@@ -126,13 +136,15 @@ function searchFunction()
     var clientID ="0";
     var divID = document.getElementById("clientTable");
     var params = "clientID=" + clientID + "&queryType=0&startRow=0&surname=" + surname;
-
+   
 		createRequest(clientID , params, divID);
+                 clientID=""
+                getClientInfo(clientID);
 }
 
 //*************************************************************************************************
 //************************************************************************************************
-// Function to find a client
+// Function to delete a client
 //
 //************************************************************************************************
 function deleteUser(clientID)
@@ -153,7 +165,7 @@ function deleteUser(clientID)
 //*************************************************************************************************
 
 //************************************************************************************************
-// Function to find a client
+// Function to load summary table
 //
 //************************************************************************************************
 function getClientInfo(clientID)
@@ -162,14 +174,133 @@ function getClientInfo(clientID)
    
     var divID = document.getElementById("clientDetails");
     var params = "clientID=" + clientID + "&queryType=1&startRow=0";
+      
+    createRequest(clientID , params, divID);
+      
+}
+
+//*************************************************************************************************
+//************************************************************************************************
+// Function to manage client participation
+//
+//************************************************************************************************
+function manageClientEvent(clientID)
+{
+  
+   
+    var divID = document.getElementById("clientDetails");
+    var params = "clientID=" + clientID + "&queryType=5&startRow=0";
     createRequest(clientID , params, divID);
         
 }
 
 //*************************************************************************************************
+
+//************************************************************************************************
+// Function to manage client participation
+//
+//************************************************************************************************
+function editClientData(clientID)
+{
+  
+   
+    var divID = document.getElementById("clientDetails");
+    var params = "clientID=" + clientID + "&queryType=3&startRow=0";
+    createRequest(clientID , params, divID);
+        
+}
+
+//*************************************************************************************************
+//************************************************************************************************
+// Function to save eidted client data
+//
+//************************************************************************************************
+function saveEdits(clientID)
+{
+        var first_name = document.getElementById('first_name').value;
+	var last_name = document.getElementById('last_name').value;
+	var email = document.getElementById('email').value;
+	var mobile = document.getElementById('mobile').value;
+	var active1 = document.getElementById('active').checked;
+        var active = 0;
+      
+        if(active1== true)
+            {
+                active= 1;
+            }
+        if(active1== false)
+            {
+                active= 0;
+            }
+	
+   
+    var divID = document.getElementById("clientDetails");
+    var params = "clientID=" + clientID + "&queryType=4&startRow=0";
+        params += "&first_name=" + first_name + "&last_name=" + last_name;
+        params += "&email=" + email + "&mobile=" + mobile + "&active=" + active;
+    
+   
+    createRequest(clientID , params, divID);
+        
+}
+
+//*************************************************************************************************
+//************************************************************************************************
+// Function to add a client to an event
+//
+//************************************************************************************************
+function joinEvent(clientID)
+{
+        var e = document.getElementById("eventSelect");
+        var eventID = e.options[e.selectedIndex].value;
+
+    var divID = document.getElementById("clientDetails");
+    var params = "eventID=" + eventID + "&clientID=" + clientID + "&queryType=6&startRow=0";
+    createRequest(clientID , params, divID);
+        
+}
+
+//*************************************************************************************************
+//************************************************************************************************
+// Function to add a client to an event
+//
+//************************************************************************************************
+function joinTeam(noTeam, clientID)
+{
+       
+       var e = document.getElementById("teamSelect");
+        var teamID = e.options[e.selectedIndex].value;
+
+   
+    var divID = document.getElementById("clientDetails");
+    var params = "noTeam=" + noTeam + "&teamID=" + teamID + "&clientID=" + clientID + "&queryType=7&startRow=0";
+    createRequest(clientID , params, divID);
+        
+}
+
+//*************************************************************************************************
+
+//************************************************************************************************
+// Accepts an event payment
+//
+//************************************************************************************************
+function payEvent(payStatus, clientID)
+{
+    
+    var divID = document.getElementById("clientDetails");
+    var params = "payStatus=" + payStatus + "&clientID=" + clientID + "&queryType=8&startRow=0";
+    createRequest(clientID , params, divID);
+        
+}
+
+//*************************************************************************************************
+
+    
+    
+
 </script>
 </head>
-<body onload="getClientData()">
+<body onload="getClientData();">
 <center>
 <div id='shell'>
 
@@ -186,8 +317,7 @@ echo '<br />';
 <div id="clientTable"></div>
 <?php
 echo '<hr />';
-echo '<p><h2>Client Details</h2></p>';
-echo '<br />';
+
 ?>
 <div id="clientDetails"></div>
 
