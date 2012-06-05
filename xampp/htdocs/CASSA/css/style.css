@@ -685,6 +685,19 @@ p
 	line-height: 25pt;
 	text-indent: 5px;
 }
+.orderLogo
+{
+	background: url('/cassa/images/logos/CASSA_header.png') no-repeat;
+	height: 125px;
+	text-align: center;
+	position: relative;
+	top: -35px;
+}
+.orderHeader
+{
+	position: relative;
+	top: -35px;
+}
 #orderSummaryDIV
 {
 	vertical-align: middle;

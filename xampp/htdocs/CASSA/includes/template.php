@@ -52,6 +52,10 @@
 	<link rel="stylesheet" type="text/css" href="/cassa/js/thickbox/thickbox.css" />
 
 
+	<!-- Website Common Functions -->
+	<?php include('functions.php'); ?>
+
+
 	<!-- VALIDATE: login form -->
 	<script type='text/javascript'>
 	function loginValidate()
