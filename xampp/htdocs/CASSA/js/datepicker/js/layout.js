@@ -50,22 +50,54 @@
 			mode: 'range',
 			starts: 1
 		});
+
+
+		/* USED IN PAGES: 
+		* ---------------
+		* -MANevent, 
+		* -selectevent.php
+		*/
 		$('.inputDate').DatePicker({
 			format:'d/m/Y',
 			date: $('#inputDate').val(),
 			current: $('#inputDate').val(),
 			starts: 1,
 			position: 'right',
-			onBeforeShow: function(){
+			onBeforeShow: function()
+			{
 				$('#inputDate').DatePickerSetDate($('#inputDate').val(), true);
 			},
-			onChange: function(formated, dates){
+			onChange: function(formated, dates)
+			{
 				$('#inputDate').val(formated);
-				if ($('#closeOnSelect input').attr('checked')) {
+				if ($('#closeOnSelect input').attr('checked')) 
+				{
 					$('#inputDate').DatePickerHide();
 				}
 			}
 		});
+		$('#E_startDate').DatePicker({
+			format:'d/m/Y',
+			date: $('#E_startDate').val(),
+			current: $('#E_startDate').val(),
+			starts: 1,
+			position: 'right',
+			onBeforeShow: function()
+			{
+				$('#E_startDate').DatePickerSetDate($('#E_startDate').val(), true);
+			},
+			onChange: function(formated, dates)
+			{
+				$('#E_startDate').val(formated);
+				if ($('#E_closeOnSelect input').attr('checked')) 
+				{
+					$('#E_startDate').DatePickerHide();
+				}
+			}
+		});
+
+
+
 		var now3 = new Date();
 		now3.addDays(-4);
 		var now4 = new Date()
