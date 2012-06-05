@@ -314,14 +314,14 @@ $(document).ready(function(){
 		$result = $db->query($get);
 		$row = $result->fetch_assoc();
 		$eventID = $row['eventID'];
-
+		$eventStartDate = dateToScreen($row['startDate']);
 
 		// GET [this] EVENTS MENU
 		$getmenuID = "SELECT * FROM pizza_menu WHERE eventID='".$eventID."'";
 		$result = $db->query($getmenuID);
 		$row = $result->fetch_assoc();
 		$menuID = $row['menuID'];
-
+		$menuName = $row['menu_name'];
 
 		// GET [this] EVENTS MENU PIZZA ORDER SUMMARY
 		$getpizzaID = "SELECT DISTINCT pizzaID FROM pizza_order WHERE menuID='".$menuID."' ORDER BY pizzaID ASC";
@@ -347,6 +347,27 @@ $(document).ready(function(){
 		}
 	?>
 
+
+	<!-- ORDER HEADER -->
+	<div class='orderLogo'></div>
+	<div class='orderHeader'>
+		<div style='float: left;'>
+			<font class='subtitle' style='font-size: 18pt;'>
+				<?php echo $menuName; ?> 
+			</font>
+		</div>
+		<div style='float: right;'>
+			<?php echo $eventStartDate; ?>
+		</div>
+	</div>
+
+
+
+	<br />
+	<br />
+
+
+	<!-- ORDER LINE TABLE -->
 	<table class='pizzaOrder'>
 	<tr>
 		<td class='MANheader' width='300px'>Name</td>
@@ -381,9 +402,9 @@ $(document).ready(function(){
 			echo '<td>'.$total.'</td>';
 			echo '</tr>';
 		}
-		echo '<tr><td colspan="4"><hr /></td></tr>';
-		echo '<tr><td colspan="4" align="right">GRAND TOTAL: $'.$grandTotal.'</td></tr>';
 	?>
+		<tr><td colspan="4"><hr /></td></tr>
+		<tr><td colspan="4" align="right">GRAND TOTAL: $<?php echo $grandTotal; ?></td></tr>
 	</table>
 	</div>
 </div>

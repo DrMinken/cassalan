@@ -238,7 +238,7 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 	$result = $db->query($query);
 	$row = $result->fetch_assoc();
 
-	echo "<h2 align='center'>Current Menu: <font size='2'>".$row['menu_name']."</font></h2>";
+	echo "<h2 align='center' class='subtitle' style='font-size:14pt'>".$row['menu_name']."</h2>";
 	echo "<input type='hidden' name='currentMenu' id='currentMenu' value='".$row['menuID']."' />";
 ?>
 
