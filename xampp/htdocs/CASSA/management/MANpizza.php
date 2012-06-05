@@ -296,10 +296,9 @@ $(document).ready(function(){
 <div id='orderSummaryDIV'>
 <a class='inlineB' href='#summaryPizza'>
 <img class='pointer' border='0' height="50" width="50"
-	 src='../images/layers/form.png' alt='Click here to see pizza order summary' 
-	 onclick='window.location.href="pizzaSummary.php"'  />
-	 
-	 Click here to view this events order summary</a>
+	 src='../images/layers/form.png' 
+	 alt='Click here to see pizza order summary' />
+	 Pizza order summary</a>
 </div>
 
 

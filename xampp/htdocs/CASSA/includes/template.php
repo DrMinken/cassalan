@@ -147,14 +147,6 @@
 						document.getElementById("faq").style.display="none"'
 			onclick='window.location.href="/cassa/eventProgram.php"'>
 			<a href='/cassa/faq.php'>FAQ</a>
-			
-			<!-- CHILD LIST -->
-			<ul class='children' id='faq'>
-				<!-- LEADER BOARD -->
-				<li onclick='window.location.href="/cassa/askQuestion.php"'>
-					<a href='/cassa/askQuestion.php'>Got A Question?</a>
-				</li>
-			</ul>
 		</li>
 
 
@@ -168,26 +160,17 @@
 			<a href='/cassa/eventProgram.php'>Event Program</a>
 			
 			<!-- CHILD LIST -->
-			<ul class='children' id='event'>
-				<!-- LEADER BOARD -->
+			<!-- ul class='children' id='event'>
+				<!-- LEADER BOARD>
 				<li onclick='window.location.href="/cassa/leaderBoard.php"'>
 					<a href='/cassa/leaderBoard.php'>Leader Board</a>
 				</li>
 				
-				<!-- GAME SERVER DETAILS -->
+				<!-- GAME SERVER DETAILS>
 				<li onclick='window.location.href="/cassa/serverDetails.php"'>
 					<a href='/cassa/serverDetails.php'>Game Server Details</a>
 				</li>
-			</ul>
-		</li>
-
-
-
-		<!-- GENERAL LAN NOTICES -->
-		<li onmouseover='this.style.backgroundColor="#333333"' 
-			onmouseout='this.style.backgroundColor="black"'
-			onclick='window.location.href="/cassa/notices.php"'>
-			<a href='/cassa/notices.php'>General LAN Notices</a>
+			</ul -->
 		</li>
 
 
@@ -196,7 +179,7 @@
 		<li onmouseover='this.style.backgroundColor="#333333"' 
 			onmouseout='this.style.backgroundColor="black"'
 			onclick='window.location.href="/cassa/seatMap.php"'>
-			<a href='/cassa/seatMap.php'>Seat Availability</a>
+			<a href='/cassa/seatMap.php'>Seat Map</a>
 		</li>
 
 
@@ -249,14 +232,19 @@
 							<a href='/cassa/management/ADDnotices.php'>Add Notices</a>
 						</li>
 
-						<!-- Create Pizza -->
-						<li onclick='window.location.href="/cassa/management/createPizza.php"'>
-							<a href='/cassa/management/createPizza.php'>Create Pizza</a>
+						<!-- MANAGE Event -->
+						<li onclick='window.location.href="/cassa/management/MANevent.php"'>
+							<a href='/cassa/management/MANevent.php'>Manage Event</a>
 						</li>
 
-						<!-- Delete Pizza -->
-						<li onclick='window.location.href="/cassa/management/deletePizza.php"'>
-							<a href='/cassa/management/deletePizza.php'>Delete Pizza</a>
+						<!-- MANAGE Tournaments -->
+						<li onclick='window.location.href="/cassa/management/MANtournament.php"'>
+							<a href='/cassa/management/MANtournament.php'>Manage Tournament</a>
+						</li>
+
+						<!-- MANAGE Pizza -->
+						<li onclick='window.location.href="/cassa/management/MANpizza.php"'>
+							<a href='/cassa/management/MANpizza.php'>Manage Pizza</a>
 						</li>
 
 						<!-- MANAGE Participants -->
@@ -264,6 +252,7 @@
 							<a href='/cassa/management/MANparticipants.php'>Manage Participants</a>
 						</li>
 						
+
 						<!-- MANAGE FAQ -->
 						<li onclick='window.location.href="/cassa/management/MANFAQ.php"'>
 							<a href='/cassa/management/MANFAQ.php'>Manage FAQ</a>
@@ -282,11 +271,6 @@
 						<!-- MANAGE Results -->
 						<li onclick='window.location.href="/cassa/management/MANresults.php"'>
 							<a href='/cassa/management/MANresults.php'>Manage Results</a>
-						</li>
-
-						<!-- MANAGE Tournaments -->
-						<li onclick='window.location.href="/cassa/management/MANtournaments.php"'>
-							<a href='/cassa/management/MANtournaments.php'>Manage Tournaments</a>
 						</li>
 					</ul>
 				</li>

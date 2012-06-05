@@ -95,7 +95,6 @@
 					$result = $db->query($insert);
 				}
 				//echo ('<meta http-equiv="refresh" content="1;url=MANpizza.php">');
-				$page = $_SERVER['PHP_SELF']; 
 				//header('Refresh: url=$page');
 				//exit;
 			}

@@ -140,7 +140,6 @@ function display_all_events($db)
 	<tr>
 		<th align='left'>Name</th>
 		<th align='left'>Location</th>
-		<th align='left'>Event Room</th>
 		<th align='left'>Date</th>
 		<th align='left'>Start Time</th>
 		<th align='left'>Seat Quantity</th>
@@ -160,8 +159,7 @@ function display_all_events($db)
 		$row = $result->fetch_assoc();    
 		$name = $row['event_name'];
 		$location = $row['event_location'];
-		$room = $row['eventRoom'];
-		$date = $row['eventDate'];
+		$date = $row['startDate'];
 		$startTime = $row['startTime'];
 		$seatQuantity = $row['seatQuantity'];
 		
@@ -171,7 +169,6 @@ function display_all_events($db)
 		echo '<tr onmouseover="'.$on.'" onmouseout="'.$off.'">';
 			echo '<td>'.$name.'</td>';
 			echo '<td>'.$location.'</td>';
-			echo '<td>'.$room.'</td>';
 			echo '<td>'.$date.'</td>';
 			echo '<td>'.$startTime.'</td>';
 			echo '<td>'.$seatQuantity.'</td>';
@@ -216,8 +213,7 @@ function display_all_booked_events($db)
 		// SETUP [this] ROW DETAILS
 		$name = $rowEvent['event_name'];
 		$location = $rowEvent['event_location'];
-		$room = $rowEvent['eventRoom'];
-		$date = $rowEvent['eventDate'];
+		$date = $rowEvent['startDate'];
 		$startTime = $rowEvent['startTime'];
 		$seatQuantity = $rowEvent['seatQuantity'];
 		
@@ -226,7 +222,6 @@ function display_all_booked_events($db)
 
 		echo '<tr><td class="displayRow">Event Name</td><td>'.$name.'</td></tr>';
 		echo '<tr><td class="displayRow">Location</td><td>'.$location.'</td></tr>';
-		echo '<tr><td class="displayRow">Room</td><td>'.$room.'</td></tr>';
 		echo '<tr><td class="displayRow">Event Date</td><td>'.$date.'</td></tr>';
 		echo '<tr><td class="displayRow">Start Time</td><td>'.$startTime.'</td></tr>';
 		echo '<tr><td class="displayRow">Seat Quantity</td><td>'.$seatQuantity.'</td></tr>';
@@ -269,8 +264,7 @@ function display_all_event_tournaments($db)
 		// SETUP [this] ROW DETAILS
 		$name = $rowEvent['event_name'];
 		$location = $rowEvent['event_location'];
-		$room = $rowEvent['eventRoom'];
-		$date = $rowEvent['eventDate'];
+		$date = $rowEvent['startDate'];
 		$startTime = $rowEvent['startTime'];
 		$seatQuantity = $rowEvent['seatQuantity'];
 		

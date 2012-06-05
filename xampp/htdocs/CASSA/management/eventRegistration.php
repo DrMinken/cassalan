@@ -203,7 +203,10 @@ function cancelSeat(seatID, attendeeID)
 <!-- Main Content [left] -->
 
 <div id="content">
-<h1>Event Registration</h1>
+<h2>
+	Event Registration For: 
+	<font size="4" style='font-family: Segoe Print;'><?php echo $_SESSION['fullName']; ?></font>
+</h2>
 
 
 
@@ -255,7 +258,8 @@ function cancelSeat(seatID, attendeeID)
 
 	<?php 
 		// SETUP MOUSE CLICK CLASSES
-		$onclick = 'document.getElementById("eventBUT").className="eBAR pointer"; 		document.getElementById("tournBUT").className="eBAR pointer"; document.getElementById("seatBUT").className="eBAR pointer"; document.getElementById("pizzaBUT").className="eBAR pointer"; this.className="eBAR_ON pointer";';
+		$onclick = 
+		'document.getElementById("eventBUT").className="eBAR pointer"; 		document.getElementById("tournBUT").className="eBAR pointer"; document.getElementById("seatBUT").className="eBAR pointer"; document.getElementById("pizzaBUT").className="eBAR pointer"; this.className="eBAR_ON pointer";';
 
 		// CHECK IF OUTSIDE PAGE IS TRYING TO ACCESS A CERTAIN MENU BAR 
 		// 1 = EVENT

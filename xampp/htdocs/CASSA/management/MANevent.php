@@ -1,5 +1,8 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+
 <?php 
-	session_start();													// Start/resume THIS session
+	session_start();									// Start/resume THIS session
 
 	// PAGE SECURITY
 	if (!isset($_SESSION['isAdmin']))
@@ -16,13 +19,10 @@
 	include("../includes/conn.php");                    // Include the db connection
         unset($_SESSION['errMsg']);
 
-	$username = $_SESSION['username'];
-	$query = "SELECT * FROM event order by startDate DESC";
+	$query = "SELECT * FROM event order by startDate ASC";
 	$result = $db->query($query);
 	$row = $result->fetch_array(MYSQLI_BOTH);    
 	$eventID = $row['eventID'];
-	
-	
 ?>
 
 
@@ -38,8 +38,14 @@
 
 //********** Start of MANAGE EVENTS PAGE ************** -->
 
-<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+	<link rel="stylesheet" href="../js/datepicker/css/datepicker.css" type="text/css" />
+    <link rel="stylesheet" media="screen" type="text/css" href="../js/datepicker/css/layout.css" />
+	<script type="text/javascript" src="../js/datepicker/js/datepicker.js"></script>
+    <script type="text/javascript" src="../js/datepicker/js/eye.js"></script>
+    <script type="text/javascript" src="../js/datepicker/js/utils.js"></script>
+    <script type="text/javascript" src="../js/datepicker/js/layout.js"></script>
+
 <script type="text/javascript">
 //***************************************************************
 //
@@ -48,52 +54,47 @@
 //****************************************************************
 function createRequest (eventID, params)
 {
-    if (eventID=="")
-		
-            {
-                
-                document.getElementById("eventTable").innerHTML="";
-                return;
-            } 
+	if (eventID == "")
+	{
+		document.getElementById("eventTable").innerHTML="";
+		return;
+	}
+
 	if (window.XMLHttpRequest)
-            {	// code for mainstream browsers
-                    xmlhttp=new XMLHttpRequest();
-                }
-                else
-                    {// code for earlier IE versions
-                        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-                    }
-                    xmlhttp.onreadystatechange=function()
-                        {
-                            if (xmlhttp.readyState==4 && xmlhttp.status==200)
-                                {
-                                    document.getElementById("eventTable").innerHTML=xmlhttp.responseText;
-                                   
+	{	
+		// code for mainstream browsers
+		xmlhttp=new XMLHttpRequest();
+	}
+	else
+	{
+		// code for earlier IE versions
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	}
 
-                                }
-                        }
-                        //Now we have the xmlhttp object, get the data using AJAX.
-				
-			xmlhttp.open("POST","selectEvent.php",true);
-			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-			xmlhttp.setRequestHeader("Content-length", params.length);
-			xmlhttp.setRequestHeader("Connection", "close");
-			xmlhttp.send(params);
-
-
-
+	xmlhttp.onreadystatechange=function()
+	{
+		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			document.getElementById("eventTable").innerHTML=xmlhttp.responseText;
+		}
+	}
+	//Now we have the xmlhttp object, get the data using AJAX.
+	xmlhttp.open("POST","selectEvent.php",true);
+	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xmlhttp.setRequestHeader("Content-length", params.length);
+	xmlhttp.setRequestHeader("Connection", "close");
+	xmlhttp.send(params);
+	parent.jQuery.colorbox.close();
 }
 
 //******************************************************************
+
 function getEvent(eventID)
 {
-	
- //Now we have the xmlhttp object, get the data using AJAX.
-var params = "eventID=" + eventID + "&queryType=0";
-createRequest(eventID,params);
-			
+	//Now we have the xmlhttp object, get the data using AJAX.
+	var params = "eventID=" + eventID + "&queryType=0";
+	createRequest(eventID,params);		
 }
-
 
 //***************************************************************
 //
@@ -103,19 +104,20 @@ createRequest(eventID,params);
 function checkaddEvent()
 {
 	var eventID="0";
-        //var eventID = document.getElementById('eventID').value;
+
+	//var eventID = document.getElementById('eventID').value;
 	var event_name = document.getElementById('event_name').value;
 	var event_location = document.getElementById('event_location').value;
-	var startDate = document.getElementById('startDate').value;
+	var startDate = document.getElementById('inputDate').value;
 	var startTime = document.getElementById('startTime').value;
 	var server_IP_address = document.getElementById('server_IP_address').value;
 	var seatQuantity = document.getElementById('seatQuantity').value;
 
-               var params = "eventID=" + eventID + "&queryType=6" + "&event_name=" + event_name
-                            + "&event_location=" + event_location + "&startDate=" + startDate 
-                            + "&startTime=" + startTime + "&server_IP_address=" + server_IP_address
-                            + "&seatQuantity=" + seatQuantity;			
-		createRequest(eventID,params);
+   var params = "eventID=" + eventID + "&queryType=6" + "&event_name=" + event_name
+				+ "&event_location=" + event_location + "&startDate=" + startDate 
+				+ "&startTime=" + startTime + "&server_IP_address=" + server_IP_address
+				+ "&seatQuantity=" + seatQuantity;			
+	createRequest(eventID,params);
 }
 //***************************************************************
 //
@@ -125,43 +127,43 @@ function checkaddEvent()
 function addEvent()
 {
 	var message = "An event is about to be ";
-	    message += "added.Proceed?";
+	    message += "added. Proceed?";
 	
-        var answer = confirm(message );
+    var answer = confirm(message);
 	if (answer == true)
 	{
-		
-               var eventID ="0";
-		var params = "eventID=" + eventID + "&queryType=5";		
-                    createRequest(eventID,params);
+		var eventID ="0";
+		var params = "eventID=" + eventID + "&queryType=5";
+		createRequest(eventID,params);
 	}
-	else{ return;}
+	else
+	{
+		return;
+	}
 }
-
 //***************************************************************
 //
 // Ajax Function to delete an event.
 //
 //****************************************************************
-function deleteEvent()
+function deleteEvent(eventID, eventName)
 {
-	
-        //var eventName = selectEvent.options[selectEvent.selectedIndex].text;
+	// var eventName = selectEvent.options[selectEvent.selectedIndex].text;
+	// eventID = document.getElementById("selectEvent").value;
+	// eventName = document.getElementById("option" + eventID).text;
 
+	message = "Please confirm to delete '" + eventName + "'";
 
-        eventID = document.getElementById("selectEvent").value;
-        eventName = document.getElementById("option" + eventID).text;
-       
-        message = "You have chosen to delete the ";
-	    message += eventName + " event. Proceed?";
-	
-        var answer = confirm(message );
+	var answer = confirm(message);
 	if (answer == true)
 	{
-            var params = "eventID=" + eventID + "&queryType=7";		
-             createRequest(eventID,params);
+		var params = "eventID=" + eventID + "&queryType=7";		
+		createRequest(eventID,params);
 	}
-	else{ return;}
+	else
+	{ 
+		return;
+	}
 }
 //***************************************************************
 //
@@ -170,24 +172,24 @@ function deleteEvent()
 //****************************************************************
 function startEvent(eventID)
 {
+	eventID = document.getElementById("selectEvent").value;
+	eventName = document.getElementById("option" + eventID).text;
 	
-        eventID = document.getElementById("selectEvent").value;
-        eventName = document.getElementById("option" + eventID).text;
-        
-        var message = "The " + eventName + " event is about to be ";
-	    message += "started. All other started events will";
-	    message += " be stopped. Proceed?";
+	var message = "The " + eventName + " event is about to be ";
+	message += "started. All other started events will";
+	message += " be stopped. Proceed?";
 	
-	var answer = confirm(message );
+	var answer = confirm(message);
 	if (answer == true)
 	{
-            var params = "eventID=" + eventID + "&queryType=1";		
-            createRequest(eventID,params);
-		
+		var params = "eventID=" + eventID + "&queryType=1";		
+		createRequest(eventID,params);
 	}
-	else{ return;}
+	else
+	{ 
+		return;
+	}
 }
-
 //***************************************************************
 //
 // Ajax Function to stop / end an event.
@@ -195,22 +197,22 @@ function startEvent(eventID)
 //****************************************************************
 function stopEvent(eventID)
 {
+	eventName = document.getElementById("option" + eventID).text;
 	
-        eventName = document.getElementById("option" + eventID).text;
-        
-        var message = "The " + eventName + " event is about to be ";
-	    message += "stopped. It cannot be re-started. Proceed?";
+	var message = "The " + eventName + " event is about to be ";
+	message += "stopped. It cannot be re-started. Proceed?";
 	
 	var answer = confirm(message );
 	if (answer == true)
 	{
-		
 		var params = "eventID=" + eventID + "&queryType=2";		
-                    createRequest(eventID,params);
+		createRequest(eventID,params);
 	}
-	else{ return;}
+	else
+	{ 
+		return;
+	}
 }
-
 //***************************************************************
 //
 // Ajax Function to edit an event.
@@ -218,21 +220,9 @@ function stopEvent(eventID)
 //****************************************************************
 function editEvent(eventID)
 {
-	eventName = document.getElementById("option" + eventID).text;
-        var message = "The " + eventName +" event is about to be ";
-	    message += "edited. Proceed?";
-	
-	var answer = confirm(message );
-	if (answer == true)
-	{
-		
-		var params = "eventID=" + eventID + "&queryType=3";		
-                    createRequest(eventID,params);
-		
-	}
-	else{ return;}
+	var params = "eventID=" + eventID + "&queryType=3";
+	createRequest(eventID,params);
 }
-
 //************************************************************************************************
 
 //************************************************************************************************
@@ -243,22 +233,20 @@ function editEvent(eventID)
 function updateEvent()
 {	
   	var eventID = document.getElementById('eventID').value;
-	var event_name = document.getElementById('event_name').value;
-	var event_location = document.getElementById('event_location').value;
-	var startDate = document.getElementById('startDate').value;
-	var startTime = document.getElementById('startTime').value;
-	var server_IP_address = document.getElementById('server_IP_address').value;
-	var seatQuantity = document.getElementById('seatQuantity').value;
+	var event_name = document.getElementById('E_event_name').value;
+	var event_location = document.getElementById('E_event_location').value;
+	var startDate = document.getElementById('E_startDate').value;
+	var startTime = document.getElementById('E_startTime').value;
+	var server_IP_address = document.getElementById('E_server_IP_address').value;
+	var seatQuantity = document.getElementById('E_seatQuantity').value;
 
-               var params = "eventID=" + eventID + "&queryType=4" + "&event_name=" + event_name
-                            + "&event_location=" + event_location + "&startDate=" + startDate 
-                            + "&startTime=" + startTime + "&server_IP_address=" + server_IP_address
-                            + "&seatQuantity=" + seatQuantity;			
-		createRequest(eventID,params);	
-		
+	var params = "eventID=" + eventID + "&queryType=4" + "&event_name=" + event_name
+				+ "&event_location=" + event_location + "&startDate=" + startDate 
+				+ "&startTime=" + startTime + "&server_IP_address=" + server_IP_address
+				+ "&seatQuantity=" + seatQuantity;			
+
+	createRequest(eventID,params);		
 }
-
-
 //************************************************************************************************
 
 //************************************************************************************************
@@ -269,90 +257,188 @@ function updateEvent()
 function refreshEvent()
 {	
   	document.forms["frm1"].submit(); 
-	
+}
+//************************************************************************************************
+
+
+function setDate()
+{
+	// GET TODAYS DATE
+	var fullDate = new Date(); // full date
+	var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : '0' + (fullDate.getMonth()+1); // 2 Digit month
+	var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear(); // Absolute date nn/nn/nnnn
+
+	// SET TODAYS DATE
+	document.getElementById('inputDate').value = currentDate;
 }
 
 
-//************************************************************************************************
 
+// COLORBOX
+$(document).ready(function(){
+	$(".ajax").colorbox();
+	$(".inlineADD").colorbox({inline:true, width:"550px", height:"350px"});
+	$(".inlineB").colorbox({inline:true, width:"700px", height:"900px"});
+});
+
+
+
+// DATE PICKER - Create new event
+$('#inputDate').DatePicker({
+	format:'d/m/Y',
+	position: 'bottom',
+	onChange: function(formated, dates)
+	{
+		if ($('#closeOnSelect input').attr('checked'))
+		{
+			$('#inputDate').DatePickerHide();
+		}
+	}
+});
+
+
+
+// DATE PICKER - Edit event
+$('#startDate').DatePicker({
+	format:'d/m/Y',
+	position: 'bottom',
+	onChange: function(formated, dates)
+	{
+		if ($('#closeOnSelect input').attr('checked'))
+		{
+			$('#inputDate').DatePickerHide();
+		}
+	}
+});
+
+
+
+// 'Current Events' @ ROW SELECT 
+function selectRow(row, count)
+{
+	for (var i = 0 ; i < count ; i++)
+	{
+		if (i == row)
+		{
+			document.getElementById("eventRow_"+i).style.backgroundColor = "#EDFFFE";
+		}
+		else
+		{
+			document.getElementById("eventRow_"+i).style.backgroundColor = "white";
+		}
+	}
+}
 </script>
 </head>
 		
-<body onload="getEvent(<?php echo $eventID;$result->close();?>)">
-			
+<body onload="getEvent(<?php echo $eventID;$result->close();?>); setDate();">
 <center>
 <div id='shell'>
+
+
+
+
+
 <!-- Main Content [left] -->
 <div id="content">
-<h1>Event Management</h1>
+
+
+
+
+
+<!-- HREF : OPENS INLINE 'CREATE NEW PIZZA' FORM -->
+<a class="inlineADD" href="#addEventTable">Create new event</a>
+
+
+
+
+
+<br /><br /><br />
+
+
+
+
+
+<!-- 'ADD NEW EVENT' @ colorbox -->
+<div style='display: none;'>
+<div id='addEventTable'>
 <?php
-//***********************************************
-// Set some variables up for use
-//***********************************************
-
-
-echo '<hr />';
-echo '<p><h2>Current Events</h2></p>';
-echo '<FORM id="frm1">';
-echo '<P>';
-echo '<SELECT size="6" id="selectEvent" name="selectEvent" onchange = getEvent(this.value)>';
-	
-$result = $db->query($query);
-// Now we can output the option fields to populate the list box.
-for ($i = 0; $i < $result->num_rows;$i++) 
-	{
-        $row = $result->fetch_array(MYSQLI_BOTH);    
-
-            if ($i==0)
-                {
-                    echo '<OPTION id="option' . $row['eventID']. '" value="'.$row['eventID'].'" selected="selected">' . $row['event_name'] . '</OPTION><br />';			
-                }
-            else
-                {
-                    echo '<OPTION id="option' . $row['eventID']. '" value="'.$row['eventID'].'">' . $row['event_name'] . '</OPTION><br />';
-                }
-	}
-
-		echo '</SELECT>';
-                echo '<br />';
-                //echo '<INPUT type="submit" value="Refresh List">';
-                
-                 $refreshDwn = 'this.src="../images/buttons/refresh_dwn.png"';
-                $refreshUp = 'this.src="../images/buttons/refresh_up.png"';
-                
-                $newDwn = 'this.src="../images/buttons/new_dwn.png"';
-                $newUp = 'this.src="../images/buttons/new_up.png"';
-
-                $deleteDwn = 'this.src="../images/buttons/delete_dwn.png"';
-                $deleteUp = 'this.src="../images/buttons/delete_up.png"';
-			  			
-        echo' <img src="../images/buttons/refresh_dwn.png" width="30" height="30"';
-        echo' alt="Refresh The List Box" onclick="refreshEvent()" ';
-        echo 'onmouseover='.$refreshUp.' onmouseout='. $refreshDwn .' />';
-        
-                
-        echo ' <img src="../images/buttons/new_dwn.png" width="30" height="30"';
-        echo ' alt="Add a New Event" onclick="addEvent()" ';
-        
-        echo 'onmouseover='.$newUp.' onmouseout='.$newDwn.' />';
-
-        echo' <img src="../images/buttons/delete_dwn.png" width="30" height="30"';
-        echo' alt="Delete the selected event" onclick="deleteEvent()" ';
-        echo 'onmouseover='.$deleteUp.' onmouseout='. $deleteDwn .' />';
-        echo '</P>';
-        echo '</FORM>';
-        echo '<hr />';
-
+	$on = 'this.src="../images/buttons/save_dwn.png"';
+	$off = 'this.src="../images/buttons/save_up.png"';
 ?>
-<!-- INCLUDE THIS AFTER 'MAIN CONTENT' -->
-<!-- ********************************* -->
+	<table cellspacing="0" class="editTable" border='0'>
+	<tr>
+		<th class="headText" colspan="3">Create A New Event</th>
+	</tr>
+
+	<tr>
+		<td width='150px'>Event Name:</td>
+		<td><input type="text" name="event_name" id="event_name" value="" size="50" maxlength="64" /></td>
+	</tr>
+
+	<tr>
+		<td>Event Location: </td>
+		<td><input type="text" name="event_location" id="event_location" value="" size="50" maxlength="128" /></td>
+	</tr>
+
+	<tr>
+		<td>Event Date:</td>
+		<td>
+			<input class="inputDate" type='text' name='inputDate' id="inputDate" value="" readonly='readonly'/>
+			<label id='closeOnSelect'><input type='checkbox' checked='true' style='visibility: hidden' /></label>
+		</td>
+	</tr>
+
+	<tr>
+		<td>Event Time: <font size='1'>(24 Hour)</font></td>
+		<td><input type="text" name="startTime" id="startTime" value="00:00:00" size="50" maxlength="30" /></td>
+	</tr>
+
+	<tr>
+		<td>Server IP Address: </td>
+		<td><input type="text" name="server_IP_address" id="server_IP_address" value="" size="50" maxlength="128" /></td>
+	</tr>
+
+	<tr>
+		<td>Seat Quantity: </td>
+		<td><input type="text" name="seatQuantity" id="seatQuantity" value="64" size="50" maxlength="2" /></td>
+	</tr>
+
+	<tr>
+		<td align="right" height="50px" colspan="2">
+        <div align="right" style='position: relative; left: -20px;'>
+			<!-- SAVE EVENT -->
+			<img class='button'
+				 src="../images/buttons/save_dwn.png" 
+				 alt="Save the current Event" onclick="checkaddEvent()" 
+				 onmouseover='<?php echo $off; ?>' onmouseout='<?php echo $on; ?>' />
+        </div>
+		</td>
+    </tr>
+	</table>
+</div>
+</div>
+
+
+
+
+
 <!--This is where the summary table ends up.-->
 <div id="eventTable"></div>
-<!--**************************************** -->
 <br /><br />
+
+
+
+
+
+<!-- INCLUDE THIS AFTER 'MAIN CONTENT' -->
+<!-- ********************************* -->
+
 </div><!-- end of: Content -->
+
 <!-- INSERT: rightPanel -->
 <?php include('../includes/rightPanel.html'); ?>
+
 <!-- INSERT: footer -->
 <div id="footer">
 	<?php include('../includes/footer.html'); ?>
