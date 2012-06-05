@@ -103,7 +103,7 @@ function getEvent(eventID)
 //****************************************************************
 function checkaddEvent()
 {
-	var eventID="0";
+	var eventID = "0";
 
 	//var eventID = document.getElementById('eventID').value;
 	var event_name = document.getElementById('event_name').value;
@@ -119,6 +119,9 @@ function checkaddEvent()
 				+ "&seatQuantity=" + seatQuantity;			
 	createRequest(eventID,params);
 }
+
+
+
 //***************************************************************
 //
 // Ajax Function to insert a new event.
@@ -141,6 +144,9 @@ function addEvent()
 		return;
 	}
 }
+
+
+
 //***************************************************************
 //
 // Ajax Function to delete an event.
@@ -165,6 +171,9 @@ function deleteEvent(eventID, eventName)
 		return;
 	}
 }
+
+
+
 //***************************************************************
 //
 // Ajax Function to start an event.
@@ -190,6 +199,9 @@ function startEvent(eventID)
 		return;
 	}
 }
+
+
+
 //***************************************************************
 //
 // Ajax Function to stop / end an event.
@@ -213,6 +225,9 @@ function stopEvent(eventID)
 		return;
 	}
 }
+
+
+
 //***************************************************************
 //
 // Ajax Function to edit an event.
@@ -224,6 +239,8 @@ function editEvent(eventID)
 	createRequest(eventID,params);
 }
 //************************************************************************************************
+
+
 
 //************************************************************************************************
 //
@@ -247,18 +264,6 @@ function updateEvent()
 
 	createRequest(eventID,params);		
 }
-//************************************************************************************************
-
-//************************************************************************************************
-//
-// Refresh Event List Box
-//
-//*************************************************************************************************
-function refreshEvent()
-{	
-  	document.forms["frm1"].submit(); 
-}
-//************************************************************************************************
 
 
 function setDate()
@@ -279,37 +284,13 @@ $(document).ready(function(){
 	$(".ajax").colorbox();
 	$(".inlineADD").colorbox({inline:true, width:"550px", height:"350px"});
 	$(".inlineB").colorbox({inline:true, width:"700px", height:"900px"});
+
+
+	// DATE PICKER:
+	$('.inputDate').DatePicker();
 });
 
 
-
-// DATE PICKER - Create new event
-$('#inputDate').DatePicker({
-	format:'d/m/Y',
-	position: 'bottom',
-	onChange: function(formated, dates)
-	{
-		if ($('#closeOnSelect input').attr('checked'))
-		{
-			$('#inputDate').DatePickerHide();
-		}
-	}
-});
-
-
-
-// DATE PICKER - Edit event
-$('#startDate').DatePicker({
-	format:'d/m/Y',
-	position: 'bottom',
-	onChange: function(formated, dates)
-	{
-		if ($('#closeOnSelect input').attr('checked'))
-		{
-			$('#inputDate').DatePickerHide();
-		}
-	}
-});
 
 
 
@@ -384,19 +365,19 @@ function selectRow(row, count)
 	<tr>
 		<td>Event Date:</td>
 		<td>
-			<input class="inputDate" type='text' name='inputDate' id="inputDate" value="" readonly='readonly'/>
+			<input class="inputDate" type='text' name='inputDate' id="inputDate" readonly='readonly'/>
 			<label id='closeOnSelect'><input type='checkbox' checked='true' style='visibility: hidden' /></label>
 		</td>
 	</tr>
 
 	<tr>
 		<td>Event Time: <font size='1'>(24 Hour)</font></td>
-		<td><input type="text" name="startTime" id="startTime" value="00:00:00" size="50" maxlength="30" /></td>
+		<td><input type="text" name="startTime" id="startTime" value="00:00" size="50" maxlength="5" /></td>
 	</tr>
 
 	<tr>
 		<td>Server IP Address: </td>
-		<td><input type="text" name="server_IP_address" id="server_IP_address" value="" size="50" maxlength="128" /></td>
+		<td><input type="text" name="server_IP_address" id="server_IP_address" value="" size="50" maxlength="28" /></td>
 	</tr>
 
 	<tr>

@@ -219,11 +219,10 @@ body {
 }
 
 input.inputDate {
-	border: 1px solid #999;
-	padding: 4px;
-	border-bottom-color: #ddd;
-	border-right-color: #ddd;
-	width: 65px;
+	text-align: center;
+	width: 75px;
+	height: 23px;
+	cursor: pointer;
 }
 #widget {
 	position: relative;
