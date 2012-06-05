@@ -249,13 +249,13 @@ function saveEdits(clientID)
 // Function to add a client to an event
 //
 //************************************************************************************************
-function joinEvent(clientID)
+function joinEvent(noEvent, clientID)
 {
         var e = document.getElementById("eventSelect");
         var eventID = e.options[e.selectedIndex].value;
 
     var divID = document.getElementById("clientDetails");
-    var params = "eventID=" + eventID + "&clientID=" + clientID + "&queryType=6&startRow=0";
+    var params = "noEvent=" + noEvent + "&eventID=" + eventID + "&clientID=" + clientID + "&queryType=6&startRow=0";
     createRequest(clientID , params, divID);
         
 }
