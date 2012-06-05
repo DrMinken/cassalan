@@ -306,6 +306,18 @@ body
 	font-size: 10pt;
 	line-height: 14pt;
 }
+input
+{
+	height: 23px;
+}
+.muteInput
+{
+	background-color: #F0F0F0;
+}
+	.unmuteInput
+	{
+		background-color: white;
+	}
 p
 {
 	font-size: 12px;
@@ -322,6 +334,11 @@ p
 {
 	color: red;
 	font-size: 12pt;
+}
+.subtitle
+{
+	font-family: 'Segoe Print';
+	font-size: 10pt;
 }
 
 
@@ -382,14 +399,6 @@ p
 
 	position: relative;
 	left: 80px;
-}
-.muteInput
-{
-	background-color: #F0F0F0;
-}
-.unmuteInput
-{
-	background-color: white;
 }
 
 
@@ -641,11 +650,11 @@ p
 /* CREATE PIZZA */
 #createPizza
 {
-	width: 300px;
-	height: 350px;
+	width: 290px;
+	height: 320px;
 	padding: 20px;
 	text-align: left;
-	background: url('/cassa/images/layers/pizzaQuart.png') right 20px bottom 30px no-repeat;
+	background: url('/cassa/images/layers/pizzaQuart.png') no-repeat right bottom;
 }
 
 /* DELETE PIZZA */
@@ -669,10 +678,12 @@ p
 .pizzaOrder
 {
 	width: 650px;
-	padding: 50px;
+	padding: 20px;
 	text-align: left;
 	border-collapse: collapse;
+	border: 1px solid black;
 	line-height: 25pt;
+	text-indent: 5px;
 }
 #orderSummaryDIV
 {
@@ -681,7 +692,25 @@ p
 
 
 
-/* Event Page */
+/* Event Page *//* Event Page *//* Event Page */
+/* Event Page *//* Event Page *//* Event Page */
+
+/* ONCLICK OF: 'new' EVENT */
+#addEventTable
+{
+	padding: 20px;
+}
+	.editTable
+	{
+		font-size: 11pt;
+		line-height: 25pt;
+	}
+	.editTable td
+	{
+		text-indent: 10px;
+	}
+
+
 #tableEventDetail
 { 
 	width:700px;
@@ -704,10 +733,8 @@ p
 		color:white;
 		font-weight: bold;
 		text-align:left;
-		height: 40px;
-		width: 6500px;
+		width: 650px;
 		padding:0;
-		padding-left: 10px;
 	}
 	#headCell_middle
 	{
@@ -715,15 +742,12 @@ p
 		color:white;
 		height: 40px;
 		width: 10px;
-		
 	}		
 	#headCell_right
 	{
 		background-color: black;
 		color:white;
-		height: 40px;
 		width: 40px;
-		
 		text-align: right;
 		padding-right:5px;
 	}
@@ -734,7 +758,7 @@ p
 	height: 30px;
 	width: 350px;
 	text-align: left;
-	padding:0px,0px,0px,10px;
+	padding:0px 0px 0px 10px;
 }
 #pad
 {
@@ -742,7 +766,7 @@ p
 	height: 30px;
 	width: 50px;
 	text-align: right;
-	padding:0px,0px,0px,5px;	
+	padding:0px 0px 0px 5px;	
 }
 
 
@@ -928,7 +952,7 @@ p
  #clientTableData
  {
      width:600px;
-     padding:10;
+     padding: 10px;
      border-collapse: collapse;
      
  }

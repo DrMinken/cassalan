@@ -32,64 +32,63 @@
 
 if (isset($_POST['submit']))
 {
-// First check if user exists
-$thisLogin = login_user($db);
-if ($thisLogin == 1)//user exists in database & credentials are correct
+	// First check if user exists
+	$thisLogin = login_user($db);
+	
+	if ($thisLogin == 1)//user exists in database & credentials are correct
 	{
 		$eventStatus = event_check($db);		
 		if ($eventStatus == 1) // event started when set to 1
 			{
 				$adminStatus = isStaff($db);
 				if($adminStatus == 1) // if user is a staff member then skip IP address check
+				{
+					//close connection
+					$db->close();
+					$_SESSION['errMsg'] = "";
+					
+					header('Location: /CASSA/management/staffBoard.php?msg="3"');
+				}
+				else 
+				{
+					$ipStatus = check_IP_address($db);
+					if ($ipStatus == 1) // if IP address is within range allow login
 					{
 						//close connection
 						$db->close();
 						$_SESSION['errMsg'] = "";
-						
-						header('Location: /CASSA/management/staffBoard.php?msg="3"');
+						header('Location: /CASSA/management/clientBoard.php?msg="4"');
 					}
-				else 
-					{
-						$ipStatus = check_IP_address($db);
-						if ($ipStatus == 1) // if IP address is within range allow login
-							{
-								//close connection
-								$db->close();
-								$_SESSION['errMsg'] = "";
-								header('Location: /CASSA/management/clientBoard.php?msg="4"');
-							}
-						else
-							{
-								// else login not allowed so close connection 
-								$db->close();
-								$_SESSION['errMsg'] = "You cannot login after an event is started from a remote location.";
-								header('Location: home.php?msg="1"');
-							}
-					}
-			}
-		
-			else 
-				{
-					$adminStatus = isStaff($db);
-					
-					if($adminStatus == 1) //event has not started so process login normally as an admin
-						{
-							//close connection
-							$db->close();
-							$_SESSION['errMsg'] = "";
-							header('Location: /CASSA/management/staffBoard.php?msg="5"');
-						}
 					else
-							{
-								// else user is not an admin so goto client summary page and close connection
-								$db->close();
-								$_SESSION['errMsg'] = "";
-								header('Location: /CASSA/management/client_summary.php?msg="6"');
-							}
+					{
+						// else login not allowed so close connection 
+						$db->close();
+						$_SESSION['errMsg'] = "You cannot login after an event is started from a remote location.";
+						header('Location: home.php?msg="1"');
+					}
 				}
-
+			}
+			else 
+			{
+				$adminStatus = isStaff($db);
+				
+				if($adminStatus == 1) //event has not started so process login normally as an admin
+				{
+					//close connection
+					$db->close();
+					$_SESSION['errMsg'] = "";
+					header('Location: /CASSA/management/staffBoard.php?msg="5"');
+				}
+				else
+				{
+					// else user is not an admin so goto client summary page and close connection
+					$db->close();
+					$_SESSION['errMsg'] = "";
+					header('Location: /CASSA/management/client_summary.php?msg="6"');
+				}
+			}
 	}
-else
+	else
 	{
 		//close connection
 		$db->close();
@@ -110,26 +109,23 @@ else
 
 function event_check($db)
 {
-
 	$query = "SELECT event_started FROM event WHERE event_started = 1";
 	$result = $db->query($query);
 	$row = $result->fetch_array(MYSQLI_BOTH);
 	$row_cnt = $result->num_rows;
 
-
-if ($row_cnt = 1) 
+	if ($row_cnt = 1) 
 	{
-		 // close result set
+		// close result set
     	$result->close();
 		return 1;
 	}
-	
 	else 
-		{ 
+	{ 
 		 // close result set
-    	$result->close();
+		$result->close();
 		return 0;
-		}
+	}
 	
 }
 		
@@ -146,17 +142,13 @@ if ($row_cnt = 1)
 		
 function check_IP_address($db)
 {
-	
 	$query = "SELECT server_IP_address FROM event WHERE event_started = 1";
 	$result = $db->query($query);
 	$row = $result->fetch_array(MYSQLI_BOTH);	
-		
-		
 				
 	$serverIP = abs(ip2long($row['server_IP_address']));
 	
 	// Now create the hi and lo values of the server address
-	
 	$lowIP = abs($serverIP - 20);
 	$highIP = abs($serverIP + 20);
 	
@@ -172,22 +164,20 @@ function check_IP_address($db)
 	// Check whether the address is within range and return the result
 	
 	if ( $userIP <= $lowIP || $userIP >= $highIP )
-				{
-					
-					$_SESSION['errorMSG'] = "You have attempted to login after an event has started and"
-													. "from outside the MegaLAN";
-					 // close result set
-    				$result->close();
-					return 0; // IP address outside range
-				}
+	{
 		
+		$_SESSION['errorMSG'] = "You have attempted to login after an event has started and"
+										. "from outside the MegaLAN";
+		 // close result set
+		$result->close();
+		return 0; // IP address outside range
+	}
 	else	
-			{  
-			// close result set
-    		$result->close();
-    		return 1; // IP address within range.
-    		}
-	
+	{  
+	// close result set
+	$result->close();
+	return 1; // IP address within range.
+	}
 }	
 		
 //******************************************end of function check_IP_address ********************************		
@@ -204,65 +194,62 @@ function isStaff($db)
 	$result = $db->query($query);
 	$row = $result->fetch_array(MYSQLI_BOTH);
 		
-		// Check to see if user is a staff member
-							
-			if ($row['admin'] == 1)
-				{
-					 // close result set
-    				$result->close();
-    				$_SESSION['isAdmin'] = 1;					
-					return 1; // user is an admin
-				}
-				else 
-					{ 
-					 // close result set
-	    			$result->close();
-	    			$_SESSION['isAdmin'] = 0;
-					return 0; // user is not an admin
-					}
-		
+		// Check to see if user is a staff member	
+		if ($row['admin'] == 1)
+		{
+			 // close result set
+			$result->close();
+			$_SESSION['isAdmin'] = 1;					
+			return 1; // user is an admin
+		}
+		else 
+		{ 
+			 // close result set
+			$result->close();
+			$_SESSION['isAdmin'] = 0;
+			return 0; // user is not an admin
+		}
 }
-//	***************************************End of isStaff Function ***********************************************		
+
+// ***************************************End of isStaff Function ***********************************************		
 
 //*********************************Function login_user() is used for code re-use only ***************************
 // Requires= Database Connection
 // Returns 1 if user exists returns 0 if not
 //*****************************************************************************************************************	
 function login_user($db)
-	{
-	
+{
 	$query = "SELECT * FROM client WHERE username = '" . mysql_real_escape_string($_POST['username']) . "' 
 				and password = '" . mysql_real_escape_string($_POST['password']) . "'";
 				
 	$result = $db->query($query);
 	$row = $result->fetch_array(MYSQLI_BOTH);
 	$row_cnt = $result->num_rows;
-	
-		
-		// Check username and password match stored record
-		if ($row_cnt == 1) 
-			{
-				// Set username session variable
-				$_SESSION['username'] = $_POST['username'];
-				$_SESSION['err_code'] = 0;
-						
-				// create session vars if ok
-				$_SESSION['fullName'] = $row['first_name']. " " . $row['last_name'];
-				$_SESSION['userID'] = $row['clientID'];
-			 	
-			 	// close result set
-   				$result->close();			
-					return 1; // user exists in database
-				
-			}
-		else 
-			{
-				 // close result set
-    			$result->close();				
-				return 0; //user does not exist.
-			}
-	}
 
+	
+	// Check username and password match stored record
+	if ($row_cnt == 1) 
+	{
+		// Set username session variable
+		$_SESSION['username'] = $_POST['username'];
+		$_SESSION['err_code'] = 0;
+				
+		// create session vars if ok
+		$_SESSION['fullName'] = $row['first_name']. " " . $row['last_name'];
+		$_SESSION['userID'] = $row['clientID'];
+		
+		// close result set
+		$result->close();			
+			return 1; // user exists in database
+		
+	}
+	else 
+	{
+		 // close result set
+		$result->close();				
+		return 0; //user does not exist.
+	}
+}
 //*************************************End of Function login_user() ********************************************
 ?>
 
