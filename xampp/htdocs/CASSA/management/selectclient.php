@@ -2,7 +2,7 @@
 
 // Name of File: selectclient.php
 // Revision: 1.0
-// Date: 24/5/12
+// Date: 6/6/12
 // Author: Lyndon Smith
 // Modified: 
 
@@ -47,7 +47,7 @@
  
        
  
-if($queryType == 0)
+if($queryType == 0)// show the client table at the top of the page.
             {
                 $_SESSION['errMsg'] = "";
                $startRow = $_POST['startRow'];
@@ -62,18 +62,18 @@ if($queryType == 0)
                     {
                     
                     ajax_client_table_basic($db, $startRow, $surname);
-                    //ajax_client_Summary_table($db, $startRow, $clientID);
+                   
                     
                     }
             }
          
-   elseif ($queryType == 1)
+   elseif ($queryType == 1)// Show the summary Table when the user clicked on the [?] button
     {
        
        ajax_client_Summary_table($db, $startRow, $clientID);
     }
     
-     elseif ($queryType == 2)
+     elseif ($queryType == 2)// Delete the selected user.
     {
 
          $query = "Delete from client WHERE clientID = ";
@@ -85,13 +85,14 @@ if($queryType == 0)
          $surname = "";
          ajax_client_table_basic($db, $startRow, $surname);
     }
-  elseif ($queryType == 3)
+ // Show the edit client table for editing. 
+    elseif ($queryType == 3)
     {
 
      editClient($db, $clientID);
          
     }
-  
+// After submitting the datat send it for validation.
     elseif ($queryType == 4)
     {
 
@@ -110,7 +111,7 @@ if($queryType == 0)
      chk_editClient($db, $clientID, $postData, $postNames);
          
     }
-   
+ // Show the main participation editing table.   
      elseif ($queryType == 5)
     {
 
@@ -118,7 +119,9 @@ if($queryType == 0)
         
          
     }
-      elseif ($queryType == 6)
+      
+  // Update the clients event registration.  
+    elseif ($queryType == 6)
     {
           $noEvent = $_POST['noEvent'];
           
@@ -145,7 +148,7 @@ if($queryType == 0)
         
          
     }
-    
+// Update the client team selection.    
        elseif ($queryType == 7)
     {
           $teamID = $_POST['teamID'];
@@ -177,7 +180,7 @@ if($queryType == 0)
          
     }
     
-    
+// Update the clients paid status.    
         elseif ($queryType == 8)
     {
           $payStatus= $_POST['payStatus'];
@@ -209,6 +212,7 @@ if($queryType == 0)
 //
 //****************************************************************************************
 // Sets up basic table for viewing records. Visible in the top of the MANparticipants page
+// Author: Lyndon Smith
 //****************************************************************************************
     
 function ajax_client_table_basic($db, $startRow,$surname)
@@ -331,6 +335,7 @@ function ajax_client_table_basic($db, $startRow,$surname)
 }
 //***************************************************************************************
 //Table to display summary information
+// Author: Lyndon Smith
 //***************************************************************************************
 
 function ajax_client_Summary_table($db, $startRow, $clientID)
@@ -479,6 +484,7 @@ function ajax_client_Summary_table($db, $startRow, $clientID)
 
 //***************************************************************************************
 //Dsiplay a form to edit a clients details.
+// Author: Lyndon Smith
 //***************************************************************************************
 
 function editClient($db, $clientID)
@@ -586,6 +592,7 @@ function editClient($db, $clientID)
 
 //***************************************************************************************
 //Check form submission
+// Author: Lyndon Smith
 //***************************************************************************************
 function chk_editClient($db, $clientID, $postData, $postNames)
 {
@@ -674,24 +681,12 @@ function chk_editClient($db, $clientID, $postData, $postNames)
             editClient($db, $clientID);
 
         }
-                
-                
-      
-      
-          
-          
-          
+        
 }
-
-
-
-  
-    
-
-
 
 //***************************************************************************************
 //Display form so a client can be added or removed from an event, team or tournament.
+// Author: Lyndon Smith
 //***************************************************************************************
 
 function manageClientEvent($db, $startRow, $clientID)
@@ -700,44 +695,45 @@ function manageClientEvent($db, $startRow, $clientID)
     echo '<p><h2>Edit Client Event Details</h2></p>';
     echo '<br />';
     echo '<p class="redAstrix">' . $_SESSION['errMsg'] . '</p>';
-    
-     $query = "SELECT * FROM client WHERE clientID =" . $clientID . ";";
+ // Utillity queries follow..............................................   
+            $query = "SELECT * FROM client WHERE clientID =" . $clientID . ";";
             $result1 = $db->query($query);
             $row1 = $result1->fetch_array(MYSQLI_BOTH);
             
-        $query2 = "SELECT e.event_name, e.eventID, a.paid FROM (event e INNER JOIN attendee a ON e.eventID = a.eventID)"; 
-        $query2 .= "WHERE a.clientID = '".$clientID."'";
-	$result2 = $db->query($query2);
-	$row2 = $result2->fetch_array(MYSQLI_BOTH);
-        
-            $query3= "SELECT event_name,eventID FROM event ";
-            $query3 .= "WHERE event_started != 2;";
-            $result3 = $db->query($query3);
+                $query2 = "SELECT e.event_name, e.eventID, a.paid FROM (event e INNER JOIN attendee a ON e.eventID = a.eventID)"; 
+                $query2 .= "WHERE a.clientID = '".$clientID."'";
+                $result2 = $db->query($query2);
+                $row2 = $result2->fetch_array(MYSQLI_BOTH);
+
+                if($row2['paid'] == '1')
+                    {
+                        $eventPaid = "Paid : Yes";
+                        $buttonStyle = '<td colspan="1" id="td14"><img class="button" align="right" src="../images/buttons/delPay.png"';
+                        $buttonStyle .= 'alt="Delete Payment for This Event" onclick="payEvent(0,' . $row1['clientID'] . ')" /></td>';
+                    }
+                    else 
+                        {
+                            $eventPaid = "Paid : No";
+
+                            $buttonStyle = '<td colspan="1" id="td14"><img class="button" align="right" src="../images/buttons/pay.png"';
+                            $buttonStyle .= 'alt="Accept Payment for This Event" onclick="payEvent(1,' . $row1['clientID'] . ')" /></td>';
+
+
+                        }
+                            $query3= "SELECT event_name,eventID FROM event ";
+                            $query3 .= "WHERE event_started != 2;";
+                            $result3 = $db->query($query3);
             
-         $query4 = "SELECT team_name from teams WHERE ";
-         $query4 .=   "teamID = (Select teamID from team_attendee where attendeeID";
-               $query4 .= " = (SELECT attendeeID from attendee where clientID = " . $clientID ."));";
-            $result4 = $db->query($query4);
+                $query4 = "SELECT team_name from teams WHERE ";
+                $query4 .=   "teamID = (Select teamID from team_attendee where attendeeID";
+                $query4 .= " = (SELECT attendeeID from attendee where clientID = " . $clientID ."));";
+                $result4 = $db->query($query4);
                 
 	 $query5 = "SELECT team_name, teamID from teams";
-             $result5 = $db->query($query5);
+         $result5 = $db->query($query5);
              
-             if($row2['paid'] == '1')
-             {
-                 $eventPaid = "Paid : Yes";
-                 $buttonStyle = '<td colspan="1" id="td14"><img class="button" align="right" src="../images/buttons/delPay.png"';
-                 $buttonStyle .= 'alt="Delete Payment for This Event" onclick="payEvent(0,' . $row1['clientID'] . ')" /></td>';
-             }
-             else 
-                 {
-                    $eventPaid = "Paid : No";
-                    
-                    $buttonStyle = '<td colspan="1" id="td14"><img class="button" align="right" src="../images/buttons/pay.png"';
-                    $buttonStyle .= 'alt="Accept Payment for This Event" onclick="payEvent(1,' . $row1['clientID'] . ')" /></td>';
-                 
-                    
-                 }
-                 
+            
+ //End of Queries..............................................................................                
         
             echo '<form id="editClientEvent">';
             
@@ -750,7 +746,7 @@ function manageClientEvent($db, $startRow, $clientID)
             echo '<td id="td13" style ="font-weight:bold">Client Name:</td>';
             echo '<td id="td14">' . ucwords($row1['first_name'] . ' ' . $row1['last_name']) . '</td>';
             echo '</tr>';
-            
+            //Intentional Blank row           
             echo '<tr>';
             echo '<td id="td11" ></td>';
             echo '<td id="td12"></td>';
@@ -784,6 +780,7 @@ function manageClientEvent($db, $startRow, $clientID)
             echo '</tr>';
             
             echo '<tr>';
+            //Populate the Event List Box
             echo '<td id="td11" >Change Events To:</td>';
             echo '<td colspan="2" id="td2">';
             
@@ -811,7 +808,7 @@ function manageClientEvent($db, $startRow, $clientID)
             echo 'alt="Change Events for this client" onclick="joinEvent('. $noEvent . "," . $row1['clientID'] . ')" /></td>';
             echo '</tr>';
             echo '</form>';
- //Get Data for team name         
+            //Get Data for team name         
             $row4 = $result4->fetch_array(MYSQLI_BOTH);
             echo '<form id="editClientTeam">';
             echo '<tr><th colspan="4">Client Team Details</th></tr>';
@@ -819,6 +816,9 @@ function manageClientEvent($db, $startRow, $clientID)
             echo '<tr>';
             echo '<td id="td11" >Current Team:</td>';
             echo '<td colspan="3" id="td12">' . $row4['team_name']. '</td>';
+            
+            //If the team name is blank the client is not a member of any team.          
+            
             if($row4['team_name']== "")
             {
                 $noTeam = 1;
@@ -828,6 +828,7 @@ function manageClientEvent($db, $startRow, $clientID)
             echo '</tr>';
             $row5 = $result5->fetch_array(MYSQLI_BOTH);
             echo '<tr>';
+            //Populate the team list box.
             echo '<td id="td11" >Change Team To:</td>';
             echo '<td colspan="2" id="td2">';
             
@@ -855,6 +856,7 @@ function manageClientEvent($db, $startRow, $clientID)
             echo 'alt="Change Teams for this client" onclick="joinTeam('. $noTeam .','. $row1['clientID'] . ')" /></td>';
             echo '</tr>';
             echo '</form>';
+            
             
             
             
