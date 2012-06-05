@@ -120,11 +120,27 @@ if($queryType == 0)
     }
       elseif ($queryType == 6)
     {
+          $noEvent = $_POST['noEvent'];
+          
+        if($noEvent =="0")
+        {
           $eventID = $_POST['eventID'];
           $query = "UPDATE attendee SET eventID =" . $eventID . " WHERE clientID = ";
          $query .= $clientID;
+       
          $result1 = $db->query($query);     
+        }
+        
+        elseif($noEvent == "1")
+        {
           
+            
+            $eventID = $_POST['eventID'];
+          $query = "INSERT INTO attendee (`attendeeID`, `seatID`, `eventID`, `clientID`, `paid`) VALUES (NULL, NULL, " . $eventID . ", ";
+         $query .= $clientID . ", 0);";
+         
+         $result1 = $db->query($query); 
+        }
           manageClientEvent($db, $startRow, $clientID);
         
          
@@ -752,9 +768,18 @@ function manageClientEvent($db, $startRow, $clientID)
             if(!$row2['event_name'] == "")
                 { 
                     echo $buttonStyle;
+                    $noEvent=0;
                     
                 }
-            else {echo '<td id="td14"></td>';}
+            else 
+                
+                {
+                
+                $noEvent=1;
+                echo '<td id="td14"></td>';
+                
+                
+                }
             
             echo '</tr>';
             
@@ -783,7 +808,7 @@ function manageClientEvent($db, $startRow, $clientID)
           
             echo '</td>';
             echo '<td id="td14"><img class="button" align="right" src="../images/buttons/join.png"';
-            echo 'alt="Change Events for this client" onclick="joinEvent(' . $row1['clientID'] . ')" /></td>';
+            echo 'alt="Change Events for this client" onclick="joinEvent('. $noEvent . "," . $row1['clientID'] . ')" /></td>';
             echo '</tr>';
             echo '</form>';
  //Get Data for team name         
