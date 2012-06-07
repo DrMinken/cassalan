@@ -340,6 +340,15 @@ p
 	font-family: 'Segoe Print';
 	font-size: 10pt;
 }
+.tableTitle
+{
+	background-color: black;
+	color:white;
+	font-weight: bold;
+	text-align:left;
+	padding:0;
+	height: 41px;
+}
 
 
 

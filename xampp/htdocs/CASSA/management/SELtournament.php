@@ -18,6 +18,7 @@
 
 
 <?php 
+	session_start();
     include("../includes/conn.php");            // Include the db connection
 
 	// SECURE AND UNIFORM POST VARIABLE
@@ -29,77 +30,37 @@
     $queryType = $_POST['queryType'];           // Retrieve the query Identifier.
 
 
-	// Create the general select query.		
-	// DRAW BASIC TOURNAMENT TABLE
-    if($queryType == '0')
-	{
-		$query = "SELECT * FROM tournament WHERE tournID='".$tournID."';";        
-		ajax_tournament_table_basic($db, $tournID);
-	}
 
-	// Create the general select query.
-	// DRAW CREATE TOURNAMENT TABLE
-    else if($queryType == '1')
-	{
-		$query = "SELECT * FROM tournament WHERE tournID='".$tournID."';";        
-		ajax_tournament_table_create($db, $tournID);
-	}
 
-	// Create the general select query.  
-	// DRAW EDIT TOURNAMENT TABLE
-    else if($queryType == '2')
-	{
-		$query = "SELECT * FROM tournament WHERE tournID='".$tournID."';";        
-		ajax_tournament_table_edit($db, $tournID);
-	}
-
-	// DELETE TOURNAMENT
-	else if($queryType == "delete")
-	{
-		$tournID = $_POST['tournID'];
-		$query = "DELETE FROM tournament WHERE tournID='".$tournID."';";
-		$result = $db->query($query);
-	}
-
-	// INSERT TOURNAMENT
-	else if($queryType == "insert")
-	{
-		// SETUP SUBJECTIVE VARIABLES
-		$eventID = $_POST['eventID'];
-		$name = $_POST['name'];
-		$date = $_POST['date'];
-		$startTime = $_POST['startTime'];
-		$endTime = $_POST['endTime'];
-		$_SESSION['errMsg'] = '';
-
-		// VALIDATE INPUTES
-		if ($eventID == '')
-		{
-			$_SESSION['errMsg'] .= 'No event was selected';
-		}
-		else if ($name == '')
-		{
-			$_SESSION['errMsg'] .= 'No event name was entered';
-		}
-		else if (!is_numeric($startTime) || !is_numeric($endTime))
-		{
-			$_SESSION['errMsg'] .= 'Start/End times must be digits that are in 24 hour times';
-		}
-		else if ($startTime == $endTime)
-		{
-			$_SESSION['errMsg'] .= 'Start time and End time are the same';
-		}
-	}
-
-// DRAW BASIC TOURNAMENT TABLE
-function ajax_tournament_table_basic($db, $tournID)
+function getCurrentTourn($db)
 {
-	$query = "SELECT * FROM tournament WHERE tournID=".$tournID;      //Create the general select query.
+	// AVAILABLE EVENTS
+	$query = "SELECT * FROM event WHERE startDate >= NOW() AND event_completed=0 ORDER BY startDate ASC";
 	$result = $db->query($query);
-	$row1 = $result->fetch_array(MYSQLI_BOTH);                        //use it first for the title
-	$result->close();                                                 //then close it ready for the next execution
-	$result = $db->query($query);     
+	$row = $result->fetch_assoc();
+
+	// GET TOURNAMENT
+	$query = "SELECT * FROM tournament WHERE eventID=".$row['eventID']."";
+	$result = $db->query($query);
+	$row = $result->fetch_assoc();
+	$tournID = $row['tournID'];
+	draw_tournament_table($db, $tournID);
+}
+
+function draw_tournament_table($db, $tournID)
+{
+	draw_current_tournament($db);
+
+	//Create the general select query.
+	$query = "SELECT * FROM tournament WHERE tournID='".$tournID."'";
+	$result = $db->query($query);
 	
+	//use it first for the title
+	$row1 = $result->fetch_array(MYSQLI_BOTH);                        
+	
+	//then close it ready for the next execution
+	$result->close();                                                 
+	$result = $db->query($query);     
 	
 	// DECLARE MOUSE EVENTS
 	$on = 'this.src="../images/buttons/edit_dwn.png"';
@@ -109,43 +70,39 @@ function ajax_tournament_table_basic($db, $tournID)
 	<br /><br />
 
 
-	<table class="pizzaOrder" id="tableTournamentDetail">
+	<table class="pizzaOrder" style="width: 400px;">
 
 
-	<tr><td colspan="2" id="headCell_left" >Tournament Details for: 
+	<tr><td colspan="2" id="headCell_left">
+		&nbsp;&nbsp;Tournament Details for: 
 		<font class='subtitle'><?php echo $row1['name']; ?></font></td>
 	
 	<td id="headCell_right">
 		<img class="pointer" 
 			 src="../images/buttons/edit_dwn.png" 
-			 width="30" height="30"
-			 alt="" 
+			 width="30px" height="30px"
+			 alt="Click to edit this tournament" 
 			 onclick="editTournament(' <?php echo $row1['tournID']; ?> ')" 
 			 onmouseover='<?php echo $off; ?>' onmouseout='<?php echo $on; ?>' /></td>
 	</tr>
 			
 <?php 
-	//While Loop starts here - 
+	// While Loop starts here - 
 	// Retrieve the data for the table. There should only be one row.
 	while($row = $result->fetch_array(MYSQLI_BOTH))                            
 	{
 		echo '<tr>';
-			echo '<td>Tournament Date: </td>';
-			echo '<td>' . $row['date'] . '</td>';
+			echo '<td>Start Time: </td>';
+			echo '<td>' . substr($row['start_time'], 0, 5) . '</td>';
 		echo '</tr>';    
 		
 		echo '<tr>';
-			echo '<td>Tournament Start Time: </td>';
-			echo '<td>' . $row['start_time'] . '</td>';
-		echo '</tr>';    
-		
-		echo '<tr>';
-			echo '<td>Tournament End Time: </td>';
-			echo '<td>' . $row['end_time'] . '</td>';
+			echo '<td>End Time: </td>';
+			echo '<td>' . substr($row['end_time'], 0, 5) . '</td>';
 		echo '</tr>';       
 
 		echo '<tr>';
-			echo '<td>Tournament Winner: </td>';
+			echo '<td>Winner: </td>';
 			echo '<td>' . $row['winner'] . '</td>';
 		echo '</tr>';
 													   
@@ -157,7 +114,7 @@ function ajax_tournament_table_basic($db, $tournID)
 			$off = 'this.src="../images/buttons/stop.png"';
 
 			echo '<tr>';
-				echo '<td>Tournament Started: </td>';
+				echo '<td>Started: </td>';
 				echo '<td>Yes</td>';
 					echo '<td><img src="../images/buttons/stop_dwn.png" class="pointer"';
 						echo 'width="30px" height="30px"'; 
@@ -203,131 +160,270 @@ function ajax_tournament_table_basic($db, $tournID)
 
 
 
-function ajax_tournament_table_create($db, $tournID)
+
+
+
+// DELETE TOURNAMENT
+if($queryType == "delete")
+{
+	$tournID = $_POST['tournID'];
+	$query = "DELETE FROM tournament WHERE tournID='".$tournID."';";
+	$result = $db->query($query);
+
+	// DISPLAY CURRENT EVENT->TOURNAMENT
+	getCurrentTourn($db);
+}
+
+
+
+
+
+
+
+
+// INSERT TOURNAMENT
+else if($queryType == "insert")
+{
+	// SETUP SUBJECTIVE VARIABLES
+	$eventID = $_POST['eventID'];
+	$name = $_POST['name'];
+	$startTime = $_POST['startTime'];
+	$endTime = $_POST['endTime'];
+	$_SESSION['errMsg'] = '';
+
+	// CHECK IF TOURNAMENT EXISTS
+	$check = "SELECT * FROM tournament WHERE name='".$name."'";
+	$result = $db->query($check);
+
+	if ($result->num_rows > 0)
+	{
+		echo '<font class="error">This tournament already exists!</font>';
+	}
+	else
+	{
+		// VALIDATE INPUTS
+		if ($eventID == '')
+		{
+			$_SESSION['errMsg'] .= '<br />No event was selected';
+		}
+		if ($name == '')
+		{
+			$_SESSION['errMsg'] .= '<br />No event name was entered';
+		}
+		if ($startTime < '00:00' && $startTime > '24:00' || $endTime > '00:00' && $endTime > '24:00')
+		{
+			$_SESSION['errMsg'] .= '<br />Start and End times must be within 24 hours';
+		}
+		if ($startTime == '00:00' && $endTime == '00:00')
+		{
+			$_SESSION['errMsg'] .= '<br />Start time and End time cannot be the same times';
+		}
+
+		// IF ERROR(S) ARE TRUE, DISPLAY ERROR MESSAGE 
+		if ($_SESSION['errMsg'] != '')
+		{
+			echo '<div class="error" align="left">'.$_SESSION['errMsg'].'</div>';
+		}
+		else
+		{
+			// INSERT INTO DATABASE
+			$insert = "INSERT INTO tournament (eventID, name, start_time, end_time, winner, started, finished) ";
+			$insert .= "VALUES ('".$eventID."','".$name."','".$startTime."','".$endTime."', '', 0, 0)";
+			$result = $db->query($insert);
+
+			// DISPLAY CURRENT EVENT->TOURNAMENT
+			getCurrentTourn($db);
+		}
+	}
+}
+
+
+
+
+
+
+
+
+// UPDATE TOURNAMENT
+else if($queryType == "update")
+{
+	// SETUP SUBJECTIVE VARIABLES
+	$tournID = $_POST['tournID'];
+	$name = $_POST['name'];
+	$startTime = $_POST['startTime'];
+	$endTime = $_POST['endTime'];
+	$_SESSION['errMsg'] = '';
+
+
+	// CHECK IF TOURNAMENT EXISTS
+	$check = "SELECT * FROM tournament WHERE name='".$name."' AND tournID !='".$tournID."'";
+	$result = $db->query($check);
+
+	if ($result->num_rows > 0)
+	{
+		echo '<font class="error">This tournament name already exists!</font>';
+	}
+	else
+	{
+		// VALIDATE INPUTS
+		if ($name == '')
+		{
+			$_SESSION['errMsg'] .= '<br />No event name was entered';
+		}
+		if ($startTime < '00:00' && $startTime > '24:00' || $endTime > '00:00' && $endTime > '24:00')
+		{
+			$_SESSION['errMsg'] .= '<br />Start and End times must be within 24 hours';
+		}
+		if ($startTime == '00:00' && $endTime == '00:00')
+		{
+			$_SESSION['errMsg'] .= '<br />Start time and End time cannot be the same times';
+		}
+
+		// IF ERROR(S) ARE TRUE, DISPLAY ERROR MESSAGE 
+		if ($_SESSION['errMsg'] != '')
+		{
+			echo '<div class="error" align="left">'.$_SESSION['errMsg'].'</div>';
+		}
+		else
+		{
+			// UPDATE TOURNAMENT
+			$update = "UPDATE tournament SET name='".$name."', start_time='".$startTime."', end_time='".$endTime."' WHERE tournID='".$tournID."'";
+			$result = $db->query($update);
+			$queryType='0';
+		}
+	}
+}
+
+
+
+
+
+
+
+
+// DRAW CURRENT TOURNAMENT TABLE [top]
+function draw_current_tournament($db)
 {
 ?>
-    <br>
-    <br>
-    <p><h2>Create Tournament</h2></p> 
-     <br>
-     <table border="1" width="400">
-    <tr> 
-    <td>Select Event:</td>
-    <td>
-    <select name="events">
-    <?php
-        $get = "SELECT * FROM event WHERE event_completed=0";
-        $result = $db->query($get);
-        
-        for ($i=0; $i<$result->num_rows; $i++)
-        {
-            $row = $result->fetch_assoc();
-            
-            echo '<option value="'.$row['eventID'].'">'.$row['event_name'].'</option>';
-        }
-    ?>
-    </select></td>
-    </tr>
-    <tr>
-    <td>Enter Tournament Name:</td>
-    <td><input type='text' name='name' mexlength='64'> </td>
-    </tr>
-    <tr>
-    <td>Enter Tournament Date:</td>
-    <td><input type='text' name='date'></td>
-    </tr>
-    <tr>
-    <td>Enter Start Time:</td>
-    <td><input type='time' name='start_time'></td>
-    </tr>
-    <tr>
-    <td>Enter End Time:</td>
-    <td><input type='time' name='end_time'></td>
-    </tr>
-    </table>
-<p><input type='submit'  value='Create Tournament' onclick='getInfo();'>
-     <?php
-     
-   
-    //$username = $_SESSION['username'];
-    $query = "SELECT * FROM tournament";
-   $result = $db->query($query);
-    $row = $result->fetch_array(MYSQLI_BOTH);    
+<table class='pizzaOrder'>
+<tr>
+	<td class='MANheader' width='600px' colspan='2'>
+	&nbsp;&nbsp;Current Tournaments: 
+	<font size="2" class="subtitle">Click on a tournament to see more information below</font></td>
+</tr>
 
-   echo "<br><h1> Created Tournaments</h1>";
-    echo "<table border='1' CELLPADDING = 5 width= '400px' STYLE='font-size:13px'>";
-    echo "<tr><td><H4> Name</h3></td>";
-    echo "<td width = '100px'><H3> Date</h3></td>";
-     echo "<td><H4> start time </h3></td>";
-    echo "<td><H4> end time</h3></td>";
-    echo "<td><H4> winner</h3></td>";
-    echo "<td><H4> started</h3></td>";
-    echo "<td><H4> finished</h3></td>";
-    
-    
-          
-    // second row
-    while($row = $result->fetch_array(MYSQLI_BOTH)) 
-    {
-        // Put all the contents of each row into table
-        
-        echo '<tr><td colspan="1" id="detailCell">';
-         echo  $row['name'];
-        echo '</td><td>';
-        echo $row['date'];
-        echo "</td><td>";
-        echo $row['start_time'];
-        echo "</td><td>";
-        echo $row['end_time'];
-        echo "</td><td>";
-        echo $row['winner'];
-        echo "</td><td>";
-        echo $row['started'];
-        echo "</td><td>";
-        echo $row['finished'];
-        echo "</td><td>";
-        echo "</td></tr>";
-    }
-        echo "</table>"; 
-        function deleteTournament()
-        {
-              $id = $_GET["id"];
-              $DeleteDB = "DELETE FROM tournament  WHERE tournID = $id";
-              $result = $db->query($DeleteDB);
-        }
-        ?>
-        <button type="button" onclick="deleteTournament()">Delete Tournament</button>
-<?php 
+<?php
+	// AVAILABLE EVENTS
+	$query = "SELECT * FROM event WHERE startDate >= NOW() AND event_completed=0 ORDER BY startDate ASC";
+	$result = $db->query($query);
+
+	// FOR EACH AVAILABLE EVENTS, LOOP THROUGH AND DISPLAY EACH TOURNAMENT
+	for ($x=0; $x<$result->num_rows; $x++)
+	{
+		// EVENT ROW
+		$row = $result->fetch_assoc();
+		$eventName = $row['event_name'];
+
+		// GET TOURNAMENT
+		$queryTourn = "SELECT * FROM tournament WHERE eventID=".$row['eventID']."";
+		$resultTourn = $db->query($queryTourn);
+		
+		// FOR EACH TOURNAMENT IN [this] EVENT, DISPLAY
+		for ($i=0; $i<$resultTourn->num_rows; $i++) 
+		{
+			$rowTourn = $resultTourn->fetch_assoc();    
+
+			// GET START / END TIME
+			$startTime = substr($rowTourn['start_time'], 0, 5);
+			$endTime = substr($rowTourn['end_time'], 0 , 5);
+			echo '<tr>';
+				echo '<td width="70px">';
+					echo '<div style="position: relative; top: 5px;">';
+				?>
+					<!-- // DELETE EVENT BUTTON -->
+					<img class="pointer"
+						src="../images/buttons/delete_60.png"';
+						alt="Delete this tournament" 
+						onclick="deleteTournament(<?php echo $rowTourn["tournID"]; ?>, '<?php echo $rowTourn["name"]; ?>')" />
+				<?php
+					echo '</div>';
+				echo '</td>';
+				echo '<td class="pointer" id="tournRow_'.$i.'" onclick="getTournament('.$rowTourn["tournID"].')">';
+					echo $rowTourn['name'];
+					echo '&nbsp;-&nbsp;<font size="1"><b>'.$eventName.'</b> ['.$startTime.' - '.$endTime.']</font>';
+				echo '</td>';
+			echo '</tr>';
+		}
+	}
+echo '</table>';
 }
 
 
 
 
-function ajax_tournament_table_edit($db, $tournID)
+
+
+
+
+// DRAW BASIC TOURNAMENT TABLE [bottom]
+if($queryType == '0')
 {
-//$id = $_GET['name'];   
- //$tournID = $_POST['tournID'];                                                // Retrieve the search value.   
-    $sql = "SELECT * FROM tournament";
-  // $result = mysql_query($sql);
-    $result = $db->query($sql);                                             
-    $num = $result->fetch_array(MYSQLI_BOTH);
-    //$num = $mysql_fetch_array($result);      
-     
-   ?>
-     <br>
-    <br>
+	draw_tournament_table($db, $tournID);
+}
+
+
+
+
+
+
+
+
+// DRAW EDIT TOURNAMENT TABLE
+else if($queryType == '2')
+{
+	// DRAW TOP TABLE FIRST
+	draw_current_tournament($db);
+
+	// PREPARE EDIT TABLE
+	$sql = "SELECT * FROM tournament WHERE tournID='".$tournID."'";
+	$result = $db->query($sql);                                             
+	$num = $result->fetch_array(MYSQLI_BOTH);    
+?>
+
+    <br />
+    <br />
          
-<h1>Edit Tournament</h1>
-<input type ='hidden' name='id' value="<?php echo $num['tournID']; ?>" />
-Tournament Name:<input type ="text" name = "name" value ="<?php echo $num['name']?>" /><br>
-Tournament Date: <input type ="date" name = "date" value ="<?php echo $num['date']?>" /><br>
-Tournament Start Time: <input type ="time" name = "start_time" value ="<?php echo $num['start_time']?>" /><br>
-Tournament End Time: <input type ="time" name = "end_time" value ="<?php echo $num['end_time']?>" /><br>
-Tournament Winner: <input type ="text" name = "winner" value ="<?php echo $num['winner']?>" /><br>
-Tournament Started: <input type ="text" name = "started" value ="<?php echo $num['started']?>" /><br>
-Tournament Finished: <input type ="text" name = "finished" value ="<?php echo $num['finished']?>" /><br>
-<input type='submit'  value='submit' onclick='editInfo();' />   
+<table class="pizzaOrder" style='width: 400px;' border='0'>
+	<tr><td colspan="2" class="tableTitle">&nbsp;&nbsp;Edit Tournament: 
+		<font class='subtitle'><?php echo $num['name']; ?></font></td>
+	</tr>
+
+	<tr>
+		<td width='200px'>Tournament Name: </td>
+		<td><input type="text" name="E_name" id='E_name' 
+				   value="<?php echo $num['name']?>" 
+				   maxlength="128" /></td>
+	</tr>
+
+	<tr>
+		<td>Start Time: </td>
+		<td><input type="time" name="E_start_time" id='E_start_time' 
+				   value="<?php echo substr($num['start_time'], 0, 5) ?>" 
+				   size="5" maxlength="5" /></td>
+	</tr>
+
+	<tr>
+		<td>End Time: </td>
+		<td><input type="time" name="E_end_time" id='E_end_time' 
+				   value="<?php echo substr($num['end_time'], 0, 5) ?>" 
+				   size="5" maxlength="5" /></td>
+	</tr>
+
+	<tr><td colspan='2' align='center'>
+		<br />
+		<input type='submit' value='Update' onclick='updateTourn(<?php echo $num['tournID']; ?>)' /></td>
+	</tr>
+</table>
 <?php                 
 }
-//Return back to the MANevent.php page.
 ?>

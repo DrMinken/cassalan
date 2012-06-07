@@ -285,30 +285,9 @@ $(document).ready(function(){
 	$(".inlineADD").colorbox({inline:true, width:"550px", height:"350px"});
 	$(".inlineB").colorbox({inline:true, width:"700px", height:"900px"});
 
-
 	// DATE PICKER:
 	$('.inputDate').DatePicker();
 });
-
-
-
-
-
-// 'Current Events' @ ROW SELECT 
-function selectRow(row, count)
-{
-	for (var i = 0 ; i < count ; i++)
-	{
-		if (i == row)
-		{
-			document.getElementById("eventRow_"+i).style.backgroundColor = "#EDFFFE";
-		}
-		else
-		{
-			document.getElementById("eventRow_"+i).style.backgroundColor = "white";
-		}
-	}
-}
 </script>
 </head>
 		
