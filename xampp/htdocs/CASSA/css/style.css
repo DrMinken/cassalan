@@ -956,7 +956,7 @@ p
 	height: 32px;
  }
  
-#nameCell, #emailCell, #phoneCell, #userName
+#nameCell, #emailCell, #phoneCell
  {
         text-align: left;
 	padding-left: 10px;
