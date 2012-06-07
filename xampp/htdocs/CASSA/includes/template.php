@@ -93,6 +93,9 @@
 
 
 
+
+
+
 	<!-- TOP HEADER: [Logo][Title] -->
 	<table width="940px" height="100px" border='0'>
 	<tr>
@@ -109,9 +112,6 @@
 	</table>
 
 
-
-	<!-- div class='blueLine940'></div --><!-- DRAW: blue line -->
-	<!-- br / -->
 
 
 
@@ -145,10 +145,8 @@
 
 
 		<!-- FAQ -->
-		<li onmouseover='this.style.backgroundColor="#333333"; 
-						document.getElementById("faq").style.display="block"' 
-			onmouseout='this.style.backgroundColor="black";
-						document.getElementById("faq").style.display="none"'
+		<li onmouseover='this.style.backgroundColor="#333333"' 
+			onmouseout='this.style.backgroundColor="black"'
 			onclick='window.location.href="/cassa/eventProgram.php"'>
 			<a href='/cassa/faq.php'>FAQ</a>
 		</li>
@@ -156,10 +154,8 @@
 
 
 		<!-- EVENT -->
-		<li	onmouseover='this.style.backgroundColor="#333333"; 
-						document.getElementById("event").style.display="block"' 
-			onmouseout='this.style.backgroundColor="black";
-						document.getElementById("event").style.display="none"'
+		<li	onmouseover='this.style.backgroundColor="#333333"' 
+			onmouseout='this.style.backgroundColor="black"'
 			onclick='window.location.href="/cassa/eventProgram.php"'>
 			<a href='/cassa/eventProgram.php'>Event Program</a>
 			

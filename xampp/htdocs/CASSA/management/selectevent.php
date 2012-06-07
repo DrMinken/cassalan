@@ -441,7 +441,7 @@ for ($i=0; $i<$result->num_rows; $i++)
 {
 	$row = $result->fetch_assoc();    
 
-	echo '<tr class="pointer" id="eventRow_'.$i.'" onclick="selectRow('.$i.', '.$result->num_rows.'); getEvent('.$row["eventID"].')">';
+	echo '<tr class="pointer" id="eventRow_'.$i.'" onclick="getEvent('.$row["eventID"].')">';
 		echo '<td width="70px">';
 			echo '<div style="position: relative; top: 5px;">';
 		?>
@@ -633,7 +633,7 @@ for ($i=0; $i<$result->num_rows; $i++)
 {
 	$row = $result->fetch_assoc();    
 
-	echo '<tr class="pointer" id="eventRow_'.$i.'" onclick="selectRow('.$i.', '.$result->num_rows.'); getEvent('.$row["eventID"].')">';
+	echo '<tr class="pointer" id="eventRow_'.$i.'" onclick="getEvent('.$row["eventID"].')">';
 		echo '<td width="70px">';
 			echo '<div style="position: relative; top: 5px;">';
 		?>
