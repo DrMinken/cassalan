@@ -448,7 +448,7 @@ for ($i=0; $i<$result->num_rows; $i++)
 			<!-- // DELETE EVENT BUTTON -->
 			<img class="pointer"
 				src="../images/buttons/delete_60.png"';
-				alt="Delete the selected event" 
+				alt="Delete this event" 
 				onclick="deleteEvent(<?php echo $row["eventID"]; ?>, '<?php echo $row["event_name"]; ?>')" />
 		<?php
 			echo '</div>';
@@ -640,7 +640,7 @@ for ($i=0; $i<$result->num_rows; $i++)
 			<!-- // DELETE EVENT BUTTON -->
 			<img class="pointer"
 				src="../images/buttons/delete_60.png"';
-				alt="Delete the selected event" 
+				alt="Delete this event" 
 				onclick="deleteEvent(<?php echo $row["eventID"]; ?>, '<?php echo $row["event_name"]; ?>')" />
 		<?php
 			echo '</div>';
