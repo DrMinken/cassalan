@@ -36,10 +36,6 @@
 		$passwordConfirm = $_POST['passwordConfirm'];
 
 
-	// SET ERROR ARRAY
-		//$_SESSION['errMsg'][] = '';
-
-
 	// CHECK IF ANY INPUT ARE EMPTY OR DO NOT COMPLY
 		if ($firstName == '' || $firstName == 'Enter Text')
 		{
@@ -114,55 +110,7 @@
 			$headers	.= 'From: webmaster@megalan.com' . "\r\n";
 			//$mail ($to, $subject, $message, $headers);
 		}
-
-
-
-	// CHECK IF NEW TEAM IS [on]
-		/*if (isset($_POST['newTeam']))
-		{
-			// NEW TEAM [on]
-			if ($_POST['newTeam'] == 'on')
-			{
-				// CHECK IF ENTERED TEAM NAME ALREADY EXISTS
-				$check = "SELECT * FROM teams WHERE team_name = '".$teamName."'";
-				$result = $db->query($check);
-
-				// IF IT DOES, WRITE ERROR
-				if ($result->num_rows > 0)
-				{
-					if (isset($_SESSION['regError']))
-					{
-						$_SESSION['regError'] .= '<br />*Your new Team Name already exists in our system!'; 
-					}
-					else
-					{
-						$_SESSION['regError'] = '*Your new Team Name already exists in our system!'; 
-					}
-				}
-			}
-		}
-		// ELSE, CHECK IF USER SELECTED A PREDEFINED TEAM
-		// ENSURE TEAM PASSWORD MATCHES
-		else
-		{
-			$check = "SELECT * FROM teams WHERE teamID = '".$selectTeam."' AND team_password = '".$selectPassword."'";
-			$result = $db->query($check);
-
-			// IF PASSWORD IS INCORRECT, WRITE ERROR
-			if ($result->num_rows != 1)
-			{
-				if (isset($_SESSION['regError']))
-				{
-					$_SESSION['regError'] .= '<br />*That Password is incorrect!'; 
-				}
-				else
-				{
-					$_SESSION['regError'] = '*That Password is incorrect!'; 
-				}
-			}
-		}*/
 	}
-
 ?>
 
 
@@ -432,7 +380,7 @@
 
 	<tr>
 		<td width='150px' align='right'>Username</td>
-		<td><input type='text' class='readonly' name='username' id='username' size='30' maxlength='256' readonly='readonly' /></td>
+		<td><input type='text' class='muteInput' name='username' id='username' size='30' maxlength='32' readonly='readonly' /></td>
 	</tr>
 
 	<tr>
