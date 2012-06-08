@@ -106,7 +106,7 @@
 
 		<!-- Title -->
 		<td width="440px" align="center" style='vertical-align: middle;'>
-			<h1 align="center">MegaLAN Management System </h1>
+			<h1 align="center" class="subtitle" style="font-size: 16pt;">MegaLAN Management System </h1>
 		</td>
 	</tr>
 	</table>
