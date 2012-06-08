@@ -34,12 +34,23 @@
 	$query = "SELECT * FROM event WHERE startDate >= NOW() AND event_completed=0 ORDER BY startDate ASC";
 	$result = $db->query($query);
 	$row = $result->fetch_assoc();
-	
-	// TOURNAMENT
-    $query = "SELECT * FROM tournament WHERE eventID=".$row['eventID']."";
-    $result = $db->query($query);
-    $row = $result->fetch_array(MYSQLI_BOTH);
-    $tournID = $row['tournID'];
+
+	if ($result->num_rows == 0)
+	{
+		$_SESSION['errMsg'] = '<div class="emptyServer" align="center">';
+		$_SESSION['errMsg'] .= 'A current event must be inserted before you can create a new tournament';
+		$_SESSION['errMsg'] .= '<br /><br />';
+		$_SESSION['errMsg'] .= '<a href="/cassa/management/MANevent.php">Click here to create a new event</a>';
+		$_SESSION['errMsg'] .= '</div>';
+	}
+	else
+	{
+		// TOURNAMENT
+		$query = "SELECT * FROM tournament WHERE eventID=".$row['eventID']."";
+		$result = $db->query($query);
+		$row = $result->fetch_array(MYSQLI_BOTH);
+		$tournID = $row['tournID'];
+	}
 ?>
 
 
@@ -172,10 +183,20 @@ $(document).ready(function(){
 
 
 
-
-<!-- HREF : OPENS INLINE 'CREATE NEW PIZZA' FORM -->
-<a class='inline' href='#createTourn'>Create new Tournament</a>
-
+<?php 
+if (isset($_SESSION['errMsg']))
+{
+	echo $_SESSION['errMsg'];
+	unset($_SESSION['errMsg']);
+}
+else
+{
+?>
+	<!-- HREF : OPENS INLINE 'CREATE NEW PIZZA' FORM -->
+	<a class='inline' href='#createTourn'>Create new Tournament</a>
+<?php
+}
+?>
 
 
 

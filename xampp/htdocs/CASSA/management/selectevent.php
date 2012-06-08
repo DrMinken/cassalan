@@ -20,7 +20,8 @@
 
 <?php 														
 	include("../includes/conn.php");			// Include the db connection
-	
+	include("../includes/functions.php");            // Include common functions
+
 	// SECURE AND ASSIGN POST VARIABLES 
 	// TRIM all posted values
 	$_POST = array_map('trim', $_POST);
@@ -31,39 +32,55 @@
 	// Retrieve the search value.	
 	$eventID = $_POST['eventID'];												
 	$queryType = $_POST['queryType'];
-	//$_SESSION['errMsg'] = "";
         
+
+
+
+
+
 
 	//Start checking what action is required and what shall be placed into the div in
 	// the man event page.
 	if($queryType == 0)
 	{
 		$_SESSION['errMsg'] = "";
-		$query = "SELECT * FROM event WHERE eventID =" . $eventID . ";";		
-		//Create the general select query.
 		ajax_event_table_basic($db, $eventID);
 	}
 
-	//If querytype = 1 then change the event to started and stop all other
-	//events.           
+
+
+
+
+
+
+//***************************************************************************************
+// Update record in event table
+//***************************************************************************************
 	else if ($queryType == 1)
     {
         $_SESSION['errMsg'] = "";
-        $query =    "UPDATE event "; 
-        $query.=    "SET event_started = 2 ";
-        $query.=    "WHERE event_started =1 ";
+        $query  =   "UPDATE event "; 
+        $query .=   "SET event_started = 2 ";
+        $query .=   "WHERE event_started = 1 ";
 
         $query2  =  "UPDATE event "; 
         $query2 .=  "SET event_started = 1 ";
         $query2 .=  "WHERE eventID =" . $eventID;
-        $result = $db->query($query);					
+        
 		//Execute the first Query then.
+		$result = $db->query($query);	
 
+		//Then Execute the second Query then move on
         $result = $db->query($query2);                                  
 		
-		//Then Execute the second Query then move on
         ajax_event_table_basic($db, $eventID);
     }
+
+
+
+
+
+
 
 	//If querytype = 2 then change the event to finished
     else if ($queryType == 2)
@@ -78,19 +95,31 @@
 		//Then Execute the Query then move on
     }
 
+
+
+
+
+
+
 	//If querytype = 3 then display the current record in the edit form.
     else if ($queryType == 3)
     {
         ajax_event_table_edit($db, $eventID);												
     }
 	
+
+
+
+
+
+
 	//If querytype = 4 then validate changes and save form data.
 	//When done return to event page and display static table.
 	else if ($queryType == 4)
     {
         $event_location = $_POST['event_location'];
         $event_name = $_POST['event_name'];
-        $startDate = $_POST['startDate'];
+        $startDate = dateToDatabase($_POST['startDate']);
         $startTime = $_POST['startTime'];
         $server_IP_address = $_POST['server_IP_address'];
         $seatQuantity = $_POST['seatQuantity'];
@@ -100,15 +129,93 @@
         
         $postNames = array("Event Location", "Event Name", 
                            "Start Date", "Start Time", "Number of Seats", "Server IP Address");
-        
-        ajax_event_table_save($db, $eventID, $postData, $postNames);										
-    }
+
+	//Validate the fields - first check to see if they are empty
+		$_SESSION['errMsg'] = "";
+		$errCount = 0;
+
+		for($i = 0; $i < sizeof($postData); ++$i)
+		{
+			if ($postData[$i] == '')
+			{
+				$_SESSION['errMsg'] .= $postNames[$i] . ' is empty.' . '<br />';
+				$errCount ++;
+			}
+		}
+		if ($postData[2] == '00/00/0000')
+		{
+			$_SESSION['errMsg'] .= 'Date format is not valid' . '<br />';
+			$errCount ++; 
+		}
+		if (validateIpAddress($postData[5])== false)
+		{
+		  $_SESSION['errMsg'] .= 'Server I.P Address is not valid' . '<br />';
+			$errCount ++;  
+		}
+		if (check_time_format($postData[3])== false)
+		{
+		  $_SESSION['errMsg'] .= 'Start Time is not Valid' . '<br />';
+			$errCount ++;
+		}
+		if (!is_numeric($postData[4]))
+		{
+			$_SESSION['errMsg'] .= 'Seat Quantity Should be a number' . '<br />';
+			$errCount ++;
+		}
+		 
+		if ($errCount > 0)
+		{
+			 $errCount = 0;
+			 ajax_event_table_edit($db, $eventID);
+		}
+		elseif($errCount <= 0)
+		{
+			$query  =  "UPDATE event ";
+			$query .=  "SET event_location ='" . $event_location;
+			$query .= "', event_name ='" . $event_name;
+			$query .= "', startTime ='" . $startTime ;
+			$query .= "', seatQuantity ='" . $seatQuantity;
+			$query .= "', server_IP_Address='" . $server_IP_address;
+			$query .= "', startDate='" . $startDate;
+			$query .= "' WHERE eventID=".$eventID;
+
+			$db->autocommit(FALSE);
+			$db->query($query);
+
+			if($db->error)
+			{
+				$_SESSION['errMsg'] .= 'Transaction aborted:<br/>';
+				printf("Error Message:", $db->error);
+				$db->rollback();
+
+				ajax_event_table_edit($db, $eventID);
+			}
+			else
+			{
+				$db->commit();
+				$db->autocommit(TRUE);
+				ajax_event_table_basic($db, $eventID);
+			}
+		}
+	}
+
+
+
+
+
+
 
 	else if ($queryType == 5)
 	{
 		ajax_event_table_Add($db);												
 	}
 	
+
+
+
+
+
+
 	else if ($queryType == 6)
     {
         $event_location = $_POST['event_location'];
@@ -126,10 +233,16 @@
         ajax_event_table_AddNew($db, $eventID, $postData, $postNames);
     }
 
+
+
+
+
+
+
 	else if ($queryType == 7)
     {
 		$_SESSION['errMsg'] = ""; 
-		$query1 = "SELECT * FROM event Where eventID =" . $eventID . ";";
+		$query1 = "SELECT * FROM event WHERE startDate >= NOW() AND eventID =" . $eventID . ";";
 		$result = $db->query($query1);
 		$row = $result->fetch_array(MYSQLI_BOTH);
 		
@@ -143,12 +256,12 @@
 			$db->autocommit(TRUE);
 
 			// REMOVE EVENT ROW FROM DATABASE
-			$query2  = "DELETE from event "; 
+			$query2  = "DELETE FROM event "; 
 			$query2 .= "WHERE eventID=".$eventID.";";
 			$result = $db->query($query2);
 
 			// GET NEW EVENT ROWS, DISPLAY TABLES THROUGH AJAX DIV
-			$query2 = "SELECT * FROM event ORDER BY eventID DESC";
+			$query2 = "SELECT * FROM event WHERE startDate >= NOW() ORDER BY eventID DESC";
 			$result = $db->query($query2);
 			$row = $result->fetch_array(MYSQLI_BOTH);
 			$eventID = $row['eventID'];
@@ -158,98 +271,18 @@
         }
 	}
     
- 	
-//********************* Functions Below *************************************************
-//
-//
-//
-//***************************************************************************************
-//Function to update record in event table
-//***************************************************************************************
-    
-function ajax_event_table_save($db, $eventID, $postData, $postNames) 
-{
-	$_SESSION['errMsg'] = "";
-	$errCount = 0;
-        
 
-	//Validate the fields - first check to see if they are empty
-    for($i = 0; $i < sizeof($postData); ++$i)
-	{
-		if ($postData[$i] == '')
-		{
-			$_SESSION['errMsg'] .= $postNames[$i] . ' is empty.' . '<br />';
-			$errCount ++;
-		}
-	}
-    if ($postData[2] == '00/00/0000')
-	{
-		$_SESSION['errMsg'] .= 'Date format is not valid' . '<br />';
-		$errCount ++; 
-	}
-    if (validateIpAddress($postData[5])== false)
-	{
-	  $_SESSION['errMsg'] .= 'Server I.P Address is not valid' . '<br />';
-		$errCount ++;  
-	}
-    if (check_time_format($postData[3])== false)
-	{
-	  $_SESSION['errMsg'] .= 'Start Time is not Valid' . '<br />';
-		$errCount ++;
-	}
-    if (!is_numeric($postData[4]))
-    {
-        $_SESSION['errMsg'] .= 'Seat Quantity Should be a number' . '<br />';
-        $errCount ++;
-    }
-     
-    if ($errCount > 0)
-	{
-		 $errCount = 0;
-		 ajax_event_table_edit($db, $eventID);
-	}
-    elseif($errCount <= 0)
-	{
-		$event_location = $_POST['event_location'];
-		$event_name = $_POST['event_name'];
-		$startDate = $_POST['startDate'];
-		$startTime = $_POST['startTime'];
-		$server_IP_address = $_POST['server_IP_address'];
-		$seatQuantity = $_POST['seatQuantity'];
 
-		$query  =  "UPDATE event ";
-		$query .=  "SET event_location ='" . $event_location;
-		$query .= "', event_name ='" . $event_name;
-		$query .= "', startTime ='" . $startTime ;
-		$query .= "', seatQuantity ='" . $seatQuantity;
-		$query .= "', server_IP_Address='" . $server_IP_address;
-		$query .= "', startDate='" . $startDate;
-		$query .= "' WHERE eventID=".$eventID;
 
-	    $db->autocommit(FALSE);
-		$db->query($query);
 
-		if($db->error)
-	    {
-		    $_SESSION['errMsg'] .= 'Transaction aborted:<br/>';
-		    printf("Error Message:", $db->error);
-		    $db->rollback();
 
-			ajax_event_table_edit($db, $eventID);
-		}
-		else
-		{
-			$db->commit();
-			$db->autocommit(TRUE);
-			ajax_event_table_basic($db, $eventID);
-		}
-	}
-}
+
+//********************* Functions Below **********************************************
 
 
 //************************************************************************************
 //Function to add new record to event table  
-//**************************************************************************************   
+//************************************************************************************ 
 function ajax_event_table_AddNew($db, $eventID, $postData, $postNames)
 {
 	/*
@@ -278,12 +311,9 @@ function ajax_event_table_AddNew($db, $eventID, $postData, $postNames)
 	//Check if event exists -
 	if(!$postData[1] == '')
 	{
-		$query = "SELECT * FROM event WHERE event_name='" . $postData[1]. "'";
-
+		$query = "SELECT * FROM event WHERE startDate >= NOW() AND event_name='" . $postData[1]. "'";
 		$result = $db->query($query);
-		$count = $result->num_rows;
-
-		if ($count > 0)
+		if ($result->num_rows > 0)
 		{
 			$_SESSION['errMsg'] .= 'Event Name Exists, Please choose another' . '<br />';
 			$errCount ++;
@@ -292,11 +322,8 @@ function ajax_event_table_AddNew($db, $eventID, $postData, $postNames)
 
 
 	// CONVERT DATE TO mySQL DATE
-	$date = $postData[2];
-	$day = substr($date, 0, 2);
-	$month = substr($date, 3, 2);
-	$year = substr($date, 6, 4);
-	$sqlDate = $year.'/'.$month.'/'.$day;
+	$sqlDate = dateToDatabase($postData[2]);
+
 	if ($sqlDate == '00/00/0000')
 	{
 		$_SESSION['errMsg'] .= 'Start Date is not Valid' . '<br />';
@@ -336,14 +363,10 @@ function ajax_event_table_AddNew($db, $eventID, $postData, $postNames)
 	{
 		$event_location = $_POST['event_location'];
 		$event_name = $_POST['event_name'];
-		$startDate = $_POST['startDate'];
 		$startTime = $_POST['startTime'];
 		$server_IP_address = $_POST['server_IP_address'];
 		$seatQuantity = $_POST['seatQuantity'];
   
-//INSERT INTO `cassa_lan`.`event` (`eventID`, `event_name`, `event_location`, `startDate`, `startTime`, `seatQuantity`, `server_IP_address`, `event_started`, `event_completed`)
-//VALUES (NULL,'Cassa Royal 3','Joondalup','2012-05-12', '09:00:00',56,'192.168.1.45',0,0);
-
 		$query = "INSERT INTO `cassa_lan`.`event` (`eventID`, `event_name`, `event_location`, `startDate`, `startTime`, `seatQuantity`, `server_IP_address`, `event_started`, `event_completed`)"; 
 		$query .= "VALUES (NULL, '".$event_name."', '".$event_location."', '".$sqlDate."', ";
 		$query .= "'".$startTime."', '".$seatQuantity."', '".$server_IP_address."', 0, 0);";      
@@ -354,7 +377,7 @@ function ajax_event_table_AddNew($db, $eventID, $postData, $postNames)
 		$db->query($query);
 
 		if($db->error)
-		{ 
+		{
 			$_SESSION['errMsg'] .= 'Transaction aborted:<br/>';
 			printf("Error Message:", $db->error);
 
@@ -365,7 +388,7 @@ function ajax_event_table_AddNew($db, $eventID, $postData, $postNames)
 		{
 			mysqli_commit($db);
 			$db->autocommit(TRUE);
-			$query = "SELECT * FROM event WHERE event_name='" . $_POST['event_name'] . "';";
+			$query = "SELECT * FROM event WHERE startDate >= NOW() AND event_name='" . $_POST['event_name'] . "';";
 			$result = $db->query($query);
 
 			$row = $result->fetch_array(MYSQLI_BOTH);
@@ -375,19 +398,6 @@ function ajax_event_table_AddNew($db, $eventID, $postData, $postNames)
 		echo '<script type="text/javascript">refreshEvent();</script>';
 	}
  }
-//*************************************************************************************
-// Convert DATE to suit mySQL
-//**************************************************************************************
-function convertDate($date) 
-{     
-	$day = substr($date, 0, 2);
-	$month = substr($date, 3, 2);
-	$year = substr($date, 6, 4);
-	//echo $day. '/' . $month . '/' . $year;
-
-	$sqlDate = $year.'/'.$month.'/'.$day;
-	return $sqlDate;
-}
 //*************************************************************************************
 //Check if time field is correct
 //**************************************************************************************
@@ -418,13 +428,9 @@ function validateIpAddress($ip_addr)
 //****************************************************************************************
 // Sets up basic table for viewing records.
 //****************************************************************************************
-
 function ajax_event_table_basic($db, $eventID)
 {
 ?>
-
-
-
 <table class='pizzaOrder'>
 <tr>
 	<td class='MANheader' width='600px' colspan='2'>
@@ -433,8 +439,14 @@ function ajax_event_table_basic($db, $eventID)
 </tr>
 
 <?php
-$query = "SELECT * FROM event order by startDate ASC";
+$query = "SELECT * FROM event WHERE startDate >= NOW() ORDER BY startDate ASC";
 $result = $db->query($query);
+if ($result->num_rows == 0)
+{
+	echo '<tr><td><i>There are no current events in the system</i></td></tr>';
+	die();
+}
+
 
 // Now we can output the option fields to populate the list box.
 for ($i=0; $i<$result->num_rows; $i++) 
@@ -464,11 +476,14 @@ echo '</table>';
 
 
 
+
+
 <?php
 	//Create the general select query.
-    $query = "SELECT * FROM event WHERE eventID=".$eventID.";"; 	
+    $query = "SELECT * FROM event WHERE startDate >= NOW() AND eventID=".$eventID.";"; 	
     $result = $db->query($query); 			
-	
+
+
 	//use it first for the title	
     $row1 = $result->fetch_array(MYSQLI_BOTH);		
 	
@@ -585,7 +600,7 @@ function ajax_event_table_edit($db, $eventID)
     if(!isset($_SESSION['errMsg']))
     {
 		//Create the general select query.
-        $query = "SELECT * FROM event WHERE eventID =" . $eventID; 
+        $query = "SELECT * FROM event WHERE startDate >= NOW() AND eventID =" . $eventID; 
         $result = $db->query($query); 											
         $row1 = $result->fetch_array(MYSQLI_BOTH);                  
            
@@ -625,7 +640,7 @@ function ajax_event_table_edit($db, $eventID)
 </tr>
 
 <?php
-$query = "SELECT * FROM event order by startDate ASC";
+$query = "SELECT * FROM event WHERE startDate >= NOW() ORDER BY startDate ASC";
 $result = $db->query($query);
 
 // Now we can output the option fields to populate the list box.
@@ -747,132 +762,4 @@ echo '</table>';
 <!-- /form -->
 <?php 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//****************************************************************************************
-// Sets up table for adding records.
-//****************************************************************************************
-function ajax_event_table_Add($db)
-{
-/*
-    if(isset($_SESSION['errMsg']))
-	{
-		echo "<br /><p class='redAstrix'>" . $_SESSION['errMsg'] . "</p>";
-		$eName= $_POST['event_name'];
-		$eLocation = $_POST['event_location'];
-		$eStartTime = $_POST['startTime'];
-		$eEventDate = $_POST['startDate'];
-		$eServerIP = $_POST['server_IP_address'];
-		$eSeatNum = $_POST['seatQuantity'];
-	}
-	else
-	{
-		$eName= "";
-		$eLocation = "";
-		$eStartTime = "";
-		$eEventDate = "";
-		$eServerIP = "";
-		$eSeatNum = "";
-	}
-
-	echo '<br />';
-
-	echo '<form  name="eventADD">';
-	echo' <table cellspacing="0" class="editTable" width="650">';
-	
-	echo' <tr>';
-		echo' <th class="headText" colspan=3>Event Details</th>';
-	echo' </tr>';
-
-	echo' <tr>';
-		echo' <td class="labelText" >Event Name:</td>';
-		echo' <td class="detailPad"></td>';
-		echo' <td class="detailText" ><input type="textarea" rows="4" cols="40" cellpadding ="10" id="event_name" name="event_name" value="' . $eName . ' "size="50" maxlength="100" /></td>';
-	echo' </tr>';
-
-	echo' <tr>';
-		echo' <td class="labelText" >Event Location: </td>';
-		echo' <td class="detailPad"></td>';
-		echo' <td class="detailText" ><input type="text" name="event_location" id="event_location" value="' . $eLocation . '" size="50" maxlength="100" /></td>';
-	echo' </tr>';
-
-	echo' <tr>';
-		echo' <td class="labelText" >Event Date:</td>';
-		echo'	<td class="detailPad"></td>';
-		echo' <td class="detailText" ><input type="text" name="startDate" id="startDate" value="' . $eEventDate . '" size="50" maxlength="30" /></td>';
-	echo' </tr>';
-
-	echo' <tr>';
-		echo' <td class="labelText" >Event Time:</td>';
-		echo'	<td class="detailPad"></td>';
-		echo' <td class="detailText" ><input type="text" name="startTime" id="startTime" value="' . $eStartTime . '" size="50" maxlength="30" /></td>';
-	echo' </tr>';
-
-	echo' <tr>';
-		echo' <td class="labelText" >Server IP Address: </td>';
-		echo'	<td class="detailPad"></td>';
-		echo' <td class="detailText" ><input type="text" name="server_IP_address" id="server_IP_address" value="' .$eServerIP . '" size="50" maxlength="40" /></td>';
-	echo' </tr>';
-
-	echo' <tr>';
-		echo' <td class="labelText" >Seat Quantity: </td>';
-		echo'	<td class="detailPad"></td>';
-		echo' <td class="detailText" ><input type="text" name="seatQuantity" id="seatQuantity" value="' .$eSeatNum . '" size="50" maxlength="2" /></td>';
-	echo' </tr>';
-
-	echo' <tr bgcolor="#3300CC">';	
-		echo' <td align="right" height="40" colspan="3">';
-        echo' <div align="right">';
-			$on = 'this.src="../images/buttons/save_dwn.png"';
-			$off = 'this.src="../images/buttons/save_up.png"';
-
-			$cancelDwn = 'this.src="../images/buttons/delete_dwn.png"';
-			$cancelUp = 'this.src="../images/buttons/delete_up.png"';
-					
-			// SAVE EVENT
-			echo ' <img src="../images/buttons/save_dwn.png" width="30" height="30"';
-				echo ' alt="Save the current Event" onclick="checkaddEvent()" ';
-				echo 'onmouseover='.$off.' onmouseout='.$on.' />';
-
-<<<<<<< .mine
-			// CANCEL UPDATE
-			echo' <img src="../images/buttons/delete_dwn.png" width="30" height="30"';
-				echo' alt="Cancel Current Update" onclick="MANevent.php" ';
-				echo 'onmouseover='.$cancelUp.' onmouseout='.$cancelDwn.' />';
-=======
-        $cancelDwn = 'this.src="../images/buttons/delete_dwn.png"';
-        $cancelUp = 'this.src="../images/buttons/delete_up.png"';
-			  			
-        echo ' <img src="../images/buttons/save_dwn.png" width="30" height="30"';
-        echo ' alt="Save the current Event" onclick= "checkaddEvent()" ';
-        //
-        echo 'onmouseover='.$off.' onmouseout='.$on.' />';
-
-        echo' <img src="../images/buttons/delete_dwn.png" width="30" height="30"';
-        echo' alt="Cancel Current Update" onclick="getEvent()" ';
-        echo 'onmouseover='.$cancelUp.' onmouseout='.$cancelDwn.' />';
->>>>>>> .r240
-        echo' </div>';
-		echo' </td>';
-        echo' </tr>';
-		echo '</table>';
-        //echo'<input type="hidden" name="eventID" id="eventID" value="' .$row1['eventID'] . '"/>';
-        echo' </form>';
-*/
-}
-//Return back to the MANevent.php page.
 ?>

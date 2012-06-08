@@ -19,7 +19,8 @@
 	include("../includes/conn.php");                    // Include the db connection
         unset($_SESSION['errMsg']);
 
-	$query = "SELECT * FROM event order by startDate ASC";
+
+	$query = "SELECT * FROM event WHERE startDate >= NOW() ORDER BY startDate ASC";
 	$result = $db->query($query);
 	$row = $result->fetch_array(MYSQLI_BOTH);    
 	$eventID = $row['eventID'];
@@ -120,8 +121,6 @@ function checkaddEvent()
 	createRequest(eventID,params);
 }
 
-
-
 //***************************************************************
 //
 // Ajax Function to insert a new event.
@@ -145,8 +144,6 @@ function addEvent()
 	}
 }
 
-
-
 //***************************************************************
 //
 // Ajax Function to delete an event.
@@ -154,10 +151,6 @@ function addEvent()
 //****************************************************************
 function deleteEvent(eventID, eventName)
 {
-	// var eventName = selectEvent.options[selectEvent.selectedIndex].text;
-	// eventID = document.getElementById("selectEvent").value;
-	// eventName = document.getElementById("option" + eventID).text;
-
 	message = "Please confirm to delete '" + eventName + "'";
 
 	var answer = confirm(message);
@@ -171,8 +164,6 @@ function deleteEvent(eventID, eventName)
 		return;
 	}
 }
-
-
 
 //***************************************************************
 //
@@ -200,8 +191,6 @@ function startEvent(eventID)
 	}
 }
 
-
-
 //***************************************************************
 //
 // Ajax Function to stop / end an event.
@@ -226,8 +215,6 @@ function stopEvent(eventID)
 	}
 }
 
-
-
 //***************************************************************
 //
 // Ajax Function to edit an event.
@@ -238,9 +225,6 @@ function editEvent(eventID)
 	var params = "eventID=" + eventID + "&queryType=3";
 	createRequest(eventID,params);
 }
-//************************************************************************************************
-
-
 
 //************************************************************************************************
 //
