@@ -335,6 +335,14 @@ p
 	color: red;
 	font-size: 12pt;
 }
+.emptyServer
+{
+	border: 2px solid black;
+	width: 400px;
+	height: 100px;
+	padding: 50px;
+	font-size: 13pt;
+}
 .subtitle
 {
 	font-family: 'Segoe Print';

@@ -37,14 +37,18 @@ function getCurrentTourn($db)
 	// AVAILABLE EVENTS
 	$query = "SELECT * FROM event WHERE startDate >= NOW() AND event_completed=0 ORDER BY startDate ASC";
 	$result = $db->query($query);
-	$row = $result->fetch_assoc();
 
-	// GET TOURNAMENT
-	$query = "SELECT * FROM tournament WHERE eventID=".$row['eventID']."";
-	$result = $db->query($query);
-	$row = $result->fetch_assoc();
-	$tournID = $row['tournID'];
-	draw_tournament_table($db, $tournID);
+	if ($result->num_rows > 0)
+	{
+		$row = $result->fetch_assoc();
+
+		// GET TOURNAMENT
+		$query = "SELECT * FROM tournament WHERE eventID=".$row['eventID']."";
+		$result = $db->query($query);
+		$row = $result->fetch_assoc();
+		$tournID = $row['tournID'];
+		draw_tournament_table($db, $tournID);
+	}
 }
 
 function draw_tournament_table($db, $tournID)
@@ -55,6 +59,12 @@ function draw_tournament_table($db, $tournID)
 	$query = "SELECT * FROM tournament WHERE tournID='".$tournID."'";
 	$result = $db->query($query);
 	
+	if ($result->num_rows == 0)
+	{
+		echo '<div style="border: 1px solid black; height: 30px;"><i>There are no tournaments in the system</i></div>';
+		die();
+	}
+
 	//use it first for the title
 	$row1 = $result->fetch_array(MYSQLI_BOTH);                        
 	
