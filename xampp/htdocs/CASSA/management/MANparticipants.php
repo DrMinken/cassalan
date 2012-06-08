@@ -296,10 +296,86 @@ function payEvent(payStatus, clientID)
 
 //*************************************************************************************************
 
+
+//************************************************************************************************
+// Adds a client to a tournament
+// Author: Lyndon Smith
+//************************************************************************************************
+function joinTournament(clientID)
+{
+    var e = document.getElementById("tournSelect");
+        var tournID = e.options[e.selectedIndex].value;
     
+    var divID = document.getElementById("clientDetails");
+    var params = "tournID=" + tournID + "&clientID=" + clientID + "&queryType=10&startRow=0";
+    createRequest(clientID , params, divID);
+        
+}
+
+//*************************************************************************************************
+
+
+
+
+
+
+//************************************************************************************************
+// Deletes a client from a tournament
+// Author: Lyndon Smith
+//************************************************************************************************
+function un_joinTournament(tournID, clientID)
+{
+    
+    var divID = document.getElementById("clientDetails");
+    var params = "tournID=" + tournID + "&clientID=" + clientID + "&queryType=9&startRow=0";
+    createRequest(clientID , params, divID);
+        
+}
+
+//*************************************************************************************************
+
+//************************************************************************************************
+// Deletes a pizza from an order
+// Author: Lyndon Smith
+//************************************************************************************************
+function removePizza(clientID, orderID)
+{
+    
+    var divID = document.getElementById("clientDetails");
+    var params = "orderID=" + orderID + "&clientID=" + clientID + "&queryType=11&startRow=0";
+   
+    createRequest(clientID , params, divID);
+        
+}
+
+//*************************************************************************************************
+
+//************************************************************************************************
+// Deletes a client from a tournament
+// Author: Lyndon Smith
+//************************************************************************************************
+function addPizza(menuID, attendeeID, seatID, clientID)
+{
+    
+    var e = document.getElementById("pizzaSelect");
+        var pizzaID = e.options[e.selectedIndex].value;
+    var f = document.getElementById("pizzaQty");
+        var pizzaQty = f.options[f.selectedIndex].value;
+ 
+    var divID = document.getElementById("clientDetails");
+    var params = "menuID=" + menuID + "&attendeeID=" + attendeeID + 
+        "&seatID=" + seatID + "&pizzaQty=" + pizzaQty + "&pizzaID=" + pizzaID + 
+        "&clientID=" + clientID + "&queryType=12&startRow=0";
+    
+    createRequest(clientID , params, divID);
+        
+}
+
+//*************************************************************************************************
     
 
-</script>
+    
+    </script>
 </head>
 <body onload="getClientData();">
 <center>
