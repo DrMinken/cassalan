@@ -22,4 +22,24 @@ function dateToDatabase($date)
 	return $date;
 }
 
+// REG EXPRESSION [A-Za-z] STRINGS
+function regLetters($input)
+{
+	if (!preg_match("#^[A-Za-z]+$#", $input)) 
+	{ 
+		// invalid [letter] input
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+
+
+
+
+
+
 ?>

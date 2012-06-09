@@ -21,7 +21,8 @@
 	{
 		// SET INPUT VARIABLES
 		$title = $db->real_escape_string($_POST['title']);
-		$author = $_SESSION['username'];
+		$date = dateToDatabase(date("d/m/Y"));
+		$author = ucwords($_SESSION['fullName']);
 		$message = $db->real_escape_string($_POST['message']);
 		$imageName = basename($_FILES['image']['name']);
 		$imageExt = $_FILES['image']['type'];
@@ -30,7 +31,7 @@
 
 
 		// SET IMAGE UPLOAD PATH
-		$targetPath = 'NewsArticle/uploads/';
+		$targetPath = '../NewsArticle/uploads/';
 
 
 		// SET ENTIRE UPLOAD : NewsArticle/uploads/filename.extension
@@ -57,7 +58,7 @@
 
 		// PARAMETERIZED QUERY WITH REAL_ESCAPE_STRING
 		$stmt = $db->prepare("INSERT INTO news (subject, date, author, message, image, tag) VALUES (?, ?, ?, ?, ?, ?)");
-		$stmt->bind_param('ssssss', $title, date("d/m/y"), $author, $message, $imageName, $tag);
+		$stmt->bind_param('ssssss', $title, $date, $author, $message, $imageName, $tag);
 		$stmt->execute();
 		$stmt->close();
 	}
@@ -165,7 +166,7 @@
 		<td style='vertical-align: bottom;'>
 			<input  class='addNoticeBackColor' type='text' 
 					name='author' maxlength='32' readonly='readonly'
-					value='<?php echo $_SESSION['username']; ?>' />
+					value='<?php echo ucwords($_SESSION['fullName']); ?>' />
 		</td>
 	</tr>
 

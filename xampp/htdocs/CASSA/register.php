@@ -1,3 +1,6 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
 <?php 
 	session_start();								// Start/resume THIS session
 	$_SESSION['title'] = "Registration | MegaLAN"; 	// Declare this page's Title
@@ -25,21 +28,18 @@
 		$mobile = $_POST['mobile'];
 		$userType = $_POST['userType'];
 
-		/*$teamName = $_POST['teamName'];
-		$teamPassword = $_POST['teamPassword'];
-
-		$selectTeam = $_POST['selectTeam'];
-		$selectPassword = $_POST['selectPassword'];*/
-
 		$username = $email;
 		$password = $_POST['password'];
 		$passwordConfirm = $_POST['passwordConfirm'];
-
 
 	// CHECK IF ANY INPUT ARE EMPTY OR DO NOT COMPLY
 		if ($firstName == '' || $firstName == 'Enter Text')
 		{
 			$_SESSION['errMsg'][0] = '<font class="error">*</font>';
+		}
+		else if (regLetters($firstName) == false)
+		{
+			$_SESSION['errMsg'][0] = '<font class="error">*Name must contain letters only</font>';
 		}
 		if ($lastName == '' || $lastName == 'Enter Text')
 		{
@@ -97,18 +97,6 @@
 
 			$insert = "INSERT INTO client (username, password, first_name, last_name, mobile, email) VALUES ('".$email."', '".$password."', '".$firstName."', '".$lastName."', '".$mobile."', '".$email."')";
 			$result = $db->query($insert);
-
-
-			// SEND EMAIL
-			$to			= $email;
-			$subject	= 'MegaLAN - Registration';
-			$message	= '<div class="">';
-			$message	.= '';
-			
-			$headers	= 'MIME-Version: 1.0' . "\r\n";
-			$headers	.= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-			$headers	.= 'From: webmaster@megalan.com' . "\r\n";
-			//$mail ($to, $subject, $message, $headers);
 		}
 	}
 ?>
@@ -126,90 +114,11 @@
 
 //*************** Start of REGISTRATION PAGE ******************* -->
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 
 <script type='text/javascript'>
 	var change = 0;
 
-
-	function regVal()
-	{
-
-	}
-	/*function revealTeamName()
-	{
-		if (change == 1)
-		{
-			// Team Name [on]
-			document.getElementById('teamName').style.backgroundColor='white';
-			document.getElementById('teamName').readOnly=false;
-
-			// Team Password [on]
-			document.getElementById('teamPassword').style.backgroundColor='white';
-			document.getElementById('teamPassword').readOnly=false;
-
-			// Select Team [off]
-			document.getElementById('selectTeam').selectedIndex = 0;
-
-			// Select Password [off]
-			document.getElementById('selectPassword').style.backgroundColor='#F0F0F0';
-			document.getElementById('selectPassword').readOnly=true;
-			document.getElementById('selectPassword').value = '';
-
-			change = 0;
-		}
-		else 
-		{
-			// Team Name [off]
-			document.getElementById('teamName').style.backgroundColor='#F0F0F0';
-			document.getElementById('teamName').readOnly=true;
-			document.getElementById('teamName').value = '';
-
-			// Team Password [off]
-			document.getElementById('teamPassword').style.backgroundColor='#F0F0F0';
-			document.getElementById('teamPassword').readOnly=true;
-			document.getElementById('teamPassword').value = '';
-			change = 1;
-		}
-	}
-	function closeNewTeam(index)
-	{
-		if (index > 0)
-		{
-			// Team Name [off]
-			document.getElementById('teamName').style.backgroundColor='#F0F0F0';
-			document.getElementById('teamName').readOnly=true;
-			document.getElementById('teamName').value = '';
-
-			// Team Password [off]
-			document.getElementById('teamPassword').style.backgroundColor='#F0F0F0';
-			document.getElementById('teamPassword').readOnly=true;
-			document.getElementById('teamPassword').value = '';
-
-			// CHECK THE BOX [off]
-			document.getElementById('newTeam').checked = false;
-
-			// Select Password [on]
-			document.getElementById('selectPassword').style.backgroundColor='white';
-			document.getElementById('selectPassword').readOnly=false;
-			document.getElementById('selectPassword').value = '';
-		}
-		else
-		{
-			// Team Name
-			document.getElementById('teamName').style.backgroundColor='white';
-			document.getElementById('teamName').readOnly=false;
-
-			// Team Password
-			document.getElementById('teamPassword').style.backgroundColor='white';
-			document.getElementById('teamPassword').readOnly=false;
-
-			// CHECK THE BOX
-			document.getElementById('newTeam').checked = true;
-		}
-	}*/
 	function updateUsername(email)
 	{
 		document.getElementById('username').value = email;
@@ -243,6 +152,52 @@
 			document.getElementById('conPassError').src = "/cassa/images/layers/tick.png";
 		}
 	}
+	function randomQuestion()
+	{
+		var q = new Array();
+		q[0] = "What is Gordon Freeman's first name?";
+		q[1] = "Is Luigi Mario's brother? (yes/no)";
+		q[2] = "Does CASSA stand for \n'Computer and Security Student Abomination'? (yes/no)";
+	
+		var random = Math.floor(Math.random()*3);
+		
+		if (random == 0)
+		{
+			var answer = prompt(q[0]).toLowerCase();
+			if (answer == 'gordon')
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else if (random == 1)
+		{
+			var answer = prompt(q[1]).toLowerCase();
+			if (answer == 'yes' || answer == 'y')
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else if (random == 2)
+		{
+			var answer = prompt(q[2]).toLowerCase();
+			if (answer == 'no' || answer == 'n')
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+	}
 </script>
 
 </head>
@@ -264,7 +219,7 @@
 
 	<!-- FORM: Registration -->
 	<table id='registrationTable' border='0' width='630px' cellspacing='3px'>
-	<form name='registration' method='POST' onsubmit='return regVal()' action='register.php'>
+	<form name='registration' method='POST' onsubmit='return randomQuestion()' action='register.php'>
 
 	<?php if (isset($_SESSION['regError']))
 	{?>
@@ -308,76 +263,6 @@
 			</select> <font size='1'><a href='http://www.cassa.org.au/payments/membership/'>(CASSA member?)</a></font>
 		</td>
 	</tr>
-
-
-
-
-	<!-- tr><td colspan='2'><hr /></td></tr>
-
-
-
-	<tr>
-		<td width='150px' align='right'>Select Team</td>
-		<td>
-			<select name='selectTeam' id='selectTeam' onclick='closeNewTeam(selectedIndex)'>
-				<option value='0' selected='selected'>-- NO TEAM --</option>
-				
-				<?php
-					// GET ALL TEAMS FROM DATABASE
-					$get = "SELECT * FROM teams";
-					$result = $db->query($get);
-					
-					for ($i=0; $i<$result->num_rows; $i++)
-					{
-						$row = $result->fetch_assoc();
-						$teamID = $row['teamID'];
-						$team_name = $row['team_name'];
-
-						echo '<option value='.$teamID.'>'.$team_name.'</option>';
-					}
-				?>
-			</select>
-		</td>
-	</tr>
-
-	<tr>
-		<td width='150px' align='right'>Password</td>
-		<td><input type='text' name='selectPassword' id='selectPassword' value='' size='30' maxlength='32'
-					readonly='readonly' class='muteInput' /></td>
-	</tr>
-
-	<tr><td colspan='2'><hr /></td></tr>
-
-
-
-	<tr>
-		<td width='150px' align='right'>New Team</td>
-		<td><input type='checkbox' name='newTeam' id='newTeam' checked='checked' onclick='revealTeamName()'></td>
-	</tr>
-
-	<tr>
-		<td width='150px' align='right'>Team Name</td>
-		<td><input type='text' name='teamName' id='teamName' value='' size='30' maxlength='32' 
-				    /></td>
-	</tr>
-
-	<tr>
-		<td width='150px' align='right'>Team Password</td>
-		<td><input type='text' name='teamPassword' id='teamPassword' value='' size='30' maxlength='32' 
-				   /></td>
-	</tr>
-
-
-
-
-
-
-	<tr><td colspan='2'>&nbsp;</td></tr -->
-
-
-
-
-
 	<tr>
 		<td width='150px' align='right'>Username</td>
 		<td><input type='text' class='muteInput' name='username' id='username' size='30' maxlength='32' readonly='readonly' /></td>
