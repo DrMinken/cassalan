@@ -26,7 +26,7 @@
 
 <!-- //******************************************************
 
-// Name of File: editNotices.php
+// Name of File: MANFAQ.php
 // Revision: 1.0
 // Date: 09/05/2012
 // Author: Quintin M
@@ -58,16 +58,13 @@
 			document.addFAQ['answer'].focus();
 			return false;
 		}
-
 		else
 		{
-
-				document.getElementById("question").value = question;
-				document.getElementById("answer").value = answer;
-				document.forms['addFAQ'].submit();
+			document.getElementById("question").value = question;
+			document.getElementById("answer").value = answer;
+			document.forms['addFAQ'].submit();
 		}
 	}
-
 
 </script>
 </head>
