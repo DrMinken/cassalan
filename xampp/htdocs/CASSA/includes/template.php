@@ -147,7 +147,7 @@
 		<!-- FAQ -->
 		<li onmouseover='this.style.backgroundColor="#333333"' 
 			onmouseout='this.style.backgroundColor="black"'
-			onclick='window.location.href="/cassa/eventProgram.php"'>
+			onclick='window.location.href="/cassa/faq.php"'>
 			<a href='/cassa/faq.php'>FAQ</a>
 		</li>
 
