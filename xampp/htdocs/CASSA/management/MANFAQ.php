@@ -1,3 +1,7 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+
 <?php 
 	session_start();								// Start/resume THIS session
 
@@ -15,11 +19,34 @@
 	include("../includes/template.php"); 			// Include the template page
 	include("../includes/conn.php"); 				// Include the database connection
 
+	// IF FAQ IS POSTED, 
+	// VALIDATE, INSERT
+	if (isset($_POST['submit']))
+	{
+		$_POST = array_map("mysql_real_escape_string", $_POST);
+		$_POST = array_map("trim", $_POST);
 
+		$q = $_POST['question'];
+		$a = $_POST['answer'];
+		$_SESSION['errMsg'] = '';
 
+		// VALIDATE
+		if ($q == '')
+		{
+			$_SESSION['errMsg'] .= '<br /><font class="error">*Question must not be blank</font>';
+		}
+		if ($a == '')
+		{
+			$_SESSION['errMsg'] .= '<br /><font class="error">*Answer must not be blank</font>';
+		}
 
-
-
+		// INSERT
+		if ($_SESSION['errMsg'] == '')
+		{
+			$insert = "INSERT INTO faq VALUES ('', '".$q."', '".$a."')";
+			$result = $db->query($insert);
+		}
+	}
 ?>
 
 
@@ -29,15 +56,13 @@
 // Name of File: MANFAQ.php
 // Revision: 1.0
 // Date: 09/05/2012
-// Author: Quintin M
+// Author: Luke S
 // Modified: 
 
 //***********************************************************
 
 //*********** Start of EDIT NOTICES PAGE *************** -->
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <script type='text/javascript'>
 	
@@ -79,9 +104,24 @@
 	<h1>Create FAQs</h1>
 
 
-<!-- 	Required fields are marked <font class='redAstrix'>*</font>
-	<br />
-	<br /> -->
+
+
+
+
+
+<?php
+	if (isset($_SESSION['errMsg']))
+	{
+		echo $_SESSION['errMsg'];
+		unset($_SESSION['errMsg']);
+		echo '<br />';
+	}
+?>
+
+
+
+
+
 
 
 <!-- Interface Box -->
@@ -94,7 +134,7 @@
 
 	<tr>
 		<td align='right' style='color: #888888;'>
-			Question <!-- <font class='redAstrix'>*</font> -->
+			Question
 		</td>
 		<td style='vertical-align: bottom;'>
 			<input  class='addNoticeBackColor addNoticeTitle' type='text' 
@@ -104,16 +144,13 @@
 
 	<tr>
 		<td align='right' style='vertical-align: top; color: #888888;'>
-			Answer <!-- <font class='redAstrix'>*</font> --><br /><br />
+			Answer<br /><br />
 		</td>
 		<td>
 			<textarea class='addNoticeBackColor addNoticeTextArea' 
 			name='answer' rows='10' > </textarea>
 		</td>
 	</tr>
-
-
-
 
 	<tr>
 		<td colspan="2" align="center"><br /><input type="submit" name="submit" value="Create FAQ" /></td>
@@ -127,6 +164,7 @@
 	</table>
 </form>
 </div>
+
 
 
 
