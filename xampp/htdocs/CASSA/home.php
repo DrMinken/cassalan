@@ -8,8 +8,8 @@
 	{
 		// DELETE [this] ARTICLE
 		$stmt = $db->prepare("DELETE FROM news WHERE newsID=?");
-		$stmt->bind_param('s', $newsID);
-		//$stmt->execute();
+		$stmt->bind_param('s', $_POST['deleteNews']);
+		$stmt->execute();
 		$stmt->close();
 	}
 ?>
