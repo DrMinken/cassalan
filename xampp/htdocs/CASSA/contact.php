@@ -50,7 +50,7 @@
 	
 <?php
 
-	// FETCH ALL NEWS
+	// FETCH ALL CONTACT RESULTS
 	$query = "SELECT * FROM `contact`";
 	$result = $db->query($query);
 
@@ -76,20 +76,17 @@
 
 		echo '<div style="line-height: 18pt;">'.$blur.'<br /></div>';
 	}
-
-			?>
-		<br />
+?>
+	<br />
+	<br />
+	<br />
+</div>
 </div>
 
 
-<br />
-<br />
 
-
-
-<div style='line-height: 18pt; word-spacing: 2px; float: left; ' >
-	&nbsp;<br />
-	<b>Executive Committee</b><br />
+<div style='line-height: 20pt; word-spacing: 2px; float: left;' >
+	<b>Executive Committee for 2012</b><br />
 	<b><?php echo $president; ?></b> President (IRC: <?php echo $pre_irc; ?>)<br />
 	<b><?php echo $v_president; ?></b> Vice-President (IRC: <?php echo $vpre_irc; ?>)<br />
 	<b><?php echo $secretary; ?></b> Secretary (IRC: <?php echo $sec_irc; ?>)<br />
@@ -97,7 +94,6 @@
 	<b><?php echo $tech_admin; ?></b> Tech-Admin (IRC: <?php echo $tec_irc; ?>)<br />
 	<b><?php echo $webmaster; ?></b> Webmaster (IRC: <?php echo $web_irc; ?>)<br />
 	<b><?php echo $social_events; ?></b> Social Events Coordinator (IRC: <?php echo $soc_irc; ?>)<br />
-</div>
 </div>
 
 

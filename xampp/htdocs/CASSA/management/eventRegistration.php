@@ -38,7 +38,6 @@
 		{
 			$book = "INSERT INTO attendee (eventID, clientID) VALUES ('".$_POST['bookID']."', '".$_SESSION['userID']."')";
 			$result = $db->query($book);
-			
 
 			/*
 			*	AT THIS STAGE, THIS USER HAS BOOKED AN EVENT
@@ -226,22 +225,32 @@ function cancelSeat(seatID, attendeeID)
 	$get = "SELECT * FROM attendee WHERE clientID = '".$_SESSION['userID']."'";
 	$result = $db->query($get);
 
-	for($i=0; $i<$result->num_rows; $i++)
+	if ($result->num_rows == 0)
 	{
-		$row = $result->fetch_assoc();
-		$tournID = $row['tournID'];
-		if ($row['tournID'] == ''){$tournID = 'No';}else{$tournID = 'Yes';}
-		if ($row['seatID'] == ''){$seatID = 'No';}else{$seatID = 'Yes';}
+		$rowEvent = 'No';
+		$tournID = 'No';
+		$seatID = 'No';
+		$pizzaID = 'No';
+	}
+	else
+	{
+		for($i=0; $i<$result->num_rows; $i++)
+		{
+			$row = $result->fetch_assoc();
+			$tournID = $row['tournID'];
+			if ($row['tournID'] == ''){$tournID = 'No';}else{$tournID = 'Yes';}
+			if ($row['seatID'] == ''){$seatID = 'No';}else{$seatID = 'Yes';}
 
-		// GET EVENT DETAILS
-		$get = "SELECT * FROM event WHERE eventID='".$row['eventID']."'";
-		$result = $db->query($get);
-		$rowEvent = $result->fetch_assoc();
+			// GET EVENT DETAILS
+			$get = "SELECT * FROM event WHERE eventID='".$row['eventID']."'";
+			$result = $db->query($get);
+			$rowEvent = $result->fetch_assoc();
 
-		// GET PIZZA DETAILS
-		$get = "SELECT * FROM pizza_order WHERE attendeeID = '".$row['attendeeID']."'";
-		$result = $db->query($get);
-		if ($result->lengths == NULL){$pizzaID = 'No';}else{$pizzaID = 'Yes';}
+			// GET PIZZA DETAILS
+			$get = "SELECT * FROM pizza_order WHERE attendeeID = '".$row['attendeeID']."'";
+			$result = $db->query($get);
+			if ($result->lengths == NULL){$pizzaID = 'No';}else{$pizzaID = 'Yes';}
+		}
 	}
 ?>
 
@@ -284,7 +293,7 @@ function cancelSeat(seatID, attendeeID)
 			 onclick='getEvent("t=1"); <?php echo $onclick; ?>'>
 			<div class='eFONT'><font size='2'>1-</font> EVENT</div>
 			<?php
-			if ($rowEvent['event_name'] == ''){
+			if ($rowEvent['event_name'] == '' || $rowEvent == 'No'){
 				echo "<div class='eSTATUS'><img src='/cassa/images/layers/cross.png' /></div>";
 			} else {
 				echo "<div class='eSTATUS'><img src='/cassa/images/layers/tick.png' /></div>";

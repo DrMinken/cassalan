@@ -298,11 +298,6 @@
 						<li onclick='window.location.href="/cassa/management/eventRegistration.php"'>
 							<a href='/cassa/management/eventRegistration.php'>Event Registration</a>
 						</li>
-
-						<!-- ORDER PIZZA -->
-						<li onclick='window.location.href="SELpizza.php"'>
-							<a href='SELpizza.php'>Order Pizza</a>
-						</li>
 					</ul>
 				</li>
 			<?php

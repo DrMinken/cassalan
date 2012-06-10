@@ -38,30 +38,23 @@
 
 
 
-<table class='boardDIV' align='center' border='0'>
+<table class='boardDIV' id='clientDIV' align='center' border='0'>
 <tr>
 	<td width='100px;'>&nbsp;</td>
 	<td>
-		<!-- MANAGE EVENT -->
-		<a href='MANevent.php'>
-			<img class='boardButton' src='../images/buttons/event.jpg' title='Manage Event' 
-				onmouseover='this.src="../images/buttons/eventO.jpg"' 
-				onmouseout='this.src="../images/buttons/event.jpg"' />
+		<!-- MANAGE DETAILS -->
+		<a href='MANdetails.php'>
+			<img class='boardButton' src='../images/buttons/user.jpg' title='Manage your details' 
+				onmouseover='this.src="../images/buttons/userO.jpg"' 
+				onmouseout='this.src="../images/buttons/user.jpg"' />
 		</a>
 	</td>
 	<td>
-		<!-- MANAGE TOURNAMENT -->
-		<a href='MANtournament.php'>
-			<img class='boardButton' src='../images/buttons/tournament.jpg' title='Manage Tournaments'
-				onmouseover='this.src="../images/buttons/tournamentO.jpg"' 
-				onmouseout='this.src="../images/buttons/tournament.jpg"' />
-		</a>
-	</td>
-	<td>
-		<!-- MANAGE PIZZA MENU -->
-		<a href='MANpizza.php'>
-			<img class='boardButton' src='../images/buttons/pizza.jpg' title='Manage Pizza'
-				onmouseover='this.src="../images/buttons/pizzaO.jpg"' 					onmouseout='this.src="../images/buttons/pizza.jpg"' />
+		<!-- EVENT REGISTRATION -->
+		<a href='eventRegistration.php'>
+			<img class='boardButton' src='../images/buttons/eventReg.jpg' title='Event registration'
+				onmouseover='this.src="../images/buttons/eventRegO.jpg"' 
+				onmouseout='this.src="../images/buttons/eventReg.jpg"' />
 		</a>
 	</td>
 	<td width='100px;'>&nbsp;</td>

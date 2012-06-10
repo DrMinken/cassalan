@@ -510,15 +510,19 @@ p
 {	
 	width: 930px;
 	height: 560px;
-
-
  	border: 5px solid #CDCDCD;
 	-moz-border-radius: 15px;
 	border-radius: 15px;
 
 	text-align: center;
-
+}
+#staffDIV
+{
 	background: url('/cassa/images/layers/staffMenu.png') right bottom no-repeat;
+}
+#clientDIV
+{
+	background: url('/cassa/images/layers/clientMenu.png') right bottom no-repeat;
 }
 .boardButton
 {
@@ -866,6 +870,10 @@ p
 {
 	font-size: 10pt;
 	width: 600px;
+	border-collapse: collapse;
+	margin: 0;
+	padding: 100px;
+	line-height: 23pt;
 }
 	.displayRow
 	{
@@ -876,7 +884,7 @@ p
 	.chair
 	{
 		background: url('/cassa/images/layers/chair.png') right bottom no-repeat;
-		width: 500px;
+		width: 650px;
 		height: 232px;
 	}
 
