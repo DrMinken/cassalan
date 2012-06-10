@@ -38,7 +38,7 @@
 
 
 
-<table class='boardDIV' align='center' border='0'>
+<table class='boardDIV' id='staffDIV' align='center' border='0'>
 <tr>
 	<td width='100px;'>&nbsp;</td>
 	<td>
