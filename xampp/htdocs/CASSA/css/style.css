@@ -555,7 +555,8 @@ p
 }
 .seat
 {
-	border: 0px;
+	border-collapse: collapse;
+	border: 0;
 	padding: 0;
 	margin: 0;
 }
@@ -573,31 +574,37 @@ p
 #S2
 {
 	position: relative;
-	top: -530px;
+	top: -550px;
 	left: 680px;
 }
 #S3
 {
 	position: relative;
-	top: -510px;
+	top: -570px;
 	left: 300px;
 }
 #S4
 {
 	position: relative;
-	top: -460px;
+	top: -550px;
 	left: 300px;
 }
 #S5
 {
 	position: relative;
-	top: -540px;
+	top: -650px;
 	left: 680px;
 }
 .seatNumber
 {
-	font-size: 9pt;
+	font-size: 8pt;
 	width: 20px;
+}
+.numWide
+{
+	font-size: 8pt;
+	width: 20px;
+	margin-left: -3px;
 }
 .numberTop
 {
@@ -872,8 +879,8 @@ p
 	width: 600px;
 	border-collapse: collapse;
 	margin: 0;
-	padding: 100px;
 	line-height: 23pt;
+	text-align: left;
 }
 	.displayRow
 	{
@@ -887,7 +894,6 @@ p
 		width: 650px;
 		height: 232px;
 	}
-
 
 
 /* EVENT REGISTRATION */

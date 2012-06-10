@@ -22,7 +22,7 @@
 		$seatNumber[$i] = $row['seatID'];
 		$seatStatus[$i] = $row['status'];
 
-		if ($row['status'] != 'Y')
+		if ($row['status'] != '1')
 		{
 			// GET [this] CLIENT ID
 			$getClient = "SELECT clientID FROM attendee WHERE seatID = '".$seatNumber[$i]."'";
@@ -37,7 +37,6 @@
 			$row = $resultName->fetch_assoc();
 
 			$name = ucwords($row['first_name']. ' ' .$row['last_name']);
-			// echo $name.'<br/>';
 			$client[$i] = $name;
 		}
 		else
@@ -101,24 +100,6 @@
 				die();
 			}
 
-		// CHECK IF USER HAS NOT REGISTERED INTO AN EVENT's [TOURNAMENT]
-			$check = "SELECT * FROM attendee WHERE clientID='".$_SESSION['userID']."'";
-			$result = $db->query($check);
-			$row = $result->fetch_assoc();
-
-			// IF USER HAS NOT REGISTERED FOR A TOURNAMENT
-			// DIRECT THEM TO EVENT REGISTRATION PAGE
-			if ($row['tournID'] == NULL)
-			{
-				$_SESSION['errMsg'] = "<font class='error'>You must register to an tournament first</font>";
-			?>
-				<script type='text/javascript'>
-					window.location.href="/cassa/management/eventRegistration.php?t=2";
-				</script>
-			<?php 
-				die();
-			}
-
 		// IF USER HAS NOT BOOKED A SEAT
 			if ($row['seatID'] == NULL)
 			{
@@ -134,12 +115,6 @@
 				echo '<script type="text/javascript">';
 				echo 'window.location.href="/cassa/management/eventRegistration.php?t=3"';
 				echo '</script>';
-
-				// SEND EMAIL CONFIRMATION
-				/*
-				*
-				*
-				*/
 			}
 
 		// ELSE IF USER HAS ALREADY BOOKED A SEAT
@@ -161,12 +136,6 @@
 				echo '<script type="text/javascript">';
 				echo 'window.location.href="/cassa/management/eventRegistration.php?t=3"';
 				echo '</script>';
-
-				// SEND EMAIL CONFIRMATION
-				/*
-				*
-				*
-				*/
 			}
 		}
 	}
@@ -188,10 +157,11 @@
 <head>
 <script type='text/javascript'>
 
-	$(document).ready(function(){
+	$(document).ready(function()
+	{
 		$(".ajax").colorbox();
-		$(".inline").colorbox({inline:true, width:"1150px", height:"550px"});
-		});
+		$(".inline").colorbox({inline:true, width:"1150px", height:"500px"});
+	});
 
 
 
@@ -220,34 +190,6 @@
 			{
 				document.bookThisSeat['seatID'].value = seat;
 				document.forms['bookThisSeat'].submit();
-
-				/*if (window.XMLHttpRequest)
-				{	
-					// code for mainstream browsers
-					xmlhttp=new XMLHttpRequest();
-				}
-				else
-				{
-					// code for earlier IE versions
-					xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-				}
-
-				xmlhttp.onreadystatechange=function()
-				{
-					if (xmlhttp.readyState==4 && xmlhttp.status==200)
-					{	
-						document.getElementById("seatReturn").innerHTML=xmlhttp.responseText;
-					}
-				}
-			
-				//Now we have the xmlhttp object, get the data using AJAX.
-				var params = "seatID=" + seat;		
-				
-				xmlhttp.open("POST","seatMapServer.php",true);
-				xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-				xmlhttp.setRequestHeader("Content-length", params.length);
-				xmlhttp.setRequestHeader("Connection", "close");
-				xmlhttp.send(params);*/
 			}
 		}
 		else
@@ -365,17 +307,11 @@
 
 				// [this] SEAT 
 				echo "<td id='".($i+1)."' ".$mover.$mout.$onclick.">";
-	
-	
-	//echo "<a href='seatMapServer.php?seatID=".($i+1)."' class='ajax' title='testing'>";
 					// [this] SEAT NUMBER
 					echo "<div class='seatNumber numberTop'>".($i+1)."</div>";
 
 					// [this] SEAT IMAGE
 					echo "<img class='seat_sm pointer' src='".$src.$top.$seatStatus[$i].$ext;
-	//echo "</a>";
-
-
 				echo "</td>";
 			}
 		?>
@@ -406,19 +342,44 @@
 
 	<!-- TABLE SECTION 2 [TOP RIGHT] -->
 	<table id='S2' class='seat' cellspacing="0" cellpadding="0">
+		<!-- [this] TABLE TOP ROW -->
 		<tr>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
+		<?php
+			for ($i=10; $i<15; $i++)
+			{
+			// SET HIDDEN FIELD WITH CLIENT NAME
+			echo "<input type='hidden' name='".($i+1)."name' id='".($i+1)."name' value='".$client[$i]."' />";
+
+				// [this] SEAT 
+				echo "<td id='".($i+1)."' ".$mover.$mout.$onclick.">";
+					// [this] SEAT NUMBER
+					echo "<div class='numWide numberTop'>".($i+1)."</div>";
+
+					// [this] SEAT IMAGE
+					echo "<img class='seat_sm pointer' src='".$src.$top.$seatStatus[$i].$ext;
+				echo "</td>";
+			}
+		?>
 		</tr>
+		<!-- [this] TABLE BOTTOM ROW -->
 		<tr>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
+		<?php
+			for ($i=15; $i<20; $i++)
+			{
+			// SET HIDDEN FIELD WITH CLIENT NAME
+			echo "<input type='hidden' name='".($i+1)."name' id='".($i+1)."name' value='".$client[$i]."' />";
+
+				// [this] SEAT 
+				echo "<td id='".($i+1)."' ".$mover.$mout.$onclick.">";
+
+					// [this] SEAT NUMBER
+					echo "<img class='seat_sm pointer' src='".$src.$bot.$seatStatus[$i].$ext;
+
+					// [this] SEAT IMAGE
+					echo "<div class='numWide numberBot'>".($i+1)."</div>";
+				echo "</td>";
+			}
+		?>		
 		</tr>
 	</table>
 
@@ -427,25 +388,44 @@
 
 	<!-- TABLE SECTION 3 [MIDDLE TOP] -->
 	<table id='S3' class='seat' cellspacing="0" cellpadding="0">
+		<!-- [this] TABLE TOP ROW -->
 		<tr>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
+		<?php
+			for ($i=20; $i<28; $i++)
+			{
+			// SET HIDDEN FIELD WITH CLIENT NAME
+			echo "<input type='hidden' name='".($i+1)."name' id='".($i+1)."name' value='".$client[$i]."' />";
+
+				// [this] SEAT 
+				echo "<td id='".($i+1)."' ".$mover.$mout.$onclick.">";
+					// [this] SEAT NUMBER
+					echo "<div class='numWide numberTop'>".($i+1)."</div>";
+
+					// [this] SEAT IMAGE
+					echo "<img class='seat_sm pointer' src='".$src.$top.$seatStatus[$i].$ext;
+				echo "</td>";
+			}
+		?>
 		</tr>
+		<!-- [this] TABLE BOTTOM ROW -->
 		<tr>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
+		<?php
+			for ($i=28; $i<36; $i++)
+			{
+			// SET HIDDEN FIELD WITH CLIENT NAME
+			echo "<input type='hidden' name='".($i+1)."name' id='".($i+1)."name' value='".$client[$i]."' />";
+
+				// [this] SEAT 
+				echo "<td id='".($i+1)."' ".$mover.$mout.$onclick.">";
+
+					// [this] SEAT NUMBER
+					echo "<img class='seat_sm pointer' src='".$src.$bot.$seatStatus[$i].$ext;
+
+					// [this] SEAT IMAGE
+					echo "<div class='numWide numberBot'>".($i+1)."</div>";
+				echo "</td>";
+			}
+		?>		
 		</tr>
 	</table>
 
@@ -454,25 +434,44 @@
 
 	<!-- TABLE SECTION 4 [MIDDLE BOTTOM] -->
 	<table id='S4' class='seat' cellspacing="0" cellpadding="0">
+		<!-- [this] TABLE TOP ROW -->
 		<tr>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
+		<?php
+			for ($i=36; $i<44; $i++)
+			{
+			// SET HIDDEN FIELD WITH CLIENT NAME
+			echo "<input type='hidden' name='".($i+1)."name' id='".($i+1)."name' value='".$client[$i]."' />";
+
+				// [this] SEAT 
+				echo "<td id='".($i+1)."' ".$mover.$mout.$onclick.">";
+					// [this] SEAT NUMBER
+					echo "<div class='numWide numberTop'>".($i+1)."</div>";
+
+					// [this] SEAT IMAGE
+					echo "<img class='seat_sm pointer' src='".$src.$top.$seatStatus[$i].$ext;
+				echo "</td>";
+			}
+		?>
 		</tr>
+		<!-- [this] TABLE BOTTOM ROW -->
 		<tr>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
+		<?php
+			for ($i=44; $i<52; $i++)
+			{
+			// SET HIDDEN FIELD WITH CLIENT NAME
+			echo "<input type='hidden' name='".($i+1)."name' id='".($i+1)."name' value='".$client[$i]."' />";
+
+				// [this] SEAT 
+				echo "<td id='".($i+1)."' ".$mover.$mout.$onclick.">";
+
+					// [this] SEAT NUMBER
+					echo "<img class='seat_sm pointer' src='".$src.$bot.$seatStatus[$i].$ext;
+
+					// [this] SEAT IMAGE
+					echo "<div class='numWide numberBot'>".($i+1)."</div>";
+				echo "</td>";
+			}
+		?>		
 		</tr>
 	</table>
 
@@ -480,19 +479,44 @@
 
 	<!-- TABLE SECTION 5 [BOTTOM RIGHT] -->
 	<table id='S5' class='seat' cellspacing="0" cellpadding="0">
+		<!-- [this] TABLE TOP ROW -->
 		<tr>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatTop_green.png' /></td>
+		<?php
+			for ($i=52; $i<57; $i++)
+			{
+			// SET HIDDEN FIELD WITH CLIENT NAME
+			echo "<input type='hidden' name='".($i+1)."name' id='".($i+1)."name' value='".$client[$i]."' />";
+
+				// [this] SEAT 
+				echo "<td id='".($i+1)."' ".$mover.$mout.$onclick.">";
+					// [this] SEAT NUMBER
+					echo "<div class='numWide numberTop'>".($i+1)."</div>";
+
+					// [this] SEAT IMAGE
+					echo "<img class='seat_sm pointer' src='".$src.$top.$seatStatus[$i].$ext;
+				echo "</td>";
+			}
+		?>
 		</tr>
+		<!-- [this] TABLE BOTTOM ROW -->
 		<tr>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
-			<td class='pointer'><img class='seat_sm' src='images/seatPlan/seatBot_green.png' /></td>
+		<?php
+			for ($i=57; $i<62; $i++)
+			{
+			// SET HIDDEN FIELD WITH CLIENT NAME
+			echo "<input type='hidden' name='".($i+1)."name' id='".($i+1)."name' value='".$client[$i]."' />";
+
+				// [this] SEAT 
+				echo "<td id='".($i+1)."' ".$mover.$mout.$onclick.">";
+
+					// [this] SEAT NUMBER
+					echo "<img class='seat_sm pointer' src='".$src.$bot.$seatStatus[$i].$ext;
+
+					// [this] SEAT IMAGE
+					echo "<div class='numWide numberBot'>".($i+1)."</div>";
+				echo "</td>";
+			}
+		?>		
 		</tr>
 	</table>
 </div>
