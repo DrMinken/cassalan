@@ -22,6 +22,16 @@ function dateToDatabase($date)
 	return $date;
 }
 
+// REMOVE 'seconds [:00]' FROM TIME
+function removeSeconds($time)
+{
+	$time = substr($time, 0, 5);
+	return $time;
+}
+
+
+
+
 // REG EXPRESSION [A-Za-z] STRINGS
 function regLetters($input)
 {

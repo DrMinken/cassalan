@@ -1,6 +1,7 @@
 <?php 
 	session_start();
 	include("../includes/conn.php");					// Include the db connection
+	include("../includes/functions.php");				// Include general functions
 
 	// PAGE SECURITY
 	if (!isset($_SESSION['isAdmin']))
@@ -11,6 +12,43 @@
 			die();
 		}
 	}
+
+
+if (isset($_POST['subject']))
+{
+	// IF [this] USER BOOKS FOR A TOURNAMENT
+	if ($_POST['subject'] == 'book')
+	{
+		$insert = "INSERT INTO `attendee_tournament` (attendeeID, tournID) VALUES ('".$_POST['attendeeID']."', '".$_POST['tournID']."')";
+		$result = $db->query($insert);
+		
+		$_POST['t'] = 2;
+
+		/*
+		*	AT THIS STAGE, THIS USER HAS BOOKED AN EVENT AND A TOURNAMENT
+		*	THE USER YET HAS TO:
+		*		-BOOK A SEAT
+		*		-BOOK PIZZA (optional)
+		*/
+	}
+
+	// IF [this] USER CANCELS A TOURNAMENT
+	else if ($_POST['subject'] == 'cancel')
+	{
+		$cancel = "DELETE FROM attendee_tournament WHERE attendeeID='".$_POST['attendeeID']."' AND tournID='".$_POST['tournID']."'";
+		$result = $db->query($cancel);
+		
+		$_POST['t'] = 2;
+
+		/*
+		*	AT THIS STAGE, THIS USER HAS BOOKED AN EVENT
+		*	THE USER YET HAS TO:
+		*		-BOOK A TOURNAMENT
+		*/
+	}
+}
+
+
 
 
 
@@ -40,12 +78,12 @@ if (isset($_POST['t']))
 	else if ($_POST['t'] == 2)
 	{
 		// CHECK IF [this] CLIENT HAS BOOKED A TOURNAMENT
-		$check = "SELECT * FROM attendee WHERE clientID='".$_SESSION['userID']."'";
+		$check = "SELECT `tournID` FROM attendee WHERE clientID='".$_SESSION['userID']."'";
 		$result = $db->query($check);
 
-		if ($result->num_rows == 0)
+		if ($result == false)
 		{
-			$row = $result->fetch_assoc();
+			//$row = $result->fetch_assoc();
 
 			// AT THIS STAGE, A USER HAS BOOKED AN EVENT
 			// HOWEVER, HAS NOT BOOKED A TOURNAMENT
@@ -56,6 +94,7 @@ if (isset($_POST['t']))
 		else
 		{
 			$row = $result->fetch_assoc();
+
 			// DISPLAY ALL [this] USERS BOOKED TOURNAMENTS
 			display_all_booked_tournaments($db);
 		}
@@ -93,7 +132,7 @@ if (isset($_POST['t']))
 				// AT THIS STAGE, A USER HAS BOOKED AN EVENT AND A TOURNAMENT
 				// HOWEVER, HAS NOT BOOKED A SEAT
 				echo "<table class='displayTable chair' border='0' style='line-height: 17pt'>";
-				echo "<tr><td><a href='/cassa/seatMap.php'>Click here to book a seat</a></td></tr>";
+				echo "<tr><td align='center'><a href='/cassa/seatMap.php'>Click here to book a seat</a></td></tr>";
 				echo "</table>";
 			}
 			else
@@ -140,7 +179,7 @@ function display_all_events($db)
 	$query = "SELECT * FROM event WHERE startDate >= NOW() AND event_completed = 0 ORDER BY 'desc'";
 	$result = $db->query($query);
 ?>
-	<table class='displayTable' name='eventRegistration'>
+	<table class='displayTable' name='eventRegistration' border='0'>
 <?php 
 		if(isset($_SESSION['errMsg']))
 		{
@@ -161,38 +200,43 @@ function display_all_events($db)
 		<tr>
 			<th align='left'>Name</th>
 			<th align='left'>Location</th>
-			<th align='left'>Date</th>
-			<th align='left'>Start Time</th>
-			<th align='left'>Seat Quantity</th>
-			<th>&nbsp;</th>
+			<th align='center' width="70px">Date</th>
+			<th align='center' width="80px">Start Time</th>
+			<th align='center' width="90px">Seat QTY</th>
+			<th width="106px">&nbsp;</th>
 		</tr>
 	<?php
-		echo '<tr><td><font class="error">You have not booked an Event yet</font></td></tr>';
+		echo '<tfoot><td align="center" colspan="6" height="80px">';
+		echo '<font class="error">You have not booked an Event yet</font></td></tfoot>';
 
 		for ($i=0; $i<$result->num_rows; $i++)
 		{
-			// SETUP ON MOUSE EVENTS
-			$on = "this.style.backgroundColor='#E0ECF8'";
-			$off = "this.style.backgroundColor='transparent'";
-
 			// SETUP [this] ROW DETAILS
 			$row = $result->fetch_assoc();    
 			$name = $row['event_name'];
 			$location = $row['event_location'];
-			$date = $row['startDate'];
-			$startTime = $row['startTime'];
+			$date = dateToScreen($row['startDate']);
+			$startTime = removeSeconds($row['startTime']);
 			$seatQuantity = $row['seatQuantity'];
-			
-			// SETUP MOUSE EVENTS
+
+			// FIND OUT HOW MANY SEATS HAVE BEEN BOOKED FOR THIS EVENT
+			$seatCheck = "SELECT * FROM seat WHERE status=0";
+			$seatResult = $db->query($seatCheck);
+			$seatCount = $seatResult->num_rows;
+
+			// SETUP ON MOUSE EVENTS
+			$on = "this.style.backgroundColor='#E0ECF8'";
+			$off = "this.style.backgroundColor='transparent'";
 			$onclick = "book(".$row['eventID'].")";
 
 			echo '<tr onmouseover="'.$on.'" onmouseout="'.$off.'">';
 				echo '<td>'.$name.'</td>';
 				echo '<td>'.$location.'</td>';
 				echo '<td>'.$date.'</td>';
-				echo '<td>'.$startTime.'</td>';
-				echo '<td>'.$seatQuantity.'</td>';
-				echo '<td onclick="'.$onclick.'">BOOK</td>';
+				echo '<td align="center">'.$startTime.'</td>';
+				echo '<td align="center">'.$seatCount. '/' .$seatQuantity.'</td>';
+				echo '<td onclick="'.$onclick.'" class="pointer">';
+					echo '<img src="/cassa/images/buttons/book.png" alt="Book this event" /></td>';
 			echo '</tr>';
 		}
 	}
@@ -217,7 +261,7 @@ function display_all_booked_events($db)
 	$query = "SELECT * FROM attendee WHERE clientID='".$_SESSION['userID']."' ORDER BY 'desc'";
 	$result = $db->query($query);
 ?>
-	<table class='displayTable' name='eventRegistration' cellspacing='10px'>
+	<table class='displayTable' name='eventRegistration'>
 	<caption><?php if(isset($_SESSION['errMsg'])){echo $_SESSION['errMsg'];unset($_SESSION['errMsg']);}?></caption>
 <?php
 	for ($i=0; $i<$result->num_rows; $i++)
@@ -290,49 +334,59 @@ function display_all_event_tournaments($db)
 			// GET ASSOCIATED ROW @ ATTENDEE
 			$row = $result->fetch_assoc();
 
-
 			// GET ASSOCIATED ROW @ EVENT
 			$get = "SELECT * FROM event WHERE eventID = '".$row['eventID']."'";
 			$result = $db->query($get);
 			$rowEvent = $result->fetch_assoc();
 
-
 			// SETUP [this] ROW DETAILS
 			$name = $rowEvent['event_name'];
-			$location = $rowEvent['event_location'];
-			$date = $rowEvent['startDate'];
-			$startTime = $rowEvent['startTime'];
-			$seatQuantity = $rowEvent['seatQuantity'];
-			
+				/*$location = $rowEvent['event_location'];
+				$date = $rowEvent['startDate'];
+				$startTime = $rowEvent['startTime'];
+				$seatQuantity = $rowEvent['seatQuantity'];*/
 
 			echo '<tr><td colspan="5"><b>'.$name.'</b> Tournament List:</td></tr>';
 			echo '<tr><td colspan="5"><br /></td></tr>';
 		}
 	?>
 
-		<tr>
-			<td><b>Tournament Name</b></td>
-			<td><b>Date</b></td>
-			<td><b>Start Time</b></td>
-			<td><b>End Time</b></td>
-			<td>&nbsp;</td>
-		</tr>
+	<tr>
+		<td><b>Tournament Name</b></td>
+		<td><b>Date</b></td>
+		<td><b>Start Time</b></td>
+		<td><b>End Time</b></td>
+		<td>&nbsp;</td>
+	</tr>
 
 	<?php
 		// GET ALL RELATED TOURNAMENTS TO [this] EVENT
 		$get = "SELECT * FROM tournament WHERE eventID='".$row['eventID']."' ORDER BY 'desc'";
 		$result = $db->query($get);
-		
+
 		for ($i=0; $i<$result->num_rows; $i++)
 		{
 			$rowTourn = $result->fetch_assoc();
 
+			// CHECK IF USER HAS BOOKED [this] TOURNAMENT
+			$check = "SELECT * FROM attendee_tournament WHERE attendeeID='".$row['attendeeID']."' AND tournID='".$rowTourn['tournID']."'";
+			$resultCheck = $db->query($check);
+			$rowAttendee = $resultCheck->fetch_assoc();
+
 			echo '<tr>';
 				echo '<td>'.$rowTourn['name'].'</td>';
-				echo '<td>'.$rowTourn['date'].'</td>';
-				echo '<td>'.$rowTourn['start_time'].'</td>';
-				echo '<td>'.$rowTourn['end_time'].'</td>';
-				echo '<td><img class="pointer" src="/cassa/images/buttons/book.png" onclick="bookTournament('.$rowTourn['tournID'].', '.$row['attendeeID'].')" alt="Book this tournament" /></td>';
+				echo '<td>'.dateToScreen($rowEvent['startDate']).'</td>';
+				echo '<td>'.removeSeconds($rowTourn['start_time']).'</td>';
+				echo '<td>'.removeSeconds($rowTourn['end_time']).'</td>';
+				
+				if (empty($rowAttendee))
+				{
+					echo '<td><img class="pointer" src="/cassa/images/buttons/book.png"  onclick="bookTournament('.$rowTourn['tournID'].', '.$row['attendeeID'].')" alt="Book this tournament" /></td>';
+				}
+				else
+				{
+					echo '<td><img class="pointer" src="/cassa/images/buttons/cancel.png"  onclick="cancelTournament('.$rowTourn['tournID'].', '.$row['attendeeID'].')" alt="Cancel this tournament" /></td>';
+				}
 			echo '</tr>';
 		}
 	}
@@ -379,7 +433,7 @@ function display_all_booked_tournaments($db)
 		$row = $result->fetch_assoc();
 
 		// GET [this] TOURNAMENT DETAILS
-		$get = "SELECT * FROM tournament WHERE tournID='".$row['tournID']."' ORDER BY 'desc'";
+		$get = "SELECT * FROM attendee_tournament WHERE attendeeID='".$row['attendeeID']."' ORDER BY 'desc'";
 		$resultDetails = $db->query($get);
 	
 		for ($i=0; $i<$resultDetails->num_rows; $i++)

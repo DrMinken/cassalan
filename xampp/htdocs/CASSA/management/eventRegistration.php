@@ -1,3 +1,6 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+
 <?php 
 	session_start();										// Start/resume THIS session
 
@@ -49,33 +52,6 @@
 		}
 	}
 
-// IF [this] USER BOOKS FOR A TOURNAMENT
-	if (isset($_POST['bookTournamentID']))
-	{
-		$book = "UPDATE attendee SET tournID='".$_POST['bookTournamentID']."' WHERE attendeeID='".$_POST['attendeeID']."' AND clientID='".$_SESSION['userID']."'";
-		$result = $db->query($book);
-		
-		/*
-		*	AT THIS STAGE, THIS USER HAS BOOKED AN EVENT AND A TOURNAMENT
-		*	THE USER YET HAS TO:
-		*		-BOOK A SEAT
-		*		-BOOK PIZZA (optional)
-		*/
-	}
-// IF [this] USER CANCELS A TOURNAMENT
-	if (isset($_POST['cancelTournID']))
-	{
-		$cancel = "UPDATE attendee SET tournID=NULL WHERE attendeeID='".$_POST['attendeeID']."' AND clientID='".$_SESSION['userID']."'";
-		$result = $db->query($cancel);
-		
-		/*
-		*	AT THIS STAGE, THIS USER HAS BOOKED AN EVENT
-		*	THE USER YET HAS TO:
-		*		-BOOK A TOURNAMENT
-		*		-BOOK A SEAT
-		*		-BOOK PIZZA (optional)
-		*/
-	}
 // IF [this] USER CANCELS A SEAT
 	if (isset($_POST['seatID']))
 	{
@@ -108,13 +84,12 @@
 
 //********** Start of EVENT REGISTRATION PAGE ************** -->
 
-<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 
 <script type='text/javascript'>
 
 // DISPLAY EVENT DETAILS FIRST
-function getEvent(inputRequest)
+function getEvent(params)
 {
 	if (window.XMLHttpRequest)
 	{	
@@ -136,7 +111,6 @@ function getEvent(inputRequest)
 	}
 
 	//Now we have the xmlhttp object, get the data using AJAX.
-	var params = inputRequest;		
 	xmlhttp.open("POST","ajaxEvent.php",true);
 	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xmlhttp.setRequestHeader("Content-length", params.length);
@@ -162,9 +136,8 @@ function bookTournament(tournID, attendeeID)
 
 	if (answer == true)
 	{
-		document.getElementById('bookTournamentID').value = tournID;
-		document.getElementById('attendeeID').value = attendeeID;
-		document.bookTourn.submit();
+		var params = "tournID=" + tournID + "&attendeeID=" + attendeeID + "&subject=book";
+		getEvent(params);
 	}
 }
 // CANCEL TOURNAMENT
@@ -174,9 +147,8 @@ function cancelTournament(tournID, attendeeID)
 
 	if (answer == true)
 	{
-		document.getElementById('cancelTournID').value = tournID;
-		document.getElementById('attendeeID').value = attendeeID;
-		document.cancelTourn.submit();
+		var params = "tournID=" + tournID + "&attendeeID=" + attendeeID + "&subject=cancel";
+		getEvent(params);
 	}
 }
 // CANCEL SEAT
@@ -221,7 +193,7 @@ function cancelSeat(seatID, attendeeID)
 
 <!-- GET [this] USERS BOOKED EVENTS -->
 <?php
-	// GET ATTENDEE DETAILS
+	// GET ATTENDEE EVENT DETAILS
 	$get = "SELECT * FROM attendee WHERE clientID = '".$_SESSION['userID']."'";
 	$result = $db->query($get);
 
@@ -237,19 +209,37 @@ function cancelSeat(seatID, attendeeID)
 		for($i=0; $i<$result->num_rows; $i++)
 		{
 			$row = $result->fetch_assoc();
-			$tournID = $row['tournID'];
-			if ($row['tournID'] == ''){$tournID = 'No';}else{$tournID = 'Yes';}
-			if ($row['seatID'] == ''){$seatID = 'No';}else{$seatID = 'Yes';}
 
-			// GET EVENT DETAILS
-			$get = "SELECT * FROM event WHERE eventID='".$row['eventID']."'";
-			$result = $db->query($get);
-			$rowEvent = $result->fetch_assoc();
+		// GET ATTENDEE TOURNAMENT DETAILS
+			$getT = "SELECT * FROM attendee_tournament WHERE attendeeID = '".$row['attendeeID']."'";
+			$resultT = $db->query($getT);
 
-			// GET PIZZA DETAILS
-			$get = "SELECT * FROM pizza_order WHERE attendeeID = '".$row['attendeeID']."'";
-			$result = $db->query($get);
-			if ($result->lengths == NULL){$pizzaID = 'No';}else{$pizzaID = 'Yes';}
+			if ($resultT->num_rows == 0)
+			{
+				// Tournament == FALSE
+				$rowEvent = 'Yes';
+				$tournID = 'No';
+			}
+			else
+			{
+				// Tournament == TRUE
+				$rowT = $resultT->fetch_assoc();
+				$tournID = $rowT['tournID'];
+				if ($rowT['tournID'] == ''){$tournID = 'No';}else{$tournID = 'Yes';}
+			}
+
+		// GET EVENT DETAILS
+				$get = "SELECT * FROM event WHERE eventID='".$row['eventID']."'";
+				$result = $db->query($get);
+				$rowEvent = $result->fetch_assoc();
+
+		// GET SEAT DETAILS
+				if ($row['seatID'] == ''){$seatID = 'No';}else{$seatID = 'Yes';}
+
+		// GET PIZZA DETAILS
+				$get = "SELECT * FROM pizza_order WHERE attendeeID = '".$row['attendeeID']."'";
+				$result = $db->query($get);
+				if ($result->lengths == NULL){$pizzaID = 'No';}else{$pizzaID = 'Yes';}
 		}
 	}
 ?>

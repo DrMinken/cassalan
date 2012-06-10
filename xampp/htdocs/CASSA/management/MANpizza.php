@@ -32,7 +32,6 @@
 //*************** Start of CREATE PIZZA ******************* -->
 
 <head>
-
 <script type='text/javascript'>
 function editRow(x)
 {

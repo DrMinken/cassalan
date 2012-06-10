@@ -1,3 +1,6 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+
 <?php 
 	session_start();								// Start/resume THIS session
 
@@ -16,78 +19,60 @@
 	include("../includes/conn.php"); 				// Include the database connection
 
 
+	$query = "SELECT * FROM contact";
+	$result = $db->query($query);
+	$row = $result->fetch_assoc();
 
+	if($result->num_rows == 0)
+	{
+		$blur = "";
 
+		$president = "";
+		$pre_irc = "";
 
-		$query = "SELECT * FROM contact";
-		$result = $db->query($query);
-		$row = $result->fetch_assoc();
+		$v_president = "";
+		$vpres_irc = "";
 
-		
-		if($result->num_rows == 0)
-		{
-   		 $blur = "";
-			
-		 $president = "";
-		 $pre_irc = "";
+		$secretary = "";
+		$sec_irc = "";
 
-		 $v_president = "";
-		 $vpres_irc = "";
+		$treasurer = "";
+		$tre_irc = "";
 
-		 $secretary = "";
-		 $sec_irc = "";
+		$tech_admin = "";
+		$tec_irc = "";
 
-		 $treasurer = "";
-		 $tre_irc = "";
+		$webmaster = "";
+		$web_irc = "";
 
-		 $tech_admin = "";
-		 $tec_irc = "";
-
-		 $webmaster = "";
-		 $web_irc = "";
-
-		 $social_events = "";
-		 $soc_irc = "";
-
-		}
-	
+		$social_events = "";
+		$soc_irc = "";
+	}
 	if($result->num_rows > 0 )
-		{
-			$blur = $row['blur'];
-
+	{
+		$blur = $row['blur'];
 		$president = $row['president'];
-		 $pre_irc = $row['pre_irc'];
+		$pre_irc = $row['pre_irc'];
 
-		 $v_president = $row['v_president'];
-		 $vpres_irc = $row['vpre_irc'];
+		$v_president = $row['v_president'];
+		$vpres_irc = $row['vpre_irc'];
 
-		 $secretary = $row['secretary'];
-		 $sec_irc = $row['sec_irc'];
+		$secretary = $row['secretary'];
+		$sec_irc = $row['sec_irc'];
 
-		 $treasurer = $row['treasurer'];
-		 $tre_irc = $row['tre_irc'];
+		$treasurer = $row['treasurer'];
+		$tre_irc = $row['tre_irc'];
 
-		 $tech_admin = $row['tech_admin'];
-		 $tec_irc = $row['tec_irc'];
+		$tech_admin = $row['tech_admin'];
+		$tec_irc = $row['tec_irc'];
 
-		 $webmaster = $row['webmaster'];
-		 $web_irc = $row['web_irc'];
+		$webmaster = $row['webmaster'];
+		$web_irc = $row['web_irc'];
 
-		 $social_events = $row['social_events'];
-		 $soc_irc = $row['soc_irc'];
-
-
-
-		}
-
-	
-	 
-
-
-
+		$social_events = $row['social_events'];
+		$soc_irc = $row['soc_irc'];
+	}
 ?>
-
-
 
 <!-- //******************************************************
 
@@ -101,8 +86,6 @@
 
 //*********** Start of EDIT NOTICES PAGE *************** -->
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <script type='text/javascript'>
 	
