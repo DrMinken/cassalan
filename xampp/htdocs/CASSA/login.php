@@ -68,7 +68,7 @@ if (isset($_POST['submit']))
 					}
 
 					$db->close();
-					$_SESSION['errMsg'] = "You cannot login after an event is started from a remote location.";
+					$_SESSION['errMsg'] = "<font class='error'>You cannot login after an event is started from a remote location.</font>";
 					header('Location: home.php?msg="1"');
 				}
 			}

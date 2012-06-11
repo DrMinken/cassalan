@@ -45,9 +45,9 @@
 	<td>
 		<!-- MANAGE DETAILS -->
 		<a href='MANdetails.php'>
-			<img class='boardButton' src='../images/buttons/user.jpg' title='Manage your details' 
-				onmouseover='this.src="../images/buttons/userO.jpg"' 
-				onmouseout='this.src="../images/buttons/user.jpg"' />
+			<img class='boardButton' src='../images/buttons/details.jpg' title='Manage your details' 
+				onmouseover='this.src="../images/buttons/detailsO.jpg"' 
+				onmouseout='this.src="../images/buttons/details.jpg"' />
 		</a>
 	</td>
 	<td>

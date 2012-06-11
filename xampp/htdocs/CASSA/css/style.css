@@ -486,9 +486,8 @@ p
 .addNoticeBackColor
 {
 	background-color: #F9F9F9;
-	border: 2px solid #CDCDCD;
 	font-family: arial;
-	font-size: 12pt;
+	font-size: 10pt;
 }
 .addNoticeTextArea
 {
