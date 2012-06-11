@@ -163,6 +163,9 @@ function deleteTournament(tournID, tournName)
 // PREPARE ColorBox
 //
 //****************************************************************
+$(document).ajaxStop(function(){
+	window.location.reload();
+});
 
 $(document).ready(function(){
 	// COLORBOX
