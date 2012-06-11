@@ -163,6 +163,30 @@ function cancelSeat(seatID, attendeeID)
 		document.cancelThisSeat.submit();
 	}
 }
+// BOOK PIZZA
+function bookPizza(pizzaID, row, attendeeID, menuID)
+{
+	var answer = confirm("Please confirm to order this pizza");
+
+	if (answer == true)
+	{
+		var pizzaQTY = document.getElementById("pizzaQTY_"+row).selectedIndex;
+
+		var params = "pizzaID=" + pizzaID + "&qty=" + pizzaQTY + "&attendeeID=" + attendeeID + "&menuID=" + menuID + "&subject=order";
+		getEvent(params);
+	}
+}
+// CANCEL PIZZA
+function cancelPizza(pizzaID, attendeeID, menuID)
+{
+	var answer = confirm("Please confirm to cancel this pizza order");
+
+	if (answer == true)
+	{
+		var params = "pizzaID=" + pizzaID + "&attendeeID=" + attendeeID + "&menuID=" + menuID + "&subject=cancelOrder";
+		getEvent(params);
+	}
+}
 </script>
 
 </head>
@@ -191,7 +215,7 @@ function cancelSeat(seatID, attendeeID)
 
 
 
-<!-- GET [this] USERS BOOKED EVENTS -->
+<!-- GET [this] USERS BOOKED EVENT -->
 <?php
 	// GET ATTENDEE EVENT DETAILS
 	$get = "SELECT * FROM attendee WHERE clientID = '".$_SESSION['userID']."'";
@@ -206,40 +230,79 @@ function cancelSeat(seatID, attendeeID)
 	}
 	else
 	{
-		for($i=0; $i<$result->num_rows; $i++)
+		for ($i=0; $i<$result->num_rows; $i++)
 		{
 			$row = $result->fetch_assoc();
 
-		// GET ATTENDEE TOURNAMENT DETAILS
-			$getT = "SELECT * FROM attendee_tournament WHERE attendeeID = '".$row['attendeeID']."'";
-			$resultT = $db->query($getT);
+			// CHECK IF USER HAS BOOKED IN [this current] EVENT
+			$check = "SELECT * FROM event WHERE startDate >= NOW() AND event_completed = 0 AND eventID='".$row['eventID']."'";
+			$resultCheck = $db->query($check);
 
-			if ($resultT->num_rows == 0)
+			// [this] attendee has not booked into [this] event
+			if ($resultCheck->num_rows == 0)
 			{
-				// Tournament == FALSE
-				$rowEvent = 'Yes';
+				$rowEvent = 'No';
 				$tournID = 'No';
+				$seatID = 'No';
+				$pizzaID = 'No';
 			}
 			else
 			{
-				// Tournament == TRUE
-				$rowT = $resultT->fetch_assoc();
-				$tournID = $rowT['tournID'];
-				if ($rowT['tournID'] == ''){$tournID = 'No';}else{$tournID = 'Yes';}
+				$thisEventRow = $resultCheck->fetch_assoc();
+				$rowEvent = 'Yes';
+
+				// GET TOURNAMENT DETAILS
+					// Get [this] event's tournaments
+					$check = "SELECT * FROM tournament WHERE eventID='".$row['eventID']."'";
+					$resultCheck = $db->query($check);
+
+					if ($resultCheck->num_rows != 0)
+					{
+						for ($i=0; $i<$resultCheck->num_rows; $i++)
+						{		
+							$rowTournament = $resultCheck->fetch_assoc();
+							$rowTournID = $rowTournament['tournID'];
+
+							$getT = "SELECT * FROM attendee_tournament WHERE attendeeID='".$row['attendeeID']."' AND tournID='".$rowTournID."'";
+							$resultT = $db->query($getT);
+
+							if ($resultT->num_rows != 0)
+							{
+								// User is booked into one of this events tournaments
+								$tournID = 'Yes';
+								$i = $resultCheck->num_rows;
+							}
+							else
+							{
+								// Tournament == False
+								$tournID = 'No';
+							}
+						}
+					}
+
+				// GET SEAT DETAILS
+					if ($row['seatID'] == '') { $seatID = 'No'; } else { $seatID = 'Yes'; }
+
+				// GET PIZZA DETAILS
+					// Get [this] event's menu
+					$check = "SELECT * FROM pizza_menu WHERE eventID='".$row['eventID']."'";
+					$result = $db->query($check);
+					if ($result->num_rows == 0)
+					{
+						$pizzaID = 'No';
+					}
+					else
+					{
+						$rowMenu = $result->fetch_assoc();
+						$menuID = $rowMenu['menuID'];
+
+						// Check if user has ordered a pizza for [this] menu
+						$get = "SELECT * FROM pizza_order WHERE attendeeID = '".$row['attendeeID']."' AND menuID='".$menuID."'";
+						$result = $db->query($get);
+						if ($result->num_rows == 0) { $pizzaID = 'No'; } else { $pizzaID = 'Yes'; }
+					}
+
 			}
-
-		// GET EVENT DETAILS
-				$get = "SELECT * FROM event WHERE eventID='".$row['eventID']."'";
-				$result = $db->query($get);
-				$rowEvent = $result->fetch_assoc();
-
-		// GET SEAT DETAILS
-				if ($row['seatID'] == ''){$seatID = 'No';}else{$seatID = 'Yes';}
-
-		// GET PIZZA DETAILS
-				$get = "SELECT * FROM pizza_order WHERE attendeeID = '".$row['attendeeID']."'";
-				$result = $db->query($get);
-				if ($result->lengths == NULL){$pizzaID = 'No';}else{$pizzaID = 'Yes';}
 		}
 	}
 ?>
@@ -259,6 +322,9 @@ function cancelSeat(seatID, attendeeID)
 		// SETUP MOUSE CLICK CLASSES
 		$onclick = 
 		'document.getElementById("eventBUT").className="eBAR pointer"; 		document.getElementById("tournBUT").className="eBAR pointer"; document.getElementById("seatBUT").className="eBAR pointer"; document.getElementById("pizzaBUT").className="eBAR pointer"; this.className="eBAR_ON pointer";';
+
+		$imgTick = "<div class='eSTATUS'><img src='/cassa/images/layers/tick.png' /></div>";
+		$imgCross = "<div class='eSTATUS'><img src='/cassa/images/layers/cross.png' /></div>";
 
 		// CHECK IF OUTSIDE PAGE IS TRYING TO ACCESS A CERTAIN MENU BAR 
 		// 1 = EVENT
@@ -282,49 +348,29 @@ function cancelSeat(seatID, attendeeID)
 		<div id='eventBUT' class='pointer; <?php echo $eBAR1; ?>' 
 			 onclick='getEvent("t=1"); <?php echo $onclick; ?>'>
 			<div class='eFONT'><font size='2'>1-</font> EVENT</div>
-			<?php
-			if ($rowEvent['event_name'] == '' || $rowEvent == 'No'){
-				echo "<div class='eSTATUS'><img src='/cassa/images/layers/cross.png' /></div>";
-			} else {
-				echo "<div class='eSTATUS'><img src='/cassa/images/layers/tick.png' /></div>";
-			}
-			?>
+
+			<?php if ($rowEvent == 'No') { echo $imgCross; } else { echo $imgTick; } ?>
 		</div>
 
 		<div id='tournBUT' class='pointer; <?php echo $eBAR2; ?>' 
 			 onclick='getEvent("t=2"); <?php echo $onclick; ?>'>
 			<div class='eFONT'><font size='2'>2-</font> TOURNAMENT</div>
-			<?php
-			if ($tournID == 'No'){
-				echo "<div class='eSTATUS'><img src='/cassa/images/layers/cross.png' /></div>";
-			} else {
-				echo "<div class='eSTATUS'><img src='/cassa/images/layers/tick.png' /></div>";
-			}
-			?>
+
+			<?php if ($tournID == 'No') { echo $imgCross; } else { echo $imgTick; } ?>
 		</div>
 
 		<div id='seatBUT' class='pointer; <?php echo $eBAR3; ?>' 
 			 onclick='getEvent("t=3"); <?php echo $onclick; ?>'>
 			<div class='eFONT'><font size='2'>3-</font> SEAT</div>
-			<?php
-			if ($seatID == 'No') {
-				echo "<div class='eSTATUS'><img src='/cassa/images/layers/cross.png' /></div>";
-			} else {
-				echo "<div class='eSTATUS'><img src='/cassa/images/layers/tick.png' /></div>";
-			}
-			?>
+
+			<?php if ($seatID == 'No') { echo $imgCross; } else { echo $imgTick; } ?>
 		</div>
 
 		<div id='pizzaBUT' class='pointer; <?php echo $eBAR4; ?>' 
 			 onclick='getEvent("t=4"); <?php echo $onclick; ?>'>
 			<div class='eFONT'><font size='2'>4-</font> PIZZA</div>
-			<?php
-			if ($pizzaID == 'No') {
-				echo "<div class='eSTATUS'><img src='/cassa/images/layers/cross.png' /></div>";
-			} else {
-				echo "<div class='eSTATUS'><img src='/cassa/images/layers/tick.png' /></div>";
-			}
-			?>
+
+			<?php if ($pizzaID == 'No') { echo $imgCross; } else { echo $imgTick; } ?>
 		</div>
 	</div>
 </div>
