@@ -12,6 +12,13 @@
 		}
 	}
 
+	if (isset($_POST))
+	{
+		$_POST = array_map("mysql_real_escape_string", $_POST);
+		$_POST = array_map("trim", $_POST);
+	}
+
+
 	if (isset($_POST['action']))
 	{
 		// IF [user] CLICKS TO ADD PIZZA TO 'CURRENT MENU'
@@ -52,8 +59,6 @@
 		else if ($_POST['action'] == 'createPizza')
 		{
 			// VALIDATE ALL INPUT FILES
-			$_POST = array_map('mysql_real_escape_string', $_POST);
-			$_POST = array_map('trim', $_POST);
 			$_SESSION['errMsg'] = '';
 
 			if ($_POST['name'] == '')
@@ -94,18 +99,52 @@
 					$insert = "INSERT INTO pizza_type VALUES ('', '".$_POST['name']."', '".$_POST['description']."', '".$_POST['price']."')";
 					$result = $db->query($insert);
 				}
-				//echo ('<meta http-equiv="refresh" content="1;url=MANpizza.php">');
-				//header('Refresh: url=$page');
-				//exit;
 			}
 		}
+
+		// IF [user] CLICKS TO UPDATE PIZZA ROW
+		else if ($_POST['action'] == 'pizzaMenu')
+		{
+			// Make each first letter of each words capital
+			$_POST = array_map('strtolower', $_POST);
+			$_POST = array_map('ucwords', $_POST);
+
+			// VALIDATE
+			$_SESSION['errMsg'] = '';
+
+			if ($_POST['menuName'] == '')
+			{
+				$_SESSION['errMsg'] .= '<font class="error">Pizza Menu\'s must contain a valid name</font>';
+			}
+			if ($_POST['eventID'] == '-')
+			{
+				$_SESSION['errMsg'] .= '<font class="error">Pizza Menu\'s must be associated with an event</font>';
+			}
+			
+			if ($_SESSION['errMsg'] == '')
+			{
+				// CHECK IF EVENT ALREADY CONTAINS A PIZZA ORDER
+				$check = "SELECT * FROM pizza_menu WHERE eventID='".$_POST['eventID']."'";
+				$resultCheck = $db->query($check);
+
+				if ($resultCheck->num_rows == 0)
+				{
+					// INSERT
+					$insert = "INSERT INTO pizza_menu (eventID, menu_name) VALUES ('".$_POST['eventID']."', '".$_POST['menuName']."')";
+					$result = $db->query($insert);
+				}
+				else
+				{
+					$_SESSION['errMsg'] .= '<font class="error">You can only create one pizza menu per event.</font>';
+				}
+			}
+		}
+
 		
 		// IF [user] CLICKS TO UPDATE PIZZA ROW
 		else if ($_POST['action'] == 'updateRow')
 		{
 			// VALIDATE ALL INPUT FILES
-			$_POST = array_map('mysql_real_escape_string', $_POST);
-			$_POST = array_map('trim', $_POST);
 			$_SESSION['errMsg'] = '';
 
 			if ($_POST['name'] == '')

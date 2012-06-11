@@ -80,7 +80,7 @@ function draw_tournament_table($db, $tournID)
 	<br /><br />
 
 
-	<table class="pizzaOrder" style="width: 400px;">
+	<table class="pizzaOrder" style="width: 400px;" border='0'>
 
 
 	<tr><td colspan="2" id="headCell_left">
@@ -103,17 +103,17 @@ function draw_tournament_table($db, $tournID)
 	{
 		echo '<tr>';
 			echo '<td>Start Time: </td>';
-			echo '<td>' . substr($row['start_time'], 0, 5) . '</td>';
+			echo '<td colspan="2" align="left">' . substr($row['start_time'], 0, 5) . '</td>';
 		echo '</tr>';    
 		
 		echo '<tr>';
 			echo '<td>End Time: </td>';
-			echo '<td>' . substr($row['end_time'], 0, 5) . '</td>';
+			echo '<td colspan="2" align="left">' . substr($row['end_time'], 0, 5) . '</td>';
 		echo '</tr>';       
 
 		echo '<tr>';
 			echo '<td>Winner: </td>';
-			echo '<td>' . $row['winner'] . '</td>';
+			echo '<td colspan="2" align="left">' . $row['winner'] . '</td>';
 		echo '</tr>';
 													   
 	

@@ -183,13 +183,32 @@ function createPizza()
 	xmlhttp.send(params);
 	parent.jQuery.colorbox.close();
 }
+function createPizzaMenu()
+{
+	var menuName = document.getElementById('pizza_menu_name').value;
+	var eventID = document.getElementById('menu_event').value;
+
+	var params = "menuName=" + menuName + "&eventID=" + eventID + "&action=pizzaMenu";
+	makeRequest(params);
+}
+
+
 $(document).ajaxStop(function(){
 	window.location.reload();
 });
 
 $(document).ready(function(){
+// CREATE NEW PIZZA
 	$(".inline").colorbox({inline:true, width:"300px", height:"350px"});
+
+// PIZZA ORDER SUMMARY
 	$(".inlineB").colorbox({inline:true, width:"700px", height:"900px"});
+
+// PIZZA ORDER BREAK DOWN
+	$(".inlineC").colorbox({inline:true, width:"700px", height:"1200px"}); 
+
+// PIZZA MENU
+	$(".inlineD").colorbox({inline:true, width:"250px", height:"300px"}); 
 });
 </script>
 
@@ -223,39 +242,60 @@ $(document).ready(function(){
 
 
 <!-- HREF : OPENS INLINE 'CREATE NEW PIZZA' FORM -->
+<a class='inlineD' href='#createPizzaMenu'>Create new pizza menu</a>
+
+<!-- CREATE A NEW PIZZA FORM -->
+<div style='display: none;'>
+	<div id='createPizzaMenu' style='padding: 20px; line-height: 15pt;'>
+	<h3>Create a new pizza menu</h3>
+
+	<br /><br />
+
+		Menu Name:<br />
+		<input type="text" name="pizza_menu_name" id="pizza_menu_name" maxlength="28" size="28" />
+
+	<br /><br />
+
+		For Event:<br />
+		<select name='menu_event' id='menu_event'>
+	<?php
+		// GET ALL CURRENT EVENTS
+		$get = "SELECT * FROM event WHERE startDate >= NOW() AND event_completed=0 ORDER BY startDate ASC";
+		$result = $db->query($get);
+
+		if ($result->num_rows == 0)
+		{
+			echo '<option value="-"></option>';
+		}
+		else
+		{
+			for ($i=0; $i<$result->num_rows; $i++)
+			{
+				$row = $result->fetch_assoc();
+				echo '<option value="'.$row['eventID'].'">'.$row['event_name'].'</option>';
+			}
+		}
+	?>
+		</select>
+
+	<br /><br />
+
+		<input type="button" name="submit" value="Add Pizza Menu" onclick="createPizzaMenu()" />
+	</div>
+</div>
+
+
+
+
+
+<br /><br />
+
+
+
+
+
+<!-- HREF : OPENS INLINE 'CREATE NEW PIZZA' FORM -->
 <a class='inline' href='#createPizza'>Create new pizza</a>
-
-
-
-
-
-<!-- DISPLAY CURRENT MENU -->
-<?php
-	// GET EVENT WHERE EVENT IS NEXT TO START
-	$get = "SELECT * FROM event WHERE event_completed=0 ORDER BY startDate ASC";
-	$result = $db->query($get);
-	$row = $result->fetch_assoc();
-	$eventID = $row['eventID'];
-
-	// GET [this] EVENTS MENU
-	$query = "SELECT * FROM pizza_menu WHERE eventID='".$eventID."'";
-	$result = $db->query($query);
-	$row = $result->fetch_assoc();
-
-	echo "<input type='hidden' name='currentMenu' id='currentMenu' value='".$row['menuID']."' />";
-
-?>
-
-
-
-
-
-<!-- DISPLAY AJAX: [this] PIZZA MENU -->
-<div id='pizza_menuTable' style='clear: right;'></div>
-
-
-
-
 
 <!-- CREATE A NEW PIZZA FORM -->
 <div style='display: none;'>
@@ -286,6 +326,33 @@ $(document).ready(function(){
 
 
 
+<!-- DISPLAY CURRENT MENU -->
+<?php
+	// GET EVENT WHERE EVENT IS NEXT TO START
+	$get = "SELECT * FROM event WHERE startDate >= NOW() AND event_completed=0 ORDER BY startDate ASC";
+	$result = $db->query($get);
+	$row = $result->fetch_assoc();
+	$eventID = $row['eventID'];
+
+	// GET [this] EVENTS MENU
+	$query = "SELECT * FROM pizza_menu WHERE eventID='".$eventID."'";
+	$result = $db->query($query);
+	$row = $result->fetch_assoc();
+
+	echo "<input type='hidden' name='currentMenu' id='currentMenu' value='".$row['menuID']."' />";
+?>
+
+
+
+
+
+<!-- DISPLAY AJAX: [this] PIZZA MENU -->
+<div id='pizza_menuTable' style='clear: right;'></div>
+
+
+
+
+
 <br /><br/><hr /><br /><br />
 
 
@@ -294,7 +361,7 @@ $(document).ready(function(){
 
 <div id='orderSummaryDIV'>
 <a class='inlineB' href='#summaryPizza'>
-<img class='pointer' border='0' height="50" width="50"
+<img class='pointer' border='0' height="50px" width="50px"
 	 src='../images/layers/form.png' 
 	 alt='Click here to see pizza order summary' />
 	 Pizza order summary</a>
@@ -304,12 +371,152 @@ $(document).ready(function(){
 
 
 
+<div id='orderBreakdownDIV'>
+<a class='inlineC' href='#breakdownPizza'>
+<img class='pointer' border='0' height="50px" width="50px"
+	 src='../images/layers/form.png' 
+	 alt='Click here to see pizza order break down' />
+	 Pizza order break down</a>
+</div>
+
+
+
+
+
 <div style='display: none;'>
 	<div id='summaryPizza'>
 	<br />
+
+<?php 
+	// GET EVENT WHERE EVENT IS NEXT TO START
+	$get = "SELECT * FROM event WHERE startDate >= NOW() AND event_completed=0 ORDER BY startDate ASC";
+	$result = $db->query($get);
+	$row = $result->fetch_assoc();
+	$eventID = $row['eventID'];
+	$eventStartDate = dateToScreen($row['startDate']);
+
+	// GET [this] EVENTS MENU
+	$getmenuID = "SELECT * FROM pizza_menu WHERE eventID='".$eventID."'";
+	$result = $db->query($getmenuID);
+	$row = $result->fetch_assoc();
+	$menuID = $row['menuID'];
+	$menuName = $row['menu_name'];
+
+	$grandTotal = 0;
+?>
+
+
+	<!-- ORDER HEADER -->
+	<div class='orderLogo'></div>
+	<div class='orderHeader'>
+		<div style='float: left;'>
+			<font class='subtitle' style='font-size: 18pt;'>
+				<?php echo $menuName; ?> 
+			</font>
+		</div>
+		<div style='float: right;'>
+			<?php echo $eventStartDate; ?>
+		</div>
+	</div>
+
+	<br />
+	<br />
+
+	<!-- ORDER LINE TABLE -->
+	<table class='pizzaOrder'>
+	<tr>
+		<td class='MANheader' width='300px'>Name</td>
+		<td class='MANheader' width='120px'>QTY</td>
+		<td class='MANheader' width='120px'>Price ($)</td>
+		<td class='MANheader' width='140px'>Total ($)</td>
+	</tr>
+
+	<?php 
+		// GET [this] EVENTS MENU PIZZA ORDER SUMMARY
+		$getpizzaID = "SELECT DISTINCT pizzaID FROM pizza_order WHERE menuID='".$menuID."' ORDER BY pizzaID ASC";
+		$result = $db->query($getpizzaID);
+
+		if ($result->num_rows == 0)
+		{
+			echo '<tr><td colspan="4"><i>There are no orders for this pizza menu.</i></td></tr>';
+		}
+		else
+		{
+			// FOR EVERY 'DISTINCT' PIZZA TYPE, FETCH THE SUM OF EACH
+			for ($i=0; $i<$result->num_rows; $i++) 
+			{
+				$row = $result->fetch_assoc();
+				$thisPizza = $row['pizzaID'];
+				
+				// GET THE SUM OF [this] PIZZA TYPE
+				$sum = "SELECT sum(quantity) as pizzaSum FROM pizza_order WHERE pizzaID='".$thisPizza."'";
+				$resultSum = $db->query($sum);
+				$rowSum = $resultSum->fetch_assoc();
+
+				// [this] PIZZA TYPE
+				$pizzaID[$i] = $thisPizza;
+
+				// [this] PIZZA TYPE's QUANTITY
+				$pizzaSum[$i] = $rowSum['pizzaSum'];
+			}
+
+			// DISPLAY SUM FOR THIS ORDER
+			for ($i=0 ; $i<sizeof($pizzaID); $i++)
+			{
+				// GET [this] PIZZA's NAME
+				$get = "SELECT `pizza_name` FROM pizza_type WHERE pizzaID='".$pizzaID[$i]."'";
+				$result = $db->query($get);
+				$row = $result->fetch_assoc();
+				$pizzaName = $row['pizza_name'];
+				
+				
+				// GET [this] PIZZA's PRICE
+				$get = "SELECT `price` FROM pizza_type WHERE pizzaID='".$pizzaID[$i]."'";
+				$result = $db->query($get);
+				$row = $result->fetch_assoc();
+				$price = $row['price'];
+				$total = $pizzaSum[$i] * $price;
+				$grandTotal = $grandTotal + $total;
+
+				echo '<tr>';
+				echo '<td>'.ucwords($pizzaName).'</td>';
+				echo '<td>'.$pizzaSum[$i].'</td>';
+				echo '<td>'.$price.'</td>';
+				echo '<td>'.$total.'</td>';
+				echo '</tr>';
+			}
+		}
+	?>
+	<?php
+
+	?>
+		<tr><td colspan="4"><hr /></td></tr>
+		<tr><td colspan="4" align="right">GRAND TOTAL: $<?php echo $grandTotal; ?></td></tr>
+	</table>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div style='display: none;'>
+	<div id='breakdownPizza'>
+	<br />
 	<?php 
 		// GET EVENT WHERE EVENT IS NEXT TO START
-		$get = "SELECT * FROM event WHERE event_completed=0 ORDER BY startDate ASC";
+		$get = "SELECT * FROM event WHERE startDate >= NOW() AND event_completed=0 ORDER BY startDate ASC";
 		$result = $db->query($get);
 		$row = $result->fetch_assoc();
 		$eventID = $row['eventID'];
@@ -375,38 +582,17 @@ $(document).ready(function(){
 		<td class='MANheader' width='140px'>Total ($)</td>
 	</tr>
 	<?php
-		$grandTotal = 0;
-		// DISPLAY SUM FOR THIS ORDER
-		for ($i=0 ; $i<sizeof($pizzaID); $i++)
-		{
-			// GET [this] PIZZA's NAME
-			$get = "SELECT `pizza_name` FROM pizza_type WHERE pizzaID='".$pizzaID[$i]."'";
-			$result = $db->query($get);
-			$row = $result->fetch_assoc();
-			$pizzaName = $row['pizza_name'];
-			
-			
-			// GET [this] PIZZA's PRICE
-			$get = "SELECT `price` FROM pizza_type WHERE pizzaID='".$pizzaID[$i]."'";
-			$result = $db->query($get);
-			$row = $result->fetch_assoc();
-			$price = $row['price'];
-			$total = $pizzaSum[$i] * $price;
-			$grandTotal = $grandTotal + $total;
 
-			echo '<tr>';
-			echo '<td>'.ucwords($pizzaName).'</td>';
-			echo '<td>'.$pizzaSum[$i].'</td>';
-			echo '<td>'.$price.'</td>';
-			echo '<td>'.$total.'</td>';
-			echo '</tr>';
-		}
+
+
 	?>
-		<tr><td colspan="4"><hr /></td></tr>
-		<tr><td colspan="4" align="right">GRAND TOTAL: $<?php echo $grandTotal; ?></td></tr>
 	</table>
 	</div>
 </div>
+
+
+
+
 
 
 

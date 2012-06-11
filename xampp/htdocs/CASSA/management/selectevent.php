@@ -367,7 +367,7 @@ function ajax_event_table_AddNew($db, $eventID, $postData, $postNames)
 		$server_IP_address = $_POST['server_IP_address'];
 		$seatQuantity = $_POST['seatQuantity'];
   
-		$query = "INSERT INTO `cassa_lan`.`event` (`eventID`, `event_name`, `event_location`, `startDate`, `startTime`, `seatQuantity`, `server_IP_address`, `event_started`, `event_completed`)"; 
+		$query = "INSERT INTO `event` (`eventID`, `event_name`, `event_location`, `startDate`, `startTime`, `seatQuantity`, `server_IP_address`, `event_started`, `event_completed`)"; 
 		$query .= "VALUES (NULL, '".$event_name."', '".$event_location."', '".$sqlDate."', ";
 		$query .= "'".$startTime."', '".$seatQuantity."', '".$server_IP_address."', 0, 0);";      
 				
