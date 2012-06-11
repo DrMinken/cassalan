@@ -39,68 +39,59 @@ if (isset($_POST['submit']))
 	{
 		$eventStatus = event_check($db);		
 		if ($eventStatus == 1) // event started when set to 1
-		{
-			$adminStatus = isStaff($db);
-			if($adminStatus == 1) // if user is a staff member then skip IP address check
 			{
-				//close connection
-				$db->close();
-				$_SESSION['errMsg'] = "";
-				
-				header('Location: /CASSA/management/staffBoard.php?msg="3"');
-			}
-			else 
-			{
-				$ipStatus = check_IP_address($db);
-				if ($ipStatus == 1) // if IP address is within range allow login
+				$adminStatus = isStaff($db);
+				if($adminStatus == 1) // if user is a staff member then skip IP address check
 				{
 					//close connection
 					$db->close();
 					$_SESSION['errMsg'] = "";
-					header('Location: /CASSA/management/clientBoard.php?msg="4"');
+					
+					header('Location: /CASSA/management/staffBoard.php?msg="3"');
+				}
+				else 
+				{
+					$ipStatus = check_IP_address($db);
+					if ($ipStatus == 1) // if IP address is within range allow login
+					{
+						//close connection
+						$db->close();
+						$_SESSION['errMsg'] = "";
+						header('Location: /CASSA/management/clientBoard.php?msg="4"');
+					}
+					else
+					{
+						// else login not allowed so close connection 
+						$db->close();
+						$_SESSION['errMsg'] = "You cannot login after an event is started from a remote location.";
+						header('Location: home.php?msg="1"');
+					}
+				}
+			}
+			else 
+			{
+				$adminStatus = isStaff($db);
+				
+				if($adminStatus == 1) //event has not started so process login normally as an admin
+				{
+					//close connection
+					$db->close();
+					$_SESSION['errMsg'] = "";
+					header('Location: /CASSA/management/staffBoard.php?msg="5"');
 				}
 				else
 				{
-					// else login not allowed so close connection 
-					if(isset ($_SESSION['username']))
-					{
-						unset ($_SESSION['username']);
-					}
-
+					// else user is not an admin so goto client summary page and close connection
 					$db->close();
-					$_SESSION['errMsg'] = "You cannot login after an event is started from a remote location.";
-					header('Location: home.php?msg="1"');
+					$_SESSION['errMsg'] = "";
+					header('Location: /CASSA/management/client_summary.php?msg="6"');
 				}
 			}
-		}
-		else 
-		{
-			$adminStatus = isStaff($db);
-			
-			if($adminStatus == 1) //event has not started so process login normally as an admin
-			{
-				//close connection
-				$db->close();
-				$_SESSION['errMsg'] = "";
-				header('Location: /CASSA/management/staffBoard.php?msg="5"');
-			}
-			else
-			{
-				// else user is not an admin so goto client summary page and close connection
-				$db->close();
-				$_SESSION['errMsg'] = "";
-				header('Location: /CASSA/management/clientBoard.php?msg="6"');
-			}
-		}
 	}
 	else
 	{
 		//close connection
 		$db->close();
-                if(isset ($_SESSION['username']))
-                {
-                    unset ($_SESSION['username']);
-                }
 
 		$_SESSION['errMsg'] = "<font class='error'>Login failed, please try again.</font>";
 		header('Location: home.php?msg="2"');
@@ -123,7 +114,7 @@ function event_check($db)
 	$row = $result->fetch_array(MYSQLI_BOTH);
 	$row_cnt = $result->num_rows;
 
-	if ($row_cnt == 1) 
+	if ($row_cnt = 1) 
 	{
 		// close result set
     	$result->close();
@@ -151,7 +142,7 @@ function event_check($db)
 		
 function check_IP_address($db)
 {
-	$query = "SELECT server_IP_address FROM event WHERE event_started = '1'";
+	$query = "SELECT server_IP_address FROM event WHERE event_started = 1";
 	$result = $db->query($query);
 	$row = $result->fetch_array(MYSQLI_BOTH);	
 				
@@ -169,18 +160,14 @@ function check_IP_address($db)
 		
 	// *******Remove after testing ***********
 	
-		$userIP = abs(ip2long("192.168.0.33"));
+		$userIP = abs(ip2long("192.168.0.033"));
 	// Check whether the address is within range and return the result
 	
 	if ( $userIP <= $lowIP || $userIP >= $highIP )
 	{
 		
-	$_SESSION['errorMSG'] = "You have attempted to login after an event has started and from outside the MegaLAN";
-                
-                 if(isset ($_SESSION['username']))
-                {
-                    unset ($_SESSION['username']);
-                }
+		$_SESSION['errorMSG'] = "You have attempted to login after an event has started and"
+										. "from outside the MegaLAN";
 		 // close result set
 		$result->close();
 		return 0; // IP address outside range
