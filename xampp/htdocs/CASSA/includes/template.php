@@ -158,19 +158,6 @@
 			onmouseout='this.style.backgroundColor="black"'
 			onclick='window.location.href="/cassa/eventProgram.php"'>
 			<a href='/cassa/eventProgram.php'>Event Program</a>
-			
-			<!-- CHILD LIST -->
-			<!-- ul class='children' id='event'>
-				<!-- LEADER BOARD>
-				<li onclick='window.location.href="/cassa/leaderBoard.php"'>
-					<a href='/cassa/leaderBoard.php'>Leader Board</a>
-				</li>
-				
-				<!-- GAME SERVER DETAILS>
-				<li onclick='window.location.href="/cassa/serverDetails.php"'>
-					<a href='/cassa/serverDetails.php'>Game Server Details</a>
-				</li>
-			</ul -->
 		</li>
 
 
@@ -262,16 +249,6 @@
 						<li onclick='window.location.href="/cassa/management/MANcontacts.php"'>
 							<a href='/cassa/management/MANcontacts.php'>Manage Contacts</a>
 						</li>
-
-						<!-- MANAGE Servers -->
-						<li onclick='window.location.href="/cassa/management/MANserverDetails.php"'>
-							<a href='/cassa/management/MANserverDetails.php'>Manage Server Details</a>
-						</li>
-
-						<!-- MANAGE Results -->
-						<li onclick='window.location.href="/cassa/management/MANresults.php"'>
-							<a href='/cassa/management/MANresults.php'>Manage Results</a>
-						</li>
 					</ul>
 				</li>
 			<?php 
@@ -299,9 +276,19 @@
 							<a href='/cassa/management/eventRegistration.php'>Event Registration</a>
 						</li>
 
+						<!-- TOURNAMENT REGISTRATION -->
+						<li onclick='window.location.href="/cassa/management/eventRegistration.php?t=2"'>
+							<a href='/cassa/management/eventRegistration.php?t=2'>Tournament Registration</a>
+						</li>
+
+						<!-- SELECT SEAT -->
+						<li onclick='window.location.href="/cassa/management/eventRegistration.php?t=3"'>
+							<a href='/cassa/management/eventRegistration.php?t=3'>Seat Status</a>
+						</li>
+
 						<!-- ORDER PIZZA -->
-						<li onclick='window.location.href="SELpizza.php"'>
-							<a href='SELpizza.php'>Order Pizza</a>
+						<li onclick='window.location.href="/cassa/management/eventRegistration.php?t=4"'>
+							<a href='/cassa/management/eventRegistration.php?t=4'>Order Pizza</a>
 						</li>
 					</ul>
 				</li>
