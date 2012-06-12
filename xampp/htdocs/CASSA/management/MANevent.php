@@ -20,7 +20,7 @@
         unset($_SESSION['errMsg']);
 
 
-	$query = "SELECT * FROM event WHERE startDate >= NOW() ORDER BY startDate ASC";
+	$query = "SELECT * FROM event WHERE startDate >= CURDATE() ORDER BY startDate ASC";
 	$result = $db->query($query);
 	$row = $result->fetch_array(MYSQLI_BOTH);    
 	$eventID = $row['eventID'];

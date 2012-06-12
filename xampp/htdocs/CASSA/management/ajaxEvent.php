@@ -182,7 +182,7 @@ if (isset($_POST['t']))
 	else if ($_POST['t'] == 4)
 	{
 		// GET CURRENT EVENT
-		$query = "SELECT * FROM event WHERE startDate >= NOW() AND event_completed = 0 ORDER BY startDate ASC";
+		$query = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed = 0 ORDER BY startDate ASC";
 		$result = $db->query($query);
 
 		if ($result->num_rows != 0)
@@ -305,7 +305,7 @@ if (isset($_POST['t']))
 function display_all_events($db)
 {
 	// GET ALL CURRENT EVENTS
-	$query = "SELECT * FROM event WHERE startDate >= NOW() AND event_completed = 0 ORDER BY 'desc'";
+	$query = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed = 0 ORDER BY 'desc'";
 	$result = $db->query($query);
 ?>
 	<table class='displayTable' name='eventRegistration' border='0'>
@@ -399,7 +399,7 @@ function display_all_booked_events($db)
 		$row = $result->fetch_assoc();
 
 		// GET ASSOCIATED ROW @ EVENT
-		$get = "SELECT * FROM event WHERE eventID = '".$row['eventID']."' AND startDate >= NOW() AND event_completed = 0 ORDER BY startDate";
+		$get = "SELECT * FROM event WHERE eventID = '".$row['eventID']."' AND startDate >= CURDATE() AND event_completed = 0 ORDER BY startDate";
 		$result = $db->query($get);
 
 		if ($result->num_rows == 0)

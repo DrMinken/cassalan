@@ -260,7 +260,7 @@ $(document).ready(function(){
 		<select name='menu_event' id='menu_event'>
 	<?php
 		// GET ALL CURRENT EVENTS
-		$get = "SELECT * FROM event WHERE startDate >= NOW() AND event_completed=0 ORDER BY startDate ASC";
+		$get = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed=0 ORDER BY startDate ASC";
 		$result = $db->query($get);
 
 		if ($result->num_rows == 0)
@@ -329,7 +329,7 @@ $(document).ready(function(){
 <!-- DISPLAY CURRENT MENU -->
 <?php
 	// GET EVENT WHERE EVENT IS NEXT TO START
-	$get = "SELECT * FROM event WHERE startDate >= NOW() AND event_completed=0 ORDER BY startDate ASC";
+	$get = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed=0 ORDER BY startDate ASC";
 	$result = $db->query($get);
 	$row = $result->fetch_assoc();
 	$eventID = $row['eventID'];
@@ -389,7 +389,7 @@ $(document).ready(function(){
 
 <?php 
 	// GET EVENT WHERE EVENT IS NEXT TO START
-	$get = "SELECT * FROM event WHERE startDate >= NOW() AND event_completed=0 ORDER BY startDate ASC";
+	$get = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed=0 ORDER BY startDate ASC";
 	$result = $db->query($get);
 	$row = $result->fetch_assoc();
 	$eventID = $row['eventID'];
@@ -516,7 +516,7 @@ $(document).ready(function(){
 	<br />
 	<?php 
 		// GET EVENT WHERE EVENT IS NEXT TO START
-		$get = "SELECT * FROM event WHERE startDate >= NOW() AND event_completed=0 ORDER BY startDate ASC";
+		$get = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed=0 ORDER BY startDate ASC";
 		$result = $db->query($get);
 		$row = $result->fetch_assoc();
 		$eventID = $row['eventID'];
