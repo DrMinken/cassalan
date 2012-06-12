@@ -242,7 +242,7 @@
 	else if ($queryType == 7)
     {
 		$_SESSION['errMsg'] = ""; 
-		$query1 = "SELECT * FROM event WHERE startDate >= NOW() AND eventID =" . $eventID . ";";
+		$query1 = "SELECT * FROM event WHERE startDate >= CURDATE() AND eventID =" . $eventID . ";";
 		$result = $db->query($query1);
 		$row = $result->fetch_array(MYSQLI_BOTH);
 		
@@ -261,7 +261,7 @@
 			$result = $db->query($query2);
 
 			// GET NEW EVENT ROWS, DISPLAY TABLES THROUGH AJAX DIV
-			$query2 = "SELECT * FROM event WHERE startDate >= NOW() ORDER BY eventID DESC";
+			$query2 = "SELECT * FROM event WHERE startDate >= CURDATE() ORDER BY eventID DESC";
 			$result = $db->query($query2);
 			$row = $result->fetch_array(MYSQLI_BOTH);
 			$eventID = $row['eventID'];
@@ -311,7 +311,7 @@ function ajax_event_table_AddNew($db, $eventID, $postData, $postNames)
 	//Check if event exists -
 	if(!$postData[1] == '')
 	{
-		$query = "SELECT * FROM event WHERE startDate >= NOW() AND event_name='" . $postData[1]. "'";
+		$query = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_name='" . $postData[1]. "'";
 		$result = $db->query($query);
 		if ($result->num_rows > 0)
 		{
@@ -388,7 +388,7 @@ function ajax_event_table_AddNew($db, $eventID, $postData, $postNames)
 		{
 			mysqli_commit($db);
 			$db->autocommit(TRUE);
-			$query = "SELECT * FROM event WHERE startDate >= NOW() AND event_name='" . $_POST['event_name'] . "';";
+			$query = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_name='" . $_POST['event_name'] . "';";
 			$result = $db->query($query);
 
 			$row = $result->fetch_array(MYSQLI_BOTH);
@@ -439,7 +439,7 @@ function ajax_event_table_basic($db, $eventID)
 </tr>
 
 <?php
-$query = "SELECT * FROM event WHERE startDate >= NOW() ORDER BY startDate ASC";
+$query = "SELECT * FROM event WHERE startDate >= CURDATE() ORDER BY startDate ASC";
 $result = $db->query($query);
 if ($result->num_rows == 0)
 {
@@ -480,7 +480,7 @@ echo '</table>';
 
 <?php
 	//Create the general select query.
-    $query = "SELECT * FROM event WHERE startDate >= NOW() AND eventID=".$eventID.";"; 	
+    $query = "SELECT * FROM event WHERE startDate >= CURDATE() AND eventID=".$eventID.";"; 	
     $result = $db->query($query); 			
 
 
@@ -600,7 +600,7 @@ function ajax_event_table_edit($db, $eventID)
     if(!isset($_SESSION['errMsg']))
     {
 		//Create the general select query.
-        $query = "SELECT * FROM event WHERE startDate >= NOW() AND eventID =" . $eventID; 
+        $query = "SELECT * FROM event WHERE startDate >= CURDATE() AND eventID =" . $eventID; 
         $result = $db->query($query); 											
         $row1 = $result->fetch_array(MYSQLI_BOTH);                  
            
@@ -640,7 +640,7 @@ function ajax_event_table_edit($db, $eventID)
 </tr>
 
 <?php
-$query = "SELECT * FROM event WHERE startDate >= NOW() ORDER BY startDate ASC";
+$query = "SELECT * FROM event WHERE startDate >= CURDATE() ORDER BY startDate ASC";
 $result = $db->query($query);
 
 // Now we can output the option fields to populate the list box.

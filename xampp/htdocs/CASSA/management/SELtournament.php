@@ -35,7 +35,7 @@
 function getCurrentTourn($db)
 {
 	// AVAILABLE EVENTS
-	$query = "SELECT * FROM event WHERE startDate >= NOW() AND event_completed=0 ORDER BY startDate ASC";
+	$query = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed=0 ORDER BY startDate ASC";
 	$result = $db->query($query);
 
 	if ($result->num_rows > 0)
@@ -324,7 +324,7 @@ function draw_current_tournament($db)
 
 <?php
 	// AVAILABLE EVENTS
-	$query = "SELECT * FROM event WHERE startDate >= NOW() AND event_completed=0 ORDER BY startDate ASC";
+	$query = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed=0 ORDER BY startDate ASC";
 	$result = $db->query($query);
 
 	// FOR EACH AVAILABLE EVENTS, LOOP THROUGH AND DISPLAY EACH TOURNAMENT

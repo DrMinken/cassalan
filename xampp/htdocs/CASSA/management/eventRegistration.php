@@ -235,7 +235,7 @@ function cancelPizza(pizzaID, attendeeID, menuID)
 			$row = $result->fetch_assoc();
 
 			// CHECK IF USER HAS BOOKED IN [this current] EVENT
-			$check = "SELECT * FROM event WHERE startDate >= NOW() AND event_completed = 0 AND eventID='".$row['eventID']."'";
+			$check = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed = 0 AND eventID='".$row['eventID']."'";
 			$resultCheck = $db->query($check);
 
 			// [this] attendee has not booked into [this] event

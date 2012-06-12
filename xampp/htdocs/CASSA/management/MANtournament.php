@@ -31,7 +31,7 @@
 
 
 	// AVAILABLE EVENTS
-	$query = "SELECT * FROM event WHERE startDate >= NOW() AND event_completed=0 ORDER BY startDate ASC";
+	$query = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed=0 ORDER BY startDate ASC";
 	$result = $db->query($query);
 	$row = $result->fetch_assoc();
 
@@ -225,7 +225,7 @@ else
 			<td>
 				<select name="selectedEvent" id="selectedEvent">
 				<?php
-				$get = "SELECT * FROM event WHERE event_completed=0 AND startDate >= NOW()";
+				$get = "SELECT * FROM event WHERE event_completed=0 AND startDate >= CURDATE()";
 				$result = $db->query($get);
 
 				for ($i=0; $i<$result->num_rows; $i++)
