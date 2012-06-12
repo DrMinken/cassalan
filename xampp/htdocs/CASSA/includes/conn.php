@@ -4,6 +4,7 @@ $hostname   = 'localhost';      // MySQL hostname.
 $username   = 'reader';         // Your database username.
 $password   = 'pass123';        // User Reader Password
 $database   = 'cassa_lan'; 		// database name.
+//$database   = 'lan_cassa_empty'; 		// database name.
 
 
 	// CONNECT TO THE DATABASE: cassa_lan
