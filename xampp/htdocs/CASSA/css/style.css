@@ -357,7 +357,10 @@ p
 	padding:0;
 	height: 41px;
 }
-
+.tournamentStrip
+{
+	background: url('/cassa/images/layers/tournamentStrip.jpg') repeat-y;
+}
 
 
 
@@ -391,7 +394,6 @@ p
 .articleMessage
 {
 	font-size: 12pt;
-	/*font-family: "Helvetica Neue", Arial, Helvetica, "Nimbus Sans L", sans-serif;*/
 	line-height: 18pt;
 }
 .articleImage

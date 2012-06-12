@@ -57,6 +57,8 @@ function deleteQuestion(x)
 
 <!-- Main Content [left] -->
 <div id="content">
+	<h1>Frequently Asked Questions</h1>
+
 
 
 <!-- FETCH RECENT NEWS FROM DATABASE -->
