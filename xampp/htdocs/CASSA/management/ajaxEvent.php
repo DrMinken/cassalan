@@ -445,7 +445,7 @@ function display_all_booked_events($db)
 function display_all_event_tournaments($db)
 {
 	// GET ALL OF [this] USERS CURRENTLY BOOKED EVENTS @ ATTENDEE
-	$query = "SELECT * FROM attendee WHERE clientID='".$_SESSION['userID']."' ORDER BY attendeeID ASC";
+	$query = "SELECT * FROM attendee WHERE clientID='".$_SESSION['userID']."' ORDER BY eventID ASC";
 	$result = $db->query($query);
 ?>
 
@@ -468,21 +468,46 @@ function display_all_event_tournaments($db)
 	}
 	else
 	{
+		$dateArray = array();
+
+		// FOR EACH OF THIS ATTENDEE'S ENROLMENTS
+		// FIND [this] EVENT 
+		for ($i=0; $i<$result->num_rows; $i++)
+		{
+			$row = $result->fetch_assoc();
+			$eventID = $row['eventID']; 
+
+			// GET ASSOCIATED ROW @ EVENT
+			$get = "SELECT * FROM event WHERE eventID='".$eventID."' AND startDate >= CURDATE()";
+			$resultGet = $db->query($get);
+			if ($resultGet->num_rows > 0)
+			{
+				$rowEvent = $resultGet->fetch_assoc();
+				$startDate = $rowEvent['startDate'];
+				$dateArray[$i] = $startDate;
+			}
+		}
+		// SORT DATEARRAY TO FIND CLOSES EVENT
+		natsort($dateArray);
+
+
+		// GET EVENT DETAILS
+		$get = "SELECT * FROM event WHERE startDate='".$dateArray[1]."'";
+		$result = $db->query($get);
 		$row = $result->fetch_assoc();
-		$eventID = $row['eventID']; 
+		$eventID = $row['eventID'];
+		$name = $row['event_name'];
+
+		// GET ATTENDEE DETAILS
+		$get = "SELECT * FROM attendee WHERE eventID='".$eventID."'";
+		$result = $db->query($get);
+		$row = $result->fetch_assoc();
+		$attendeeID = $row['attendeeID'];
 
 		// CHECK IF [this] EVENT HAS ANY TOURNAMENTS YET
 		$check = "SELECT * FROM tournament WHERE eventID='".$eventID."'";
 		$resultCheck = $db->query($check);
 		
-		// GET ASSOCIATED ROW @ EVENT
-		$get = "SELECT * FROM event WHERE eventID = '".$eventID."'";
-		$result = $db->query($get);
-		$rowEvent = $result->fetch_assoc();
-
-		// SETUP [this] ROW DETAILS
-		$name = $rowEvent['event_name'];
-
 		if ($resultCheck->num_rows == 0)
 		{
 		echo "<tr><td align='center' style='height: 230px;'>";
