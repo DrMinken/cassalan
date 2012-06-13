@@ -45,10 +45,12 @@
 		{
 			$_SESSION['errMsg'][1] = '<font class="error">*</font>';
 		}
-		if ($email == '' || $email == 'Enter Text')
+		if (filter_var($email,FILTER_VALIDATE_EMAIL) == false)
 		{
-			$_SESSION['errMsg'][2] = '<font class="error">*</font>';
+        
+			$_SESSION['errMsg'][2] = '<font class="error">*Invalid Email</font>';
 		}
+        
 		if ($mobile == '' || $mobile == 'Enter Text')
 		{
 			$_SESSION['errMsg'][3] = '<font class="error">*</font>';
