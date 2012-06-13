@@ -391,7 +391,7 @@
 		<!-- [this] TABLE TOP ROW -->
 		<tr>
 		<?php
-			for ($i=20; $i<28; $i++)
+			for ($i=20; $i<30; $i++)
 			{
 			// SET HIDDEN FIELD WITH CLIENT NAME
 			echo "<input type='hidden' name='".($i+1)."name' id='".($i+1)."name' value='".$client[$i]."' />";
@@ -410,7 +410,7 @@
 		<!-- [this] TABLE BOTTOM ROW -->
 		<tr>
 		<?php
-			for ($i=28; $i<36; $i++)
+			for ($i=30; $i<40; $i++)
 			{
 			// SET HIDDEN FIELD WITH CLIENT NAME
 			echo "<input type='hidden' name='".($i+1)."name' id='".($i+1)."name' value='".$client[$i]."' />";
@@ -437,7 +437,7 @@
 		<!-- [this] TABLE TOP ROW -->
 		<tr>
 		<?php
-			for ($i=36; $i<44; $i++)
+			for ($i=40; $i<50; $i++)
 			{
 			// SET HIDDEN FIELD WITH CLIENT NAME
 			echo "<input type='hidden' name='".($i+1)."name' id='".($i+1)."name' value='".$client[$i]."' />";
@@ -456,7 +456,7 @@
 		<!-- [this] TABLE BOTTOM ROW -->
 		<tr>
 		<?php
-			for ($i=44; $i<52; $i++)
+			for ($i=50; $i<60; $i++)
 			{
 			// SET HIDDEN FIELD WITH CLIENT NAME
 			echo "<input type='hidden' name='".($i+1)."name' id='".($i+1)."name' value='".$client[$i]."' />";
@@ -482,7 +482,7 @@
 		<!-- [this] TABLE TOP ROW -->
 		<tr>
 		<?php
-			for ($i=52; $i<57; $i++)
+			for ($i=60; $i<65; $i++)
 			{
 			// SET HIDDEN FIELD WITH CLIENT NAME
 			echo "<input type='hidden' name='".($i+1)."name' id='".($i+1)."name' value='".$client[$i]."' />";
@@ -501,7 +501,7 @@
 		<!-- [this] TABLE BOTTOM ROW -->
 		<tr>
 		<?php
-			for ($i=57; $i<62; $i++)
+			for ($i=65; $i<70; $i++)
 			{
 			// SET HIDDEN FIELD WITH CLIENT NAME
 			echo "<input type='hidden' name='".($i+1)."name' id='".($i+1)."name' value='".$client[$i]."' />";

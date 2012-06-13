@@ -5,7 +5,7 @@
 	session_start();									// Start/resume THIS session
 
 	// PAGE SECURITY
-	if (isset($_SESSION['isAdmin']))
+	if (!isset($_SESSION['isAdmin']))
 	{
 		if ($_SESSION['isAdmin'] == 0)
 		{
@@ -33,7 +33,7 @@
 // Revision: 1.0
 // Date: 16/04/2012
 // Author: Lyndon Smith
-// Modified: 
+// Modified: Luke Spartalis
 
 //***********************************************************
 
@@ -172,10 +172,9 @@ function deleteEvent(eventID, eventName)
 //****************************************************************
 function startEvent(eventID)
 {
-	eventID = document.getElementById("selectEvent").value;
-	eventName = document.getElementById("option" + eventID).text;
+
 	
-	var message = "The " + eventName + " event is about to be ";
+	var message = "The event is about to be ";
 	message += "started. All other started events will";
 	message += " be stopped. Proceed?";
 	
@@ -198,9 +197,8 @@ function startEvent(eventID)
 //****************************************************************
 function stopEvent(eventID)
 {
-	eventName = document.getElementById("option" + eventID).text;
-	
-	var message = "The " + eventName + " event is about to be ";
+
+	var message = "The event is about to be ";
 	message += "stopped. It cannot be re-started. Proceed?";
 	
 	var answer = confirm(message );

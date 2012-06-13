@@ -18,17 +18,7 @@
 
 <!--*******************************************************-->
 
-<?php 		
-	// PAGE SECURITY
-	if (isset($_SESSION['isAdmin']))
-	{
-		if ($_SESSION['isAdmin'] == 0)
-		{
-			echo '<script type="text/javascript">history.back()</script>';
-			die();
-		}
-	}
-
+<?php 														
 	include("../includes/conn.php");			// Include the db connection
 	include("../includes/functions.php");            // Include common functions
 
@@ -559,6 +549,9 @@ echo '<table class="pizzaOrder">';
 
 		$on = 'this.src="../images/buttons/stop_dwn.png"';
 		$off = 'this.src="../images/buttons/stop.png"';
+		
+		$on1 = 'this.src="../images/buttons/start_dwn.png"';
+		$off1 = 'this.src="../images/buttons/start.png"';
 
 		// If the event has started place the stop event button in the table.
 		if($row['event_started'] == 1) 
@@ -572,6 +565,9 @@ echo '<table class="pizzaOrder">';
 			echo '</tr>';
 		}
 		// If the event has not started place the start event button in the table. 
+		
+
+		
 		elseif ($row['event_started'] == 0)
 		{
 			echo '<tr>';
@@ -579,7 +575,7 @@ echo '<table class="pizzaOrder">';
 				echo '<td>No</td>';
 				echo '<td><img src="../images/buttons/start_dwn.png" class="button"';
 					echo 'alt="Start the selected event. Stops all others." onclick="startEvent(' . $row['eventID'] . ')"'; 
-					echo 'onmouseover='.$off.' onmouseout='.$on.' /></td>';
+					echo 'onmouseover='.$off1.' onmouseout='.$on1.' /></td>';
 			echo '</tr>';
 		}
 		// If the event has completed or been stopped. 

@@ -7,7 +7,7 @@
 // Revision: 1.0
 // Date: 16/04/2012
 // Author: Tinashe Masvaure
-// Modified: 
+// Modified: Luke Spartalis
 
 //***********************************************************
 
@@ -16,7 +16,7 @@
     session_start();		// Start/resume THIS session
 
     // PAGE SECURITY
-    if (isset($_SESSION['isAdmin']))
+    if (!isset($_SESSION['isAdmin']))
     {
         if ($_SESSION['isAdmin'] == 0)
         {
@@ -171,6 +171,57 @@ $(document).ready(function(){
 	// COLORBOX
 	$(".inline").colorbox({inline:true, width:"550px", height:"380px"});
 });
+
+//***************************************************************
+//
+// Ajax Function to start an tournament.
+//
+//****************************************************************
+function startTournament(tournID)
+{
+
+	
+	var message = "The tournament about to be ";
+	message += "started. Proceed?";
+	
+	var answer = confirm(message);
+	if (answer == true)
+	{
+		var params = "tournID=" + tournID + "&queryType=start";		
+		createRequest(params);
+	}
+	else
+	{ 
+		return;
+	}
+}
+
+//***************************************************************
+//
+// Ajax Function to stop / end an tournament.
+//
+//****************************************************************
+function stopTournament(tournID)
+{
+
+	var message = "The tournament is about to be ";
+	message += "stopped. It cannot be re-started. Proceed?";
+	
+	var answer = confirm(message );
+	if (answer == true)
+	{
+		var params = "tournID=" + tournID + "&queryType=stop";		
+		createRequest(params);
+	}
+	else
+	{ 
+		return;
+	}
+}
+
+
+
+
 </script>
 </head>
 
