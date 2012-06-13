@@ -242,17 +242,13 @@ function isStaff($db)
 //*****************************************************************************************************************	
 function login_user($db)
 {
-	$query = "SELECT * FROM client WHERE username = '" . mysql_real_escape_string($_POST['username']) . "' 
-				and password = '" . mysql_real_escape_string($_POST['password']) . "'";
-				
+	$query = "SELECT * FROM client WHERE username ='".trim(mysql_real_escape_string($_POST['username']))."' AND password ='".trim(mysql_real_escape_string($_POST['password']))."'";
 	$result = $db->query($query);
-	$row = $result->fetch_array(MYSQLI_BOTH);
-	$row_cnt = $result->num_rows;
 
-	
-	// Check username and password match stored record
-	if ($row_cnt == 1) 
+	if ($result->num_rows > 0)
 	{
+		$row = $result->fetch_assoc();
+
 		// Set username session variable
 		$_SESSION['username'] = $_POST['username'];
 		$_SESSION['err_code'] = 0;
@@ -263,8 +259,8 @@ function login_user($db)
 		
 		// close result set
 		$result->close();			
-			return 1; // user exists in database
 		
+		return 1; // user exists in database
 	}
 	else 
 	{

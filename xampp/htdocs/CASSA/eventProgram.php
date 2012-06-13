@@ -123,7 +123,7 @@
 
 				if (isset($_SESSION['isAdmin']))
 				{
-					if ($_SESSION['isAdmin'] == 1)
+					if ($_SESSION['isAdmin'] == 1 || $_SESSION['isAdmin'] == 2)
 					{
 						// Tournament Winner
 						echo '<tr>';

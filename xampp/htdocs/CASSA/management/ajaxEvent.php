@@ -82,15 +82,15 @@ if (isset($_POST['t']))
 		// CHECK IF [this] CLIENT HAS BOOKED A CURRENT EVENT
 		$check = "SELECT * FROM attendee WHERE clientID='".$_SESSION['userID']."'";
 		$result = $db->query($check);
-		$row = $result->fetch_assoc();
 
-		if ($row['eventID'] == NULL)
+		if ($result->num_rows == 0)
 		{
 			// DISPLAY ALL AVAILABLE EVENTS TO USER FOR BOOKING
 			display_all_events($db);
 		}
 		else
 		{
+			$row = $result->fetch_assoc();
 			// DISPLAY ALL [this] USERS BOOKED EVENTS
 			display_all_booked_events($db);
 		}
@@ -99,27 +99,8 @@ if (isset($_POST['t']))
 // TOURNAMENT TRIGGER
 	else if ($_POST['t'] == 2)
 	{
-		// CHECK IF [this] CLIENT HAS BOOKED A TOURNAMENT
-		$check = "SELECT `tournID` FROM attendee WHERE clientID='".$_SESSION['userID']."'";
-		$result = $db->query($check);
-
-		if ($result == false)
-		{
-			//$row = $result->fetch_assoc();
-
-			// AT THIS STAGE, A USER HAS BOOKED AN EVENT
-			// HOWEVER, HAS NOT BOOKED A TOURNAMENT
-
-			// DISPLAY ALL AVAILABLE EVENT-->TOURNAMENT TO USER FOR BOOKING
-			display_all_event_tournaments($db);
-		}
-		else
-		{
-			$row = $result->fetch_assoc();
-
-			// DISPLAY ALL [this] USERS BOOKED TOURNAMENTS
-			display_all_booked_tournaments($db);
-		}
+		// DISPLAY ALL AVAILABLE EVENT-->TOURNAMENT TO USER FOR BOOKING
+		display_all_event_tournaments($db);
 	}
 
 // SEAT TRIGGER
@@ -305,7 +286,7 @@ if (isset($_POST['t']))
 function display_all_events($db)
 {
 	// GET ALL CURRENT EVENTS
-	$query = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed = 0 ORDER BY 'desc'";
+	$query = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed=0 ORDER BY startDate ASC";
 	$result = $db->query($query);
 ?>
 	<table class='displayTable' name='eventRegistration' border='0'>
@@ -321,7 +302,7 @@ function display_all_events($db)
 	if ($result->num_rows == 0)
 	{
 		echo '<tr><td align="center" style="height: 230px;">';
-		echo '<font class="error">MegaLAN has no events running at this time.</font></td></tr>';
+		echo '<font class="error">MegaLAN have no events running at this time.</font></td></tr>';
 	}
 	else
 	{
@@ -356,7 +337,12 @@ function display_all_events($db)
 			// SETUP ON MOUSE EVENTS
 			$on = "this.style.backgroundColor='#E0ECF8'";
 			$off = "this.style.backgroundColor='transparent'";
-			$onclick = "book(".$row['eventID'].")";
+			$onclickBook = "book(".$row['eventID'].")";
+			$onclickCancel = "cancel(".$row['eventID'].")";
+
+			// CHECK IF USER HAS BOOKED THIS EVENT
+			$check = "SELECT * FROM attendee WHERE clientID='".$_SESSION['userID']."' AND eventID='".$row['eventID']."'";
+			$resultCheck = $db->query($check);
 
 			echo '<tr onmouseover="'.$on.'" onmouseout="'.$off.'">';
 				echo '<td>'.$name.'</td>';
@@ -364,8 +350,17 @@ function display_all_events($db)
 				echo '<td>'.$date.'</td>';
 				echo '<td align="center">'.$startTime.'</td>';
 				echo '<td align="center">'.$seatCount. '/' .$seatQuantity.'</td>';
-				echo '<td onclick="'.$onclick.'" class="pointer">';
+			
+			if ($resultCheck->num_rows == 0)
+			{
+				echo '<td onclick="'.$onclickBook.'" class="pointer">';
 					echo '<img src="/cassa/images/buttons/book.png" alt="Book this event" /></td>';
+			}
+			else
+			{
+				echo '<td onclick="'.$onclickCancel.'" class="pointer">';
+					echo '<img src="/cassa/images/buttons/cancel.png" alt="Cancel this event" /></td>';
+			}
 			echo '</tr>';
 		}
 	}
@@ -375,6 +370,7 @@ function display_all_events($db)
 	<!-- FORM: BOOK [this] EVENT -->
 	<form name='bookEvent' method='POST' action='eventRegistration.php'>
 	<input type='hidden' name='bookID' id='bookID' value='' />
+	<input type='hidden' name='subject' id='subject' value='' />
 	</form>
 <?php
 }
@@ -449,7 +445,7 @@ function display_all_booked_events($db)
 function display_all_event_tournaments($db)
 {
 	// GET ALL OF [this] USERS CURRENTLY BOOKED EVENTS @ ATTENDEE
-	$query = "SELECT * FROM attendee WHERE clientID='".$_SESSION['userID']."' ORDER BY 'desc'";
+	$query = "SELECT * FROM attendee WHERE clientID='".$_SESSION['userID']."' ORDER BY attendeeID ASC";
 	$result = $db->query($query);
 ?>
 
@@ -472,31 +468,46 @@ function display_all_event_tournaments($db)
 	}
 	else
 	{
-		for ($i=0; $i<$result->num_rows; $i++)
+		$row = $result->fetch_assoc();
+		$eventID = $row['eventID']; 
+
+		// CHECK IF [this] EVENT HAS ANY TOURNAMENTS YET
+		$check = "SELECT * FROM tournament WHERE eventID='".$eventID."'";
+		$resultCheck = $db->query($check);
+		
+		// GET ASSOCIATED ROW @ EVENT
+		$get = "SELECT * FROM event WHERE eventID = '".$eventID."'";
+		$result = $db->query($get);
+		$rowEvent = $result->fetch_assoc();
+
+		// SETUP [this] ROW DETAILS
+		$name = $rowEvent['event_name'];
+
+		if ($resultCheck->num_rows == 0)
 		{
-			// GET ASSOCIATED ROW @ ATTENDEE
-			$row = $result->fetch_assoc();
-
-			// GET ASSOCIATED ROW @ EVENT
-			$get = "SELECT * FROM event WHERE eventID = '".$row['eventID']."'";
-			$result = $db->query($get);
-			$rowEvent = $result->fetch_assoc();
-
-			// SETUP [this] ROW DETAILS
-			$name = $rowEvent['event_name'];
+		echo "<tr><td align='center' style='height: 230px;'>";
+			echo "<font class='error'>";
+			echo "<font class='subtitle' style='font-size: 16pt;'>".$name."</font>";
+			echo " contains no tournaments at this time.</font>"; 
+		echo "</td></tr>";
+		}
+		else
+		{
 
 			echo '<tr><td colspan="5"><b>'.$name.'</b> Tournament List:</td></tr>';
 			echo '<tr><td colspan="5"><br /></td></tr>';
+		?>
+			<tr>
+				<td><b>Tournament Name</b></td>
+				<td><b>Date</b></td>
+				<td><b>Start Time</b></td>
+				<td><b>End Time</b></td>
+				<td>&nbsp;</td>
+			</tr>
+		<?php
 		}
 	?>
 
-	<tr>
-		<td><b>Tournament Name</b></td>
-		<td><b>Date</b></td>
-		<td><b>Start Time</b></td>
-		<td><b>End Time</b></td>
-		<td>&nbsp;</td>
-	</tr>
 
 	<?php
 		// GET ALL RELATED TOURNAMENTS TO [this] EVENT
@@ -532,74 +543,9 @@ function display_all_event_tournaments($db)
 	?>
 </table>
 	<!-- FORM: BOOK [this] TOURNAMENT -->
-	<form name='bookTourn' method='POST' action='eventRegistration.php'>
+	<!-- form name='bookTourn' method='POST' action='eventRegistration.php'>
 	<input type='hidden' name='bookTournamentID' id='bookTournamentID' value='' />
 	<input type='hidden' name='attendeeID' id='attendeeID' value='' />
-	</form>
-<?php
-}
-
-
-
-
-
-
-
-
-
-// DISPLAY ALL BOOKED TOURNAMENTS [this] USER HAS BOOKED
-function display_all_booked_tournaments($db)
-{
-	// GET ALL OF [this] USERS CURRENTLY BOOKED EVENTS @ ATTENDEE
-	$query = "SELECT * FROM attendee WHERE clientID='".$_SESSION['userID']."' ORDER BY attendeeID DESC";
-	$result = $db->query($query);
-
-	echo "<table class='displayTable' border='0' style='line-height: 17pt'>";
-
-	if ($result->num_rows != 0)
-	{
-	?>
-
-	<tfoot><tr><td colspan='5' align='center' height='60px'><?php if(isset($_SESSION['errMsg'])){echo $_SESSION['errMsg'];unset($_SESSION['errMsg']);}?></td></tr></tfoot>
-		<tr>
-			<td><b>Tournament Name</b></td>
-			<td><b>Date</b></td>
-			<td><b>Start Time</b></td>
-			<td><b>End Time</b></td>
-			<td>&nbsp;</td>
-		</tr>
-
-	<?php
-		for($i=0; $i<$result->num_rows; $i++)
-		{
-			// [this] SINGLE TOURNAMENT
-			$row = $result->fetch_assoc();
-
-			// GET [this] TOURNAMENT DETAILS
-			$get = "SELECT * FROM attendee_tournament WHERE attendeeID='".$row['attendeeID']."' ORDER BY 'desc'";
-			$resultDetails = $db->query($get);
-		
-			for ($i=0; $i<$resultDetails->num_rows; $i++)
-			{
-				$rowTourn = $resultDetails->fetch_assoc();
-
-				echo '<tr>';
-					echo '<td>'.$rowTourn['name'].'</td>';
-					echo '<td>'.$rowTourn['date'].'</td>';
-					echo '<td>'.$rowTourn['start_time'].'</td>';
-					echo '<td>'.$rowTourn['end_time'].'</td>';
-					echo '<td><img class="pointer" src="/cassa/images/buttons/cancel.png" onclick="cancelTournament('.$rowTourn['tournID'].', '.$row['attendeeID'].')" alt="Cancel this tournament" /></td>';
-				echo '</tr>';
-			}
-		}
-	}
-
-	echo "</table>";
-	?>
-	<!-- FORM: CANCEL [this] TOURNAMENT -->
-	<form name='cancelTourn' method='POST' action='eventRegistration.php'>
-	<input type='hidden' name='cancelTournID' id='cancelTournID' value='' />
-	<input type='hidden' name='attendeeID' id='attendeeID' value='' />
-	</form>
+	</form -->
 <?php
 }

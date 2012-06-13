@@ -18,16 +18,6 @@
 
 
 <?php 
-	// PAGE SECURITY
-	if (isset($_SESSION['isAdmin']))
-	{
-		if ($_SESSION['isAdmin'] == 0)
-		{
-			echo '<script type="text/javascript">history.back()</script>';
-			die();
-		}
-	}
-
 	session_start();
     include("../includes/conn.php");            // Include the db connection
 
@@ -38,6 +28,7 @@
 	// SETUP LOCAL VARIABLES
 	if (isset($_POST['tournID'])){ $tournID = $_POST['tournID']; }
     $queryType = $_POST['queryType'];           // Retrieve the query Identifier.
+	
 
 
 
@@ -85,6 +76,9 @@ function draw_tournament_table($db, $tournID)
 	// DECLARE MOUSE EVENTS
 	$on = 'this.src="../images/buttons/edit_dwn.png"';
 	$off = 'this.src="../images/buttons/edit_up.png"';
+	
+
+	
 
 ?>
 	<br /><br />
@@ -167,7 +161,7 @@ function draw_tournament_table($db, $tournID)
 
 			echo '<tr>';
 				echo '<td>Tournament Started: </td>';
-				echo '<td>Finished</td>';
+				echo '<td colspan="2">Finished</td>';
 			echo '</tr>';
 		}
 
@@ -314,6 +308,36 @@ else if($queryType == "update")
 	}
 }
 
+
+
+
+
+
+
+//If querytype = start then change the tournament to started											
+	if ($queryType == "start")
+    {
+        $query2  =  "UPDATE tournament "; 
+        $query2 .=  "SET started = 1 ";
+        $query2 .=  "WHERE tournID =" . $tournID;
+        
+		//Then Execute the second Query then move on
+        $result = $db->query($query2);  
+		$queryType='0';
+    }
+	//If querytype = end then change the tournament to finished
+    else if ($queryType == "stop")
+    {
+        $_SESSION['errMsg'] = "";
+        $query2  = "UPDATE tournament "; 
+        $query2 .=	"SET started = 2 ";
+        $query2 .=	"WHERE tournID =" . $tournID;
+
+        $result = $db->query($query2);
+        	
+		$queryType='0';
+		//Then Execute the Query then move on
+    }
 
 
 
