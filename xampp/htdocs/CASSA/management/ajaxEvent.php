@@ -4,7 +4,7 @@
 	include("../includes/functions.php");				// Include general functions
 
 	// PAGE SECURITY
-	if (!isset($_SESSION['isAdmin']))
+	if (isset($_SESSION['isAdmin']))
 	{
 		if ($_SESSION['isAdmin'] == 0)
 		{

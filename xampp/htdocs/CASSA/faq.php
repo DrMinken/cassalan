@@ -58,7 +58,7 @@ function deleteQuestion(x)
 <!-- Main Content [left] -->
 <div id="content">
 	<h1>Frequently Asked Questions</h1>
-
+	<br />
 
 
 <!-- FETCH RECENT NEWS FROM DATABASE -->
@@ -85,7 +85,7 @@ echo '<div id="article">';
 		// IF USER = STAFF, ADD TOOLBOX [EDIT/DELETE]
 		if (isset($_SESSION['isAdmin']))
 		{
-			if ($_SESSION['isAdmin'] == 1)
+			if ($_SESSION['isAdmin'] == 1 || $_SESSION['isAdmin'] == 2 )
 			{
 				// TOOLBOX
 				echo '<div class="articleToolBox">';

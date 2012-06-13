@@ -1,8 +1,11 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+
 <?php 
 	session_start();								// Start/resume THIS session
 
 	// PAGE SECURITY
-	if (!isset($_SESSION['isAdmin']))
+	if (isset($_SESSION['isAdmin']))
 	{
 		if ($_SESSION['isAdmin'] == 0)
 		{
@@ -65,7 +68,6 @@
 ?>
 
 
-
 <!-- //******************************************************
 
 // Name of File: notices.php
@@ -75,11 +77,9 @@
 // Modified: 
 
 //***********************************************************
-
 //*********** Start of MANAGE NOTICES PAGE *************** -->
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
 <script type='text/javascript'>
 	
@@ -154,7 +154,7 @@
 
 
 <!-- Interface Box -->
-<div id='newsBox' align='center'>
+<div id='newsBox' style='text-align: left; text-indent: 20px;'>
 <form name='addNews' enctype="multipart/form-data" method='POST' 
 	  onsubmit='return newsVal()' action='ADDnotices.php'>
 	<br />

@@ -41,7 +41,9 @@ if (isset($_POST['submit']))
 		if ($eventStatus == 1) // event started when set to 1
 		{
 			$adminStatus = isStaff($db);
-			if($adminStatus == 1) // if user is a staff member then skip IP address check
+			
+			// if user is a STAFF or ADMIN member then skip IP address check
+			if($adminStatus == 1 || $adminStatus == 2) 
 			{
 				//close connection
 				$db->close();
@@ -77,7 +79,8 @@ if (isset($_POST['submit']))
 		{
 			$adminStatus = isStaff($db);
 			
-			if($adminStatus == 1) //event has not started so process login normally as an admin
+			// event has not started so process login normally as a STAFF / ADMIN
+			if($adminStatus == 1 || $adminStatus == 2) 
 			{
 				//close connection
 				$db->close();
@@ -213,14 +216,21 @@ function isStaff($db)
 			 // close result set
 			$result->close();
 			$_SESSION['isAdmin'] = 1;					
-			return 1; // user is an admin
+			return 1; // user is an STAFF
+		}
+		else if ($row['admin'] == 2)
+		{
+			 // close result set
+			$result->close();
+			$_SESSION['isAdmin'] = 2;					
+			return 2; // user is an ADMIN
 		}
 		else 
 		{ 
 			 // close result set
 			$result->close();
 			$_SESSION['isAdmin'] = 0;
-			return 0; // user is not an admin
+			return 0; // user is not an CLIENT
 		}
 }
 

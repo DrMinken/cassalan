@@ -8,11 +8,11 @@
 	// PAGE SECURITY
 	if (!isset($_SESSION['isAdmin']))
 	{
-		if ($_SESSION['isAdmin'] != 0)
-		{
+		//if ($_SESSION['isAdmin'] != 0)
+		//{
 			echo '<script type="text/javascript">history.back()</script>';
 			die();
-		}
+		//}
 	}
 
 	include("../includes/template.php"); 				// Include the template page

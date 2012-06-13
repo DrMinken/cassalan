@@ -1,8 +1,11 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+
 <?php 
 	session_start();								// Start/resume THIS session
 
 	// PAGE SECURITY
-	if (!isset($_SESSION['isAdmin']))
+	if (isset($_SESSION['isAdmin']))
 	{
 		if ($_SESSION['isAdmin'] == 0)
 		{
@@ -17,42 +20,24 @@
 
 
 
-
-
 	if(isset($_POST['question'])  && isset($_POST['answer']) ) 
 	{
 		$query = "UPDATE faq SET question='".$_POST['question']."', answer='".$_POST['answer']."' WHERE FAQID='".$_POST['FAQID']."'";
-		//var_dump($query);
 		$result = $db->query($query);
 
-	echo '<script type="text/javascript">alert("Question Updated")</script>';
-
-	
+		echo '<script type="text/javascript">window.location.href="/cassa/faq.php";</script>';
 	}
-
 	if(isset($_POST['FAQID']))
 	{
-
-
 		$query = "SELECT * FROM faq WHERE FAQID = '".$_POST['FAQID']."'";
 		$result = $db->query($query);
 		$row = $result->fetch_assoc();
 
 		$FAQID = $_POST['FAQID'];	
 		$question = $row['question'];
-		$answer = $row['answer'];
-
-
-    
-
-		
+		$answer = $row['answer'];	
 	}
-
-
-
 ?>
-
-
 
 <!-- //******************************************************
 
@@ -63,11 +48,9 @@
 // Modified: 
 
 //***********************************************************
-
 //*********** Start of EDIT NOTICES PAGE *************** -->
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
 <script type='text/javascript'>
 	
@@ -88,17 +71,13 @@
 			document.editFAQ['answer'].focus();
 			return false;
 		}
-
 		else
 		{
-
-				document.getElementById("question").value = question;
-				document.getElementById("answer").value = answer;
-				document.forms['editFAQ'].submit();
+			document.getElementById("question").value = question;
+			document.getElementById("answer").value = answer;
+			document.forms['editFAQ'].submit();
 		}
 	}
-
-
 </script>
 </head>
 <body>
@@ -112,10 +91,6 @@
 	<h1>Create FAQs</h1>
 
 
-<!-- 	Required fields are marked <font class='redAstrix'>*</font>
-	<br />
-	<br /> -->
-
 
 <!-- Interface Box -->
 <div id='newsBox' align='center'>
@@ -124,39 +99,34 @@
 	<br />
 
 	<table cellpadding='5px' border='0'>
+		<tr>
+			<td align='right' style='color: #888888;'>
+				Question <!-- <font class='redAstrix'>*</font> -->
+			</td>
+			<td style='vertical-align: bottom;'>
+				<input  class='addNoticeBackColor addNoticeTitle' type='text' 
+						name='question' maxlength='256' value='<?php echo $question;?>' />
+			</td>
+		</tr>
 
-	<tr>
-		<td align='right' style='color: #888888;'>
-			Question <!-- <font class='redAstrix'>*</font> -->
-		</td>
-		<td style='vertical-align: bottom;'>
-			<input  class='addNoticeBackColor addNoticeTitle' type='text' 
-					name='question' maxlength='256' value='<?php echo $question;?>' />
-		</td>
-	</tr>
+		<tr>
+			<td align='right' style='vertical-align: top; color: #888888;'>
+				Answer <!-- <font class='redAstrix'>*</font> --><br /><br />
+			</td>
+			<td>
+				<textarea class='addNoticeBackColor addNoticeTextArea' 
+				name='answer' rows='10' maxlength='1024' /><?php echo $answer;?></textarea>
+			</td>
+		</tr>
 
-	<tr>
-		<td align='right' style='vertical-align: top; color: #888888;'>
-			Answer <!-- <font class='redAstrix'>*</font> --><br /><br />
-		</td>
-<td>
-			<textarea class='addNoticeBackColor addNoticeTextArea' 
-			name='answer' rows='10' maxlength='1024' /><?php echo $answer;?></textarea>
-		</td>
-	</tr>
+		<tr>
+			<td colspan="2" align="center"><br /><input type="submit" name="submit" value="Submit FAQ" /></td>
+		</tr>
 
+		<tr><td colspan="2">&nbsp;</td></tr>
 
-
-
-	<tr>
-		<td colspan="2" align="center"><br /><input type="submit" name="submit" value="Submit FAQ" /></td>
-	</tr>
-
-	<tr><td colspan="2">&nbsp;</td></tr>
-
-	<!-- ENSURES TO THE SERVER THERE EITHER IS OR IS NOT A FILE TO BE SAVED-->
-	<input type='hidden' name='FAQID' value='<?php echo $FAQID; ?>' />
-
+		<!-- ENSURES TO THE SERVER THERE EITHER IS OR IS NOT A FILE TO BE SAVED-->
+		<input type='hidden' name='FAQID' value='<?php echo $FAQID; ?>' />
 	</table>
 </form>
 </div>

@@ -335,6 +335,14 @@ p
 	color: red;
 	font-size: 12pt;
 }
+.rowON
+{
+	background-color: lightgrey;
+}
+.rowOFF
+{
+	background-color: white;	
+}
 .emptyServer
 {
 	border: 2px solid black;
@@ -631,6 +639,20 @@ p
 	left: 12px;
 	top: -32px;
 }
+
+
+
+/* STAFF LIST [MANstaff.php] */
+.staffList
+{
+	width: 900px;
+	border-collapse: collapse;
+	border: 1px solid black;
+	margin: 0;
+	line-height: 20pt;
+
+}
+
 
 
 /* GAME SERVER DETAILS */

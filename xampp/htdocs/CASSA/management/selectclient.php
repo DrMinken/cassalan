@@ -20,6 +20,17 @@
 
  <?php 														
 	
+	// PAGE SECURITY
+	if (isset($_SESSION['isAdmin']))
+	{
+		if ($_SESSION['isAdmin'] == 0)
+		{
+			echo '<script type="text/javascript">history.back()</script>';
+			die();
+		}
+	}
+
+
   include("../includes/conn.php");											// Include the db connection
 	
     // SECURE AND ASSIGN POST VARIABLES 
