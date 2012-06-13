@@ -7,6 +7,7 @@
 	$_SESSION['title'] = "MegaLAN Management System"; 	// Declare this page's Title
 	include("includes/template.php"); 					// Include the template page
 	include("includes/conn.php"); 						// Include the database connection
+	include("includes/functions.php"); 					// Include common functions
 
 	if (isset($_POST['deleteNews']))
 	{
@@ -88,13 +89,13 @@ echo '<div id="article">';
 
 		// DATE - AUTHOR
 		echo '<div class="articleSubTitle">';
-			echo 'Posted on <u>'.$date.'</u> by <u>'.$author.'</u>';
+			echo 'Posted on <u>'.dateToScreen($date).'</u> by <u>'.$author.'</u>';
 		echo '</div><br/>';
 
 		// IF USER = STAFF, ADD TOOLBOX [EDIT/DELETE]
 		if (isset($_SESSION['isAdmin']))
 		{
-			if ($_SESSION['isAdmin'] == 1)
+			if ($_SESSION['isAdmin'] == 1 || $_SESSION['isAdmin'] == 2 )
 			{
 				// TOOLBOX
 				echo '<div class="articleToolBox">';

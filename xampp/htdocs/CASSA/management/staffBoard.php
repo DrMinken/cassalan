@@ -6,7 +6,7 @@
 	$_SESSION['title'] = "Staff Home | MegaLAN"; 			// Declare this page's Title
 
 	// PAGE SECURITY
-	if (!isset($_SESSION['isAdmin']))
+	if (isset($_SESSION['isAdmin']))
 	{
 		if ($_SESSION['isAdmin'] == 0)
 		{
@@ -77,21 +77,21 @@
 				onmouseout='this.src="../images/buttons/user.jpg"' />
 		</a>
 	</td>
-	<td>
-		<!-- MANAGE PAGES -->
-		<a href='MANpages.php'>
-			<img class='boardButton' src='../images/buttons/page.jpg' title='Manage Pages'
-				onmouseover='this.src="../images/buttons/pageO.jpg"' 
-				onmouseout='this.src="../images/buttons/page.jpg"' />
-		</a>
-	</td>
-	<td>
-		<!-- SETTINGS -->
-		<a href='settings.php'>
-			<img class='boardButton' src='../images/buttons/settings.jpg' title='Site Settings'
-				onmouseover='this.src="../images/buttons/settingsO.jpg"' 					onmouseout='this.src="../images/buttons/settings.jpg"' />
-		</a>
-	</td>
+
+	<?php 
+	if ($_SESSION['isAdmin'] == 2)
+	{
+	?>
+		<td>
+			<!-- CASSA STAFF -->
+			<a href='MANstaff.php'>
+				<img class='boardButton' src='../images/buttons/staff.jpg' title='CASSA Staff List'
+					onmouseover='this.src="../images/buttons/staffO.jpg"' 					onmouseout='this.src="../images/buttons/staff.jpg"' />
+			</a>
+		</td>
+	<?php
+	}
+	?>
 	<td width='100px;'>&nbsp;</td>
 </tr>	
 <tr><td colspan='5' height='40px'>&nbsp</td></tr>

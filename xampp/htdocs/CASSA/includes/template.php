@@ -106,7 +106,7 @@
 
 		<!-- Title -->
 		<td width="440px" align="center" style='vertical-align: middle;'>
-			<h1 align="center" class="subtitle" style="font-size: 16pt;">MegaLAN Management System </h1>
+			<h1 align="center" class="subtitle" style="font-size: 16pt;">MegaLAN Management System</h1>
 		</td>
 	</tr>
 	</table>
@@ -202,7 +202,7 @@
 		<?php 
 		if(isset($_SESSION['isAdmin']))
 		{
-			if($_SESSION['isAdmin'] == 1)
+			if($_SESSION['isAdmin'] == 1 || $_SESSION['isAdmin'] == 2)
 			{
 			?>
 				<li onmouseover='this.style.backgroundColor="#333333"; 
@@ -253,7 +253,7 @@
 				</li>
 			<?php 
 			}
-			else if($_SESSION['isAdmin'] == 0 && isset($_SESSION['username']))
+			if(isset($_SESSION['isAdmin']) && isset($_SESSION['username']))
 			{
 			?>
 				<!-- PARTICIPANT -->

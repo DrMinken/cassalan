@@ -7,11 +7,8 @@
 	// PAGE SECURITY
 	if (!isset($_SESSION['isAdmin']))
 	{
-		if ($_SESSION['isAdmin'] != 0)
-		{
-			echo '<script type="text/javascript">history.back()</script>';
-			die();
-		}
+		echo '<script type="text/javascript">history.back()</script>';
+		die();
 	}
 
 	$_SESSION['title'] = "Event Registration | MegaLAN"; 	// Declare this page's Title

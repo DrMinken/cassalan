@@ -16,7 +16,7 @@
     session_start();		// Start/resume THIS session
 
     // PAGE SECURITY
-    if (!isset($_SESSION['isAdmin']))
+    if (isset($_SESSION['isAdmin']))
     {
         if ($_SESSION['isAdmin'] == 0)
         {
