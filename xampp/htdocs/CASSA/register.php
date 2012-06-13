@@ -45,7 +45,8 @@
 		{
 			$_SESSION['errMsg'][1] = '<font class="error">*</font>';
 		}
-		if (filter_var($email,FILTER_VALIDATE_EMAIL) == false)
+		
+        if($email == '' || $email == 'Enter Text'|| (filter_var($email,FILTER_VALIDATE_EMAIL) == false))
 		{
         
 			$_SESSION['errMsg'][2] = '<font class="error">*Invalid Email</font>';
