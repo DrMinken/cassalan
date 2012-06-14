@@ -882,7 +882,7 @@ var_dump($query2);
 	echo '</form>';
 */
 //*************************************************************************************************
-            
+
 	echo '<form id="editClientTourn">';
 	echo '<tr><th colspan="4">Client Tournament Details</th></tr>';
 
@@ -1046,6 +1046,6 @@ var_dump($query2);
 	echo '</form>';
 	echo '<br />';
 	echo '<br />';
-}    
+}
 //Return back to the MANparticipants.php page.
 ?>
