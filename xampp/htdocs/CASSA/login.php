@@ -53,7 +53,9 @@ if (isset($_POST['submit']))
 			}
 			else 
 			{
-				$ipStatus = check_IP_address($db);
+				// $ipStatus = check_IP_address($db);
+				$ipStatus = 1;
+
 				if ($ipStatus == 1) // if IP address is within range allow login
 				{
 					//close connection
@@ -159,7 +161,7 @@ function check_IP_address($db)
 	$row = $result->fetch_array(MYSQLI_BOTH);	
 				
 	$serverIP = abs(ip2long($row['server_IP_address']));
-	
+
 	// Now create the hi and lo values of the server address
 	$lowIP = abs($serverIP - 20);
 	$highIP = abs($serverIP + 20);
@@ -172,27 +174,27 @@ function check_IP_address($db)
 		
 	// *******Remove after testing ***********
 	
-		$userIP = abs(ip2long("192.168.0.33"));
+	$userIP = abs(ip2long("192.168.0.33"));
 	// Check whether the address is within range and return the result
 	
 	if ( $userIP <= $lowIP || $userIP >= $highIP )
 	{
-		
-	$_SESSION['errorMSG'] = "You have attempted to login after an event has started and from outside the MegaLAN";
-                
-                 if(isset ($_SESSION['username']))
-                {
-                    unset ($_SESSION['username']);
-                }
+		$_SESSION['errorMSG'] = "You have attempted to login after an event has started and from outside the MegaLAN";
+
+		if(isset ($_SESSION['username']))
+		{
+			unset ($_SESSION['username']);
+		}
+
 		 // close result set
 		$result->close();
 		return 0; // IP address outside range
 	}
 	else	
 	{  
-	// close result set
-	$result->close();
-	return 1; // IP address within range.
+		// close result set
+		$result->close();
+		return 1; // IP address within range.
 	}
 }	
 		

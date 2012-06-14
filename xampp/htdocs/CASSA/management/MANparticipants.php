@@ -25,7 +25,7 @@
 	$result = $db->query($query);
 	$row = $result->fetch_array(MYSQLI_BOTH);
 	$clientID = $row['clientID'];
-        ?>
+?>
 
 
 <!-- //******************************************************

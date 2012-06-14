@@ -3,16 +3,6 @@
 	include("../includes/conn.php");					// Include the db connection
 	include("../includes/functions.php");				// Include general functions
 
-	// PAGE SECURITY
-	if (isset($_SESSION['isAdmin']))
-	{
-		if ($_SESSION['isAdmin'] == 0)
-		{
-			echo '<script type="text/javascript">history.back()</script>';
-			die();
-		}
-	}
-
 
 if (isset($_POST['subject']))
 {
@@ -78,7 +68,6 @@ if (isset($_POST['subject']))
 		$_POST['t'] = 4;
 	}
 }
-
 
 
 
