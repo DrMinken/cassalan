@@ -17,10 +17,9 @@
 	$_SESSION['title'] = "Event Management | MegaLAN";  // Declare this page's Title
 	include("../includes/template.php");                // Include the template page
 	include("../includes/conn.php");                    // Include the db connection
-        unset($_SESSION['errMsg']);
+    
 
-
-	$query = "SELECT * FROM event WHERE startDate >= CURDATE() ORDER BY startDate ASC";
+	$query = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_started != 2 ORDER BY startDate ASC";
 	$result = $db->query($query);
 	$row = $result->fetch_array(MYSQLI_BOTH);    
 	$eventID = $row['eventID'];
@@ -79,6 +78,7 @@ function createRequest (eventID, params)
 			document.getElementById("eventTable").innerHTML=xmlhttp.responseText;
 		}
 	}
+
 	//Now we have the xmlhttp object, get the data using AJAX.
 	xmlhttp.open("POST","selectEvent.php",true);
 	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -94,7 +94,39 @@ function getEvent(eventID)
 {
 	//Now we have the xmlhttp object, get the data using AJAX.
 	var params = "eventID=" + eventID + "&queryType=0";
-	createRequest(eventID,params);		
+	//createRequest(eventID,params);		
+
+	if (eventID == "")
+	{
+		document.getElementById("eventTable").innerHTML="";
+		return;
+	}
+
+	if (window.XMLHttpRequest)
+	{	
+		// code for mainstream browsers
+		xmlhttp=new XMLHttpRequest();
+	}
+	else
+	{
+		// code for earlier IE versions
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+
+	xmlhttp.onreadystatechange=function()
+	{
+		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			document.getElementById("eventTable").innerHTML=xmlhttp.responseText;
+		}
+	}
+
+	//Now we have the xmlhttp object, get the data using AJAX.
+	xmlhttp.open("POST","selectEvent.php",true);
+	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xmlhttp.setRequestHeader("Content-length", params.length);
+	xmlhttp.setRequestHeader("Connection", "close");
+	xmlhttp.send(params);
 }
 
 //***************************************************************
@@ -189,7 +221,6 @@ function startEvent(eventID)
 		return;
 	}
 }
-
 //***************************************************************
 //
 // Ajax Function to stop / end an event.
@@ -212,7 +243,6 @@ function stopEvent(eventID)
 		return;
 	}
 }
-
 //***************************************************************
 //
 // Ajax Function to edit an event.
@@ -223,7 +253,6 @@ function editEvent(eventID)
 	var params = "eventID=" + eventID + "&queryType=3";
 	createRequest(eventID,params);
 }
-
 //************************************************************************************************
 //
 // Ajax Function to save the edits on the page.
@@ -247,7 +276,6 @@ function updateEvent()
 	createRequest(eventID,params);		
 }
 
-
 function setDate()
 {
 	// GET TODAYS DATE
@@ -258,7 +286,6 @@ function setDate()
 	// SET TODAYS DATE
 	document.getElementById('inputDate').value = currentDate;
 }
-
 
 
 // COLORBOX
@@ -272,7 +299,8 @@ $(document).ready(function(){
 });
 </script>
 </head>
-		
+
+
 <body onload="getEvent(<?php echo $eventID;$result->close();?>); setDate();">
 <center>
 <div id='shell'>
@@ -283,6 +311,21 @@ $(document).ready(function(){
 
 <!-- Main Content [left] -->
 <div id="content">
+
+
+
+
+
+<div align='left' class='error'>
+<?php
+if (isset($_SESSION['errMsg']))
+{
+	echo $_SESSION['errMsg'];
+	unset($_SESSION['errMsg']);
+	echo '<br /><br />';
+}
+?>
+</div>
 
 
 

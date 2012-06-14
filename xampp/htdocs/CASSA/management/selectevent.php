@@ -20,7 +20,7 @@
 
 <?php 														
 	include("../includes/conn.php");			// Include the db connection
-	include("../includes/functions.php");            // Include common functions
+	include("../includes/functions.php");       // Include common functions
 
 	// SECURE AND ASSIGN POST VARIABLES 
 	// TRIM all posted values
@@ -33,7 +33,6 @@
 	$eventID = $_POST['eventID'];												
 	$queryType = $_POST['queryType'];
         
-
 
 
 
@@ -56,7 +55,7 @@
 //***************************************************************************************
 // Update record in event table
 //***************************************************************************************
-	else if ($queryType == 1)
+	if ($queryType == 1)
     {
         $_SESSION['errMsg'] = "";
         $query  =   "UPDATE event "; 
@@ -242,11 +241,11 @@
 	else if ($queryType == 7)
     {
 		$_SESSION['errMsg'] = ""; 
-		$query1 = "SELECT * FROM event WHERE startDate >= CURDATE() AND eventID =" . $eventID . ";";
+		$query1 = "SELECT * FROM event WHERE startDate >= CURDATE() AND eventID='".$eventID."'";
 		$result = $db->query($query1);
 		$row = $result->fetch_array(MYSQLI_BOTH);
 		
-		if ($row['event_started'] ==  1)
+		if ($row['event_started'] == 1)
 		{
 			$_SESSION['errMsg'] = "An event that is running cannot be deleted";
 			ajax_event_table_basic($db, $eventID);
@@ -256,19 +255,16 @@
 			$db->autocommit(TRUE);
 
 			// REMOVE EVENT ROW FROM DATABASE
-			$query2  = "DELETE FROM event "; 
-			$query2 .= "WHERE eventID=".$eventID.";";
+			$query2  = "DELETE FROM event WHERE eventID='".$eventID."'";
 			$result = $db->query($query2);
 
-			// GET NEW EVENT ROWS, DISPLAY TABLES THROUGH AJAX DIV
-			$query2 = "SELECT * FROM event WHERE startDate >= CURDATE() ORDER BY eventID DESC";
-			$result = $db->query($query2);
-			$row = $result->fetch_array(MYSQLI_BOTH);
-			$eventID = $row['eventID'];
-
+			// GET [current] EVENT ROWS, DISPLAY TABLES THROUGH AJAX DIV
+			$eventID = getThisEvent($db);
+			
 			//Then Execute the Query then move on
-			ajax_event_table_basic($db, $eventID);												
-        }
+			ajax_event_table_basic($db, $eventID);	
+			detail_table($db, $eventID);
+		}
 	}
     
 
@@ -276,9 +272,7 @@
 
 
 
-
 //********************* Functions Below **********************************************
-
 
 //************************************************************************************
 //Function to add new record to event table  
@@ -349,7 +343,8 @@ function ajax_event_table_AddNew($db, $eventID, $postData, $postNames)
 	if ($errCount > 0)
 	{
 		$errCount = 0;
-		ajax_event_table_Add($db);
+		$eventID = getThisEvent($db);
+		ajax_event_table_basic($db, $eventID);
 
 		echo "<br /><font class='error'>" . $_SESSION['errMsg'] . "</font>";
 		$eName= $_POST['event_name'];
@@ -439,7 +434,7 @@ function ajax_event_table_basic($db, $eventID)
 </tr>
 
 <?php
-$query = "SELECT * FROM event WHERE startDate >= CURDATE() ORDER BY startDate ASC";
+$query = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_started != 2 ORDER BY startDate ASC";
 $result = $db->query($query);
 if ($result->num_rows == 0)
 {
@@ -467,7 +462,7 @@ for ($i=0; $i<$result->num_rows; $i++)
 		echo '</td>';
 		echo '<td>';
 			echo $row['event_name'];
-			echo '&nbsp;-&nbsp;<font size="1">['.$row['startDate'].']</font>';
+			echo '&nbsp;-&nbsp;<font size="1">['.dateToScreen($row['startDate']).']</font>';
 		echo '</td>';
 	echo '</tr>';
 }
@@ -491,11 +486,6 @@ echo '</table>';
     $result->close();								
     $result = $db->query($query); 	
 
-    if(isset($_SESSION['errMsg']));
-    {
-       echo "<br /><p class='redAstrix'>" . $_SESSION['errMsg'] . "</p>";
-    }
-
 
 	echo '<br />';
 
@@ -515,7 +505,7 @@ echo '<table class="pizzaOrder">';
 					
 	//While Loop starts here - 
 	// Retrieve the data for the table. There should only be one row.
-	while($row = $result->fetch_array(MYSQLI_BOTH))							
+	while($row = $result->fetch_assoc())
 	{
 		echo '<tr>';
 			echo '<td width="150px"><b>Event Location: </b></td>';
@@ -525,7 +515,7 @@ echo '<table class="pizzaOrder">';
 
 		echo '<tr>';
 			echo '<td><b>Start Date: </b></td>';
-			echo '<td>'.$row['startDate'].'</td>';
+			echo '<td>'.dateToScreen($row['startDate']).'</td>';
 			echo '<td></td>';
 		echo '</tr>';
 
@@ -606,7 +596,7 @@ function ajax_event_table_edit($db, $eventID)
     if(!isset($_SESSION['errMsg']))
     {
 		//Create the general select query.
-        $query = "SELECT * FROM event WHERE startDate >= CURDATE() AND eventID =" . $eventID; 
+        $query = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_started != 2 AND eventID =" . $eventID; 
         $result = $db->query($query); 											
         $row1 = $result->fetch_array(MYSQLI_BOTH);                  
            
@@ -646,7 +636,7 @@ function ajax_event_table_edit($db, $eventID)
 </tr>
 
 <?php
-$query = "SELECT * FROM event WHERE startDate >= CURDATE() ORDER BY startDate ASC";
+$query = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_started != 2 ORDER BY startDate ASC";
 $result = $db->query($query);
 
 // Now we can output the option fields to populate the list box.
@@ -668,7 +658,7 @@ for ($i=0; $i<$result->num_rows; $i++)
 		echo '</td>';
 		echo '<td>';
 			echo $row['event_name'];
-			echo '&nbsp;-&nbsp;<font size="1">['.$row['startDate'].']</font>';
+			echo '&nbsp;-&nbsp;<font size="1">['.dateToScreen($row['startDate']).']</font>';
 		echo '</td>';
 	echo '</tr>';
 }
@@ -705,10 +695,9 @@ echo '</table>';
 	<tr>
 		<td><b>Event Date: </b></td>
 		<td>
-			<input class="inputDate" type="text" 
+			<input type="text" 
 				   name="E_startDate" id="E_startDate" 
-				   value="<?php echo $eEventDate; ?>" 
-				   readonly="readonly" />
+				   value="<?php echo $eEventDate; ?>" />
 			
 			<label id="E_closeOnSelect">
 				<input type="checkbox" checked="true" style="visibility: hidden" />
@@ -767,5 +756,123 @@ echo '</table>';
 </table>
 <!-- /form -->
 <?php 
+}
+
+
+
+
+
+
+
+
+
+
+function detail_table($db, $eventID)
+{
+	//Create the general select query.
+    $query = "SELECT * FROM event WHERE startDate >= CURDATE() AND eventID=".$eventID.";"; 	
+    $result = $db->query($query); 			
+
+
+	//use it first for the title	
+    $row1 = $result->fetch_array(MYSQLI_BOTH);		
+	
+	//then close it ready for the next execution
+    $result->close();								
+    $result = $db->query($query); 	
+
+
+	echo '<br />';
+
+
+echo '<table class="pizzaOrder">';
+    $on = 'this.src="../images/buttons/edit_dwn.png"';
+    $off = 'this.src="../images/buttons/edit_up.png"';
+
+    echo '<tr>';
+		echo '<td colspan="2" id="headCell_left"> Event Details for: <font class="subtitle">'.$row1['event_name'].'</font></td>';
+		echo '<td id="headCell_right">';
+		echo '<img class="button" src="../images/buttons/edit_dwn.png"';
+			echo 'alt="Edit The Selected Event" onclick="editEvent('.$row1['eventID'].')"';
+			echo 'onmouseover='.$off.' onmouseout='.$on.' /></td>';
+	echo '</tr>';
+
+					
+	//While Loop starts here - 
+	// Retrieve the data for the table. There should only be one row.
+	while($row = $result->fetch_assoc())
+	{
+		echo '<tr>';
+			echo '<td width="150px"><b>Event Location: </b></td>';
+			echo '<td>'.$row['event_location'].'</td>';
+			echo '<td>&nbsp;</td>';
+		echo '</tr>';
+
+		echo '<tr>';
+			echo '<td><b>Start Date: </b></td>';
+			echo '<td>'.dateToScreen($row['startDate']).'</td>';
+			echo '<td></td>';
+		echo '</tr>';
+
+		echo '<tr>';
+			echo '<td><b>Start Time: </b></td>';
+			echo '<td>'.$row['startTime'].'</td>';
+			echo '<td></td>';
+		echo '</tr>';
+
+		echo '<tr>';
+			echo '<td><b>Server IP Address: </b></td>';
+			echo '<td>'.$row['server_IP_address'].'</td>';
+			echo '<td></td>';
+		echo '</tr>';
+
+		echo '<tr>';
+			echo '<td><b>Number of Seats: </b></td>';
+			echo '<td>'.$row['seatQuantity'].'</td>';
+			echo '<td></td>';
+		echo '</tr>';
+
+		$on = 'this.src="../images/buttons/stop_dwn.png"';
+		$off = 'this.src="../images/buttons/stop.png"';
+		
+		$on1 = 'this.src="../images/buttons/start_dwn.png"';
+		$off1 = 'this.src="../images/buttons/start.png"';
+
+		// If the event has started place the stop event button in the table.
+		if($row['event_started'] == 1) 
+		{
+			echo '<tr>';
+			echo '<td><b>Event Started: </b></td>';
+			echo '<td>Yes</td>';
+			echo '<td><img src="../images/buttons/stop_dwn.png" class="button"'; 
+				echo 'alt="Stop the current event." onclick="stopEvent(' . $row['eventID'] . ')" ';
+				echo 'onmouseover='.$off.' onmouseout='.$on.' /></td>';
+			echo '</tr>';
+		}
+		// If the event has not started place the start event button in the table. 
+		
+
+		
+		elseif ($row['event_started'] == 0)
+		{
+			echo '<tr>';
+				echo '<td><b>Event Started: </b></td>';
+				echo '<td>No</td>';
+				echo '<td><img src="../images/buttons/start_dwn.png" class="button"';
+					echo 'alt="Start the selected event. Stops all others." onclick="startEvent(' . $row['eventID'] . ')"'; 
+					echo 'onmouseover='.$off1.' onmouseout='.$on1.' /></td>';
+			echo '</tr>';
+		}
+		// If the event has completed or been stopped. 
+		elseif ($row['event_started'] == 2)
+		{
+			echo '<tr>';
+				echo '<td><b>Event Started: </b></td>';
+				echo '<td>Finished</td>';
+				echo '<td>&nbsp;</td>';
+			echo '</tr>';
+		}
+	}
+echo '</table>';
 }
 ?>

@@ -139,7 +139,6 @@ function getRequest(params, action)
 
 	//Now we have the xmlhttp object, get the data using AJAX.
 	params = "menuID=" + menuID + "&pizzaID=" + params + "&action=" + action;		
-	//alert(params);
 	xmlhttp.open("POST","selectPizza.php",true);
 	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xmlhttp.setRequestHeader("Content-length", params.length);
@@ -183,13 +182,64 @@ function createPizza()
 	xmlhttp.send(params);
 	parent.jQuery.colorbox.close();
 }
-function createPizzaMenu()
+function generalQuery(params)
+{
+	if (window.XMLHttpRequest)
+	{	
+		// code for mainstream browsers
+		xmlhttp=new XMLHttpRequest();
+	}
+	else
+	{
+		// code for earlier IE versions
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xmlhttp.onreadystatechange=function()
+	{
+		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			document.getElementById("pizza_menuTable").innerHTML=xmlhttp.responseText;
+		}
+	}
+
+	//Now we have the xmlhttp object, get the data using AJAX.
+	xmlhttp.open("POST","selectPizza.php",true);
+	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xmlhttp.setRequestHeader("Content-length", params.length);
+	xmlhttp.setRequestHeader("Connection", "close");
+	xmlhttp.send(params);
+	parent.jQuery.colorbox.close();
+}
+function createPizzaMenu(eventID)
 {
 	var menuName = document.getElementById('pizza_menu_name').value;
-	var eventID = document.getElementById('menu_event').value;
-
 	var params = "menuName=" + menuName + "&eventID=" + eventID + "&action=pizzaMenu";
-	makeRequest(params);
+
+	if (window.XMLHttpRequest)
+	{	
+		// code for mainstream browsers
+		xmlhttp=new XMLHttpRequest();
+	}
+	else
+	{
+		// code for earlier IE versions
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xmlhttp.onreadystatechange=function()
+	{
+		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			document.getElementById("pizza_menuTable").innerHTML=xmlhttp.responseText;
+		}
+	}
+
+	//Now we have the xmlhttp object, get the data using AJAX.
+	xmlhttp.open("POST","selectPizza.php",true);
+	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xmlhttp.setRequestHeader("Content-length", params.length);
+	xmlhttp.setRequestHeader("Connection", "close");
+	xmlhttp.send(params);
+	parent.jQuery.colorbox.close();
 }
 
 
@@ -198,6 +248,9 @@ $(document).ajaxStop(function(){
 });
 
 $(document).ready(function(){
+// PIZZA MENU
+	$(".inlineD").colorbox({inline:true, width:"250px", height:"250px"}); 
+
 // CREATE NEW PIZZA
 	$(".inline").colorbox({inline:true, width:"300px", height:"350px"});
 
@@ -206,9 +259,6 @@ $(document).ready(function(){
 
 // PIZZA ORDER BREAK DOWN
 	$(".inlineC").colorbox({inline:true, width:"700px", height:"1200px"}); 
-
-// PIZZA MENU
-	$(".inlineD").colorbox({inline:true, width:"250px", height:"300px"}); 
 });
 </script>
 
@@ -241,54 +291,49 @@ $(document).ready(function(){
 
 
 
+<!-- CREATE A NEW PIZZA FORM -->
+<?php
+	// CHECK IF [current] EVENT HAS A PIZZA MENU
+	$eventID = getThisEvent($db);
+		
+	$check = "SELECT * FROM pizza_menu WHERE eventID='".$eventID."'";
+	$result = $db->query($check);
+
+	if ($result->num_rows == 0)
+	{
+?>
 <!-- HREF : OPENS INLINE 'CREATE NEW PIZZA' FORM -->
 <a class='inlineD' href='#createPizzaMenu'>Create new pizza menu</a>
 
-<!-- CREATE A NEW PIZZA FORM -->
+
+<br /><br />
+
+
 <div style='display: none;'>
 	<div id='createPizzaMenu' style='padding: 20px; line-height: 15pt;'>
 	<h3>Create a new pizza menu</h3>
+	<?php
+		// GET ALL CURRENT EVENTS
+		$get = "SELECT * FROM event WHERE eventID='".$eventID."'";
+		$result = $db->query($get);
+		$row = $result->fetch_assoc();
 
-	<br /><br />
+		echo '<h3>For Event: <font class="subtitle">'.$row['event_name'].'</font></h3>';
+	?>
+
+	<br />
 
 		Menu Name:<br />
 		<input type="text" name="pizza_menu_name" id="pizza_menu_name" maxlength="28" size="28" />
 
 	<br /><br />
 
-		For Event:<br />
-		<select name='menu_event' id='menu_event'>
-	<?php
-		// GET ALL CURRENT EVENTS
-		$get = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed=0 ORDER BY startDate ASC";
-		$result = $db->query($get);
-
-		if ($result->num_rows == 0)
-		{
-			echo '<option value="-"></option>';
-		}
-		else
-		{
-			for ($i=0; $i<$result->num_rows; $i++)
-			{
-				$row = $result->fetch_assoc();
-				echo '<option value="'.$row['eventID'].'">'.$row['event_name'].'</option>';
-			}
-		}
-	?>
-		</select>
-
-	<br /><br />
-
-		<input type="button" name="submit" value="Add Pizza Menu" onclick="createPizzaMenu()" />
+		<input type="button" name="submit" value=" Add Pizza Menu " onclick="createPizzaMenu(<?php echo $eventID; ?>)" />
 	</div>
 </div>
-
-
-
-
-
-<br /><br />
+<?php
+	}
+?>
 
 
 
@@ -328,11 +373,8 @@ $(document).ready(function(){
 
 <!-- DISPLAY CURRENT MENU -->
 <?php
-	// GET EVENT WHERE EVENT IS NEXT TO START
-	$get = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed=0 ORDER BY startDate ASC";
-	$result = $db->query($get);
-	$row = $result->fetch_assoc();
-	$eventID = $row['eventID'];
+	// GET [current] EVENT
+	$eventID = getThisEvent($db);
 
 	// GET [this] EVENTS MENU
 	$query = "SELECT * FROM pizza_menu WHERE eventID='".$eventID."'";
@@ -364,7 +406,7 @@ $(document).ready(function(){
 <img class='pointer' border='0' height="50px" width="50px"
 	 src='../images/layers/form.png' 
 	 alt='Click here to see pizza order summary' />
-	 Pizza order summary</a>
+	 Purchase Order</a>
 </div>
 
 
@@ -376,7 +418,7 @@ $(document).ready(function(){
 <img class='pointer' border='0' height="50px" width="50px"
 	 src='../images/layers/form.png' 
 	 alt='Click here to see pizza order break down' />
-	 Pizza order break down</a>
+	 Order Break Down</a>
 </div>
 
 
@@ -410,7 +452,8 @@ $(document).ready(function(){
 	<div class='orderLogo'></div>
 	<div class='orderHeader'>
 		<div style='float: left;'>
-			<font class='subtitle' style='font-size: 18pt;'>
+			 Purchase Order: 
+			 <font class='subtitle' style='font-size: 18pt;'>
 				<?php echo $menuName; ?> 
 			</font>
 		</div>

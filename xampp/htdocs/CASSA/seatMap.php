@@ -101,7 +101,7 @@
 			}
 
 		// IF USER HAS NOT BOOKED A SEAT
-			if ($row['seatID'] == NULL)
+			if ($row['seatID'] == NULL || $row['seatID'] == '' || empty($row['seatID']))
 			{
 				// BOOK SEAT
 				$update = "UPDATE attendee SET seatID='".$_POST['seatID']."' WHERE clientID='".$_SESSION['userID']."'";
