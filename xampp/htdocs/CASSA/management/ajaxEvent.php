@@ -32,6 +32,15 @@ if (isset($_POST['subject']))
 		*/
 	}
 
+	// IF [this] USER CANCELS AN EVENT
+	else if ($_POST['subject'] == 'cancelEvent')
+	{
+		$cancel = "DELETE FROM attendee WHERE clientID='".$_SESSION['userID']."' AND eventID='".$_POST['eventID']."'";
+		$result = $db->query($cancel);
+		
+		$_POST['t'] = 1;
+	}
+
 	// IF [this] USER CANCELS A TOURNAMENT
 	else if ($_POST['subject'] == 'cancel')
 	{
@@ -79,8 +88,10 @@ if (isset($_POST['t']))
 // EVENT TRIGGER
 	if($_POST['t'] == 1)
 	{
+		$eventID = getThisEvent($db);
+
 		// CHECK IF [this] CLIENT HAS BOOKED A CURRENT EVENT
-		$check = "SELECT * FROM attendee WHERE clientID='".$_SESSION['userID']."'";
+		$check = "SELECT * FROM attendee WHERE clientID='".$_SESSION['userID']."' AND eventID='".$eventID."'";
 		$result = $db->query($check);
 
 		if ($result->num_rows == 0)
@@ -286,8 +297,14 @@ if (isset($_POST['t']))
 function display_all_events($db)
 {
 	// GET ALL CURRENT EVENTS
-	$query = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed=0 ORDER BY startDate ASC";
+	//$query = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed=0 ORDER BY startDate ASC";
+	//$result = $db->query($query);
+
+	// GET [current] EVENT
+	$eventID = getThisEvent($db);
+	$query = "SELECT * FROM event WHERE eventID='".$eventID."'";
 	$result = $db->query($query);
+
 ?>
 	<table class='displayTable' name='eventRegistration' border='0'>
 <?php 
@@ -382,11 +399,13 @@ function display_all_events($db)
 
 function display_all_booked_events($db)
 {
+	$eventID = getThisEvent($db);
+
 	// GET ALL OF [this] USERS CURRENTLY BOOKED EVENTS @ ATTENDEE
-	$query = "SELECT * FROM attendee WHERE clientID='".$_SESSION['userID']."' ORDER BY attendeeID DESC";
+	$query = "SELECT * FROM attendee WHERE clientID='".$_SESSION['userID']."' AND eventID='".$eventID."'";
 	$result = $db->query($query);
 ?>
-	<table class='displayTable' name='eventRegistration' style='font-size: 11pt; line-height: 30pt;'>
+	<table class='displayTable' name='eventRegistration' style='font-size: 11pt; line-height: 20pt; text-align: center'>
 	<caption><?php if(isset($_SESSION['errMsg'])){echo $_SESSION['errMsg'];unset($_SESSION['errMsg']);}?></caption>
 <?php
 	for ($i=0; $i<$result->num_rows; $i++)
@@ -422,11 +441,29 @@ function display_all_booked_events($db)
 			// SETUP MOUSE EVENTS
 			$onclick = "book(".$row['eventID'].")";
 
-			echo '<tr><td class="displayRow">Event Name</td><td>'.$name.'</td></tr>';
-			echo '<tr><td class="displayRow">Location</td><td>'.$location.'</td></tr>';
-			echo '<tr><td class="displayRow">Event Date</td><td>'.dateToScreen($date).'</td></tr>';
-			echo '<tr><td class="displayRow">Start Time</td><td>'.removeSeconds($startTime).'</td></tr>';
-			echo '<tr><td class="displayRow">Seat Quantity</td><td>'.$seatCount.' / '.$seatQuantity.'</td></tr>';
+			//echo '<tr><td class="displayRow">Event Name</td>';
+			echo '<tr><td colspan="2"><font class="subtitle" style="font-size: 25pt;">'.$name.'</font></td></tr>';
+			
+			echo '<tr><td colspan="2"><hr /></td></tr>';
+
+			echo '<tr><td class="displayRow" align="right" width="100px">Location</td>';
+			echo '<td align="left" width="150px" style="text-indent: 5px">';
+			echo $location.'</td></tr>';
+			
+			echo '<tr><td class="displayRow" align="right">Event Date</td>';
+			echo '<td align="left" width="150px" style="text-indent: 5px">';
+			echo dateToScreen($date).'</td></tr>';
+			
+			echo '<tr><td class="displayRow" align="right">Start Time</td>';
+			echo '<td align="left" width="150px" style="text-indent: 5px">';
+			echo removeSeconds($startTime).'</td></tr>';
+			
+			echo '<tr><td class="displayRow" align="right">Seat Quantity</td>';
+			echo '<td align="left" width="150px" style="text-indent: 5px">';
+			echo $seatCount.' / '.$seatQuantity.'</td></tr>';
+
+			echo '<tr><td colspan="2"><br />';
+			echo '<img class="pointer" src="/cassa/images/buttons/cancel.png" title="Click to cancel this event" onclick="cancel('.$eventID.')" /></td></tr>';
 		}
 	}
 ?>
@@ -468,35 +505,13 @@ function display_all_event_tournaments($db)
 	}
 	else
 	{
-		$dateArray = array();
+		$eventID = getThisEvent($db);
 
-		// FOR EACH OF THIS ATTENDEE'S ENROLMENTS
-		// FIND [this] EVENT 
-		for ($i=0; $i<$result->num_rows; $i++)
-		{
-			$row = $result->fetch_assoc();
-			$eventID = $row['eventID']; 
-
-			// GET ASSOCIATED ROW @ EVENT
-			$get = "SELECT * FROM event WHERE eventID='".$eventID."' AND startDate >= CURDATE()";
-			$resultGet = $db->query($get);
-			if ($resultGet->num_rows > 0)
-			{
-				$rowEvent = $resultGet->fetch_assoc();
-				$startDate = $rowEvent['startDate'];
-				$dateArray[$i] = $startDate;
-			}
-		}
-		// SORT DATEARRAY TO FIND CLOSES EVENT
-		natsort($dateArray);
-
-
-		// GET EVENT DETAILS
-		$get = "SELECT * FROM event WHERE startDate='".$dateArray[1]."'";
-		$result = $db->query($get);
-		$row = $result->fetch_assoc();
-		$eventID = $row['eventID'];
-		$name = $row['event_name'];
+		// GET ALL [current] EVENTS INFORMATION
+		$select = "SELECT * FROM event WHERE eventID='".$eventID."'";
+		$result = $db->query($select);
+		$rowEvent = $result->fetch_assoc();
+		$name = $rowEvent['event_name'];
 
 		// GET ATTENDEE DETAILS
 		$get = "SELECT * FROM attendee WHERE eventID='".$eventID."'";
@@ -507,7 +522,7 @@ function display_all_event_tournaments($db)
 		// CHECK IF [this] EVENT HAS ANY TOURNAMENTS YET
 		$check = "SELECT * FROM tournament WHERE eventID='".$eventID."'";
 		$resultCheck = $db->query($check);
-		
+
 		if ($resultCheck->num_rows == 0)
 		{
 		echo "<tr><td align='center' style='height: 230px;'>";
@@ -536,7 +551,7 @@ function display_all_event_tournaments($db)
 
 	<?php
 		// GET ALL RELATED TOURNAMENTS TO [this] EVENT
-		$get = "SELECT * FROM tournament WHERE eventID='".$row['eventID']."' ORDER BY 'desc'";
+		$get = "SELECT * FROM tournament WHERE eventID='".$row['eventID']."' AND started != 2 ORDER BY start_time ASC";
 		$result = $db->query($get);
 
 		for ($i=0; $i<$result->num_rows; $i++)

@@ -15,10 +15,10 @@
 	include("../includes/template.php"); 					// Include the template page
 	include("../includes/conn.php"); 						// Include the db connection
 
-
 // IF [this] USER BOOKS FOR AN EVENT
 	if (isset($_POST['bookID']) && isset($_POST['subject']))
 	{
+
 		if ($_POST['subject'] == 'bookEvent')
 		{
 		// CHECK IF USER HAS BOOKED THIS EVENT
@@ -69,6 +69,8 @@
 			// REMOVE THIS EVENT
 			$remove = "DELETE FROM attendee WHERE clientID='".$_SESSION['userID']."' AND eventID='".$_POST['bookID']."'";
 			$result = $db->query($remove);
+			var_dump($remove);
+			var_dump($result);
 		}
 	}
 
@@ -170,10 +172,9 @@ function cancel(id)
 	var answer = confirm("Please confirm to cancel this Event");
 
 	if (answer == true)
-	{
-		document.getElementById('bookID').value = id;
-		document.getElementById('subject').value = "cancelEvent";
-		document.bookEvent.submit();
+	{	
+		var params = "eventID=" + id + "&subject=cancelEvent";
+		getEvent(params);
 	}
 }
 // BOOK TOURNAMENT
@@ -264,8 +265,11 @@ function cancelPizza(pizzaID, attendeeID, menuID)
 
 <!-- GET [this] USERS BOOKED EVENT -->
 <?php
+	// [current] EVENT ID
+	$eventID = getThisEvent($db);
+
 	// GET ATTENDEE EVENT DETAILS
-	$get = "SELECT * FROM attendee WHERE clientID = '".$_SESSION['userID']."'";
+	$get = "SELECT * FROM attendee WHERE clientID='".$_SESSION['userID']."' AND eventID='".$eventID."'";
 	$result = $db->query($get);
 
 	if ($result->num_rows == 0)
@@ -274,6 +278,7 @@ function cancelPizza(pizzaID, attendeeID, menuID)
 		$tournID = 'No';
 		$seatID = 'No';
 		$pizzaID = 'No';
+		$eventStatus = 0;
 	}
 	else
 	{
@@ -282,7 +287,7 @@ function cancelPizza(pizzaID, attendeeID, menuID)
 			$row = $result->fetch_assoc();
 
 			// CHECK IF USER HAS BOOKED IN [this current] EVENT
-			$check = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed = 0 AND eventID='".$row['eventID']."'";
+			$check = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed = 0 AND eventID='".$eventID."'";
 			$resultCheck = $db->query($check);
 
 			// [this] attendee has not booked into [this] event
@@ -300,7 +305,7 @@ function cancelPizza(pizzaID, attendeeID, menuID)
 
 				// GET TOURNAMENT DETAILS
 					// Get [this] event's tournaments
-					$check = "SELECT * FROM tournament WHERE eventID='".$row['eventID']."'";
+					$check = "SELECT * FROM tournament WHERE eventID='".$eventID."'";
 					$resultCheck = $db->query($check);
 
 					if ($resultCheck->num_rows != 0)
@@ -326,13 +331,17 @@ function cancelPizza(pizzaID, attendeeID, menuID)
 							}
 						}
 					}
+					else
+					{
+						$tournID = 'No';
+					}
 
 				// GET SEAT DETAILS
-					if ($row['seatID'] == '') { $seatID = 'No'; } else { $seatID = 'Yes'; }
+					if ($row['seatID'] == '' || empty($row['seatID'])) { $seatID = 'No'; } else { $seatID = 'Yes'; }
 
 				// GET PIZZA DETAILS
 					// Get [this] event's menu
-					$check = "SELECT * FROM pizza_menu WHERE eventID='".$row['eventID']."'";
+					$check = "SELECT * FROM pizza_menu WHERE eventID='".$eventID."'";
 					$result = $db->query($check);
 					if ($result->num_rows == 0)
 					{

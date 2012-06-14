@@ -1,5 +1,5 @@
 <?php
-
+include('conn.php');
 
 // CONVERT DATE TO user interface DATE
 if (!function_exists("dateToScreen"))
@@ -70,4 +70,74 @@ if (!function_exists("removeBlockTags"))
 		return $input;
 	}
 }
+
+
+// GET [this] EVENT's ID
+if (!function_exists("getThisEvent"))
+{
+	function getThisEvent($db)
+	{
+		// GET ALL OF [this] USERS CURRENTLY BOOKED EVENTS @ ATTENDEE
+		$query = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_started != 2";
+		$result = $db->query($query);
+		
+		if ($result->num_rows == 0)
+		{
+			return false;
+		}
+		else
+		{	
+			$dateArray = array();
+
+			// FOR EACH EVENT ROW
+			// FIND [current] EVENT
+			for ($i=0; $i<$result->num_rows; $i++)
+			{
+				$row = $result->fetch_assoc();
+				$eventID = $row['eventID']; 
+
+				// GET ASSOCIATED ROW @ EVENT
+				$get = "SELECT * FROM event WHERE eventID='".$eventID."' AND startDate >= CURDATE()";
+				$resultGet = $db->query($get);
+				if ($resultGet->num_rows > 0)
+				{
+					$rowEvent = $resultGet->fetch_assoc();
+					$startDate = $rowEvent['startDate'];
+					$dateArray[$i] = $startDate;
+				}
+			}
+			// SORT DATEARRAY TO FIND CLOSES EVENT
+			natsort($dateArray);
+				/*foreach($dateArray as $d => $x)
+				{
+					echo $d.' '.$x.'<br />';
+				}*/
+
+			// GET [current] EVENT ID
+			$get = "SELECT * FROM event WHERE startDate='".$dateArray[count($dateArray)-1]."'";
+			$result = $db->query($get);
+			$row = $result->fetch_assoc();
+			$eventID = $row['eventID'];
+
+			return $eventID;
+		}
+	}
+}
+
+// GET [this] EVENT's NAME
+if (!function_exists("getThisEventName"))
+{
+	function getThisEventName($db)
+	{
+		$eventID = getThisEvent($db);
+		$get = "SELECT * FROM event WHERE eventID='".$eventID."'";
+		$result = $db->query($get);
+		$row = $result->fetch_assoc();
+
+		$eventName = $row['event_name'];
+
+		return $eventName;
+	}
+}
+
 ?>

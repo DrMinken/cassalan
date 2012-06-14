@@ -11,23 +11,14 @@
 
 	session_start();
 	include("../includes/conn.php");					// Include database connection
+	include("../includes/functions.php");				// Include general functions
 
-	// PAGE SECURITY
-	if (!isset($_SESSION['isAdmin']))
-	{
-		if ($_SESSION['isAdmin'] == 0)
-		{
-			echo '<script type="text/javascript">history.back()</script>';
-			die();
-		}
-	}
 
 	if (isset($_POST))
 	{
 		$_POST = array_map("mysql_real_escape_string", $_POST);
 		$_POST = array_map("trim", $_POST);
 	}
-
 
 	if (isset($_POST['action']))
 	{
@@ -213,7 +204,7 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 		<img class="pointer button" 
 			 src="../images/buttons/add.png" 
 			 alt="Add" 
-			 onclick="getRequest('<?php echo $row['pizzaID']; ?>', 'add')" />
+			 onclick="getRequest(<?php echo $row['pizzaID']; ?>, 'add')" />
 
 		<!-- CLICK TO MAKE THIS ROW EDITABLE -->
 		<img class='pointer button' 
@@ -267,7 +258,7 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 
 
 
-<br /><br/><hr /><br /><br />
+<br /><hr /><br />
 
 
 
@@ -276,18 +267,15 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 
 <!-- DISPLAY CURRENT MENU -->
 <?php
-	// GET EVENT WHERE EVENT IS NEXT TO START
-	$get = "SELECT * FROM event WHERE event_completed=0 ORDER BY startDate ASC";
-	$result = $db->query($get);
-	$row = $result->fetch_assoc();
-	$eventID = $row['eventID'];
+	$eventID = getThisEvent($db);
+	$eventName = getThisEventName($db);
 
 	// GET [this] EVENTS MENU
 	$query = "SELECT * FROM pizza_menu WHERE eventID='".$eventID."'";
 	$result = $db->query($query);
 	$row = $result->fetch_assoc();
 
-	echo "<h2 align='center' class='subtitle' style='font-size:14pt'>".$row['menu_name']."</h2>";
+	echo "<h2 align='center' class='subtitle' style='font-size:14pt'>".$eventName."'s Pizza Menu: ".$row['menu_name']."</h2>";
 	echo "<input type='hidden' name='currentMenu' id='currentMenu' value='".$row['menuID']."' />";
 ?>
 
