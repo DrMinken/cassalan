@@ -378,7 +378,8 @@ function ajax_client_Summary_table($db, $startRow, $clientID)
 	$result4 = $db->query($query4);
 
 	$query5 = "SELECT pizza_name from pizza_type WHERE ";
-	$query5 .=   "pizzaID = any (Select pizzaID from pizza_order where attendeeID";
+	$query5 .=   "pizzaID = "; //any (Select pizzaID from pizza_order where attendeeID";
+	$query5 .=	 "(Select pizzaID from pizza_order where attendeeID";
 	$query5 .= " = (SELECT attendeeID from attendee where clientID = " . $clientID ."));";
 	$result5 = $db->query($query5);
 
