@@ -80,7 +80,7 @@ if (!function_exists("getThisEvent"))
 		// GET ALL OF [this] USERS CURRENTLY BOOKED EVENTS @ ATTENDEE
 		$query = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_started != 2";
 		$result = $db->query($query);
-		
+
 		if ($result->num_rows == 0)
 		{
 			return false;
@@ -108,13 +108,21 @@ if (!function_exists("getThisEvent"))
 			}
 			// SORT DATEARRAY TO FIND CLOSES EVENT
 			natsort($dateArray);
+			$dateArray = array_values($dateArray);
+
+			//********************************************
+			// TESTING PURPOSES
+			//********************************************
+				//print_r($dateArray);
+
 				/*foreach($dateArray as $d => $x)
 				{
 					echo $d.' '.$x.'<br />';
 				}*/
+			//********************************************
 
 			// GET [current] EVENT ID
-			$get = "SELECT * FROM event WHERE startDate='".$dateArray[count($dateArray)-1]."'";
+			$get = "SELECT * FROM event WHERE startDate='".$dateArray[0]."'";
 			$result = $db->query($get);
 			$row = $result->fetch_assoc();
 			$eventID = $row['eventID'];

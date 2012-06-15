@@ -209,19 +209,19 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 ?>
 		<!-- ADD PIZZA TO 'current menu' -->
 		<img class="pointer button" 
-			 src="../images/buttons/add.png" 
-			 alt="Add" 
+			 src="../images/buttons/addTo.png" 
+			 alt="Add this pizza to this events menu" 
 			 onclick="getRequest(<?php echo $row['pizzaID']; ?>, 'add')" />
 
 		<!-- CLICK TO MAKE THIS ROW EDITABLE -->
 		<img class='pointer button' 
-			 src='../images/buttons/edit_LSM.png' 
+			 src='../images/buttons/edit_up.png' 
 			 alt='Edit' 
 			 onclick='editRow("<?php echo $i; ?>")' />
 		
 		<!-- DELETE PIZZA ENTIRELY -->
 		<img class='pointer button'
-			 src='../images/buttons/delete.png' 
+			 src='../images/buttons/delete_up.png' 
 			 alt='Delete' 
 			 onclick='makeRequest("pizzaID=<?php echo $row['pizzaID']; ?>&action=deletePizzaType", "Please confirm to delete this pizza entirely")' />
 <?php
@@ -239,12 +239,12 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 		echo "<td>";
 ?>
 		<img class='pointer button'
-			 src='../images/buttons/save.png' 
+			 src='../images/buttons/save_up.png' 
 			 alt='Save' 
 			 onclick='updateRow("<?php echo $i; ?>", "Please confirm pizza changes")' />
 
 		<img class='pointer button'
-			 src='../images/buttons/cross.png' 
+			 src='../images/buttons/delete_up.png' 
 			 alt='Cancel' 
 			 onclick='closeRow("<?php echo $i; ?>")' />
 
@@ -305,31 +305,39 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 	// [this] MENU 
 	$menuID = $row['menuID'];
 
-	// GET ALL PIZZA ITEMS IN THIS MENU
-	$select = "SELECT * FROM menu_items WHERE menuID='".$menuID."'";
-	$result = $db->query($select);
-
-	for ($i=0; $i<$result->num_rows; $i++)
+	if (empty($menuID))
 	{
-		$row = $result->fetch_assoc();
+		echo '<tr><td colspan="4" height="60px"><i>';
+		echo 'This event has no pizza menu yet.</i></td></tr>';
+	}
+	else
+	{
+		// GET ALL PIZZA ITEMS IN THIS MENU
+		$select = "SELECT * FROM menu_items WHERE menuID='".$menuID."'";
+		$result = $db->query($select);
 
-		// GET [this] MENUS PIZZA
-		$pizzaID = $row['pizzaID'];
+		for ($i=0; $i<$result->num_rows; $i++)
+		{
+			$row = $result->fetch_assoc();
 
-		// GET [this] PIZZA's DESCRIPTION
-		$get = "SELECT * FROM pizza_type WHERE pizzaID='".$pizzaID."'";
-		$resultPizza = $db->query($get);
-		$rowPizza = $resultPizza->fetch_assoc();
+			// GET [this] MENUS PIZZA
+			$pizzaID = $row['pizzaID'];
 
-		// SETUP DELETE BUTTON
-		$onclick = "makeRequest('menuID=".$row['menuID']."&pizzaID=".$rowPizza['pizzaID']."&action=delete', 'Please confirm to remove this pizza from the current menu')";
+			// GET [this] PIZZA's DESCRIPTION
+			$get = "SELECT * FROM pizza_type WHERE pizzaID='".$pizzaID."'";
+			$resultPizza = $db->query($get);
+			$rowPizza = $resultPizza->fetch_assoc();
 
-		echo '<tr>';
-		echo '<td><img class="pointer" src="../images/buttons/delete_60.png" alt="Remove this pizza" onclick="'.$onclick.'" />';
-		echo '<td>'.$rowPizza['pizza_name'].'</td>';
-		echo '<td>'.$rowPizza['description'].'</td>';
-		echo '<td>$'.$rowPizza['price'].'</td>';
-		echo '</tr>';
+			// SETUP DELETE BUTTON
+			$onclick = "makeRequest('menuID=".$row['menuID']."&pizzaID=".$rowPizza['pizzaID']."&action=delete', 'Please confirm to remove this pizza from the current menu')";
+
+			echo '<tr>';
+			echo '<td><img class="pointer" src="../images/buttons/delete_60.png" alt="Remove this pizza" onclick="'.$onclick.'" />';
+			echo '<td>'.$rowPizza['pizza_name'].'</td>';
+			echo '<td>'.$rowPizza['description'].'</td>';
+			echo '<td>$'.$rowPizza['price'].'</td>';
+			echo '</tr>';
+		}
 	}
 ?>
 </table>

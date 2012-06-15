@@ -280,7 +280,7 @@ $(document).ready(function(){
 	$(".inlineD").colorbox({inline:true, width:"250px", height:"250px"}); 
 
 // CREATE NEW PIZZA
-	$(".inline").colorbox({inline:true, width:"300px", height:"350px"});
+	$(".inline").colorbox({inline:true, width:"280px", height:"350px", scrolling: false});
 
 // PIZZA ORDER SUMMARY
 	$(".inlineB").colorbox({inline:true, width:"700px", height:"600px"});

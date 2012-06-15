@@ -6,7 +6,7 @@
 
 if (isset($_POST['subject']))
 {
-	// IF [this] USER BOOKS FOR A TOURNAMENT
+	// IF [user] BOOKS A TOURNAMENT
 	if ($_POST['subject'] == 'book')
 	{
 		$insert = "INSERT INTO `attendee_tournament` (attendeeID, tournID) VALUES ('".$_POST['attendeeID']."', '".$_POST['tournID']."')";
@@ -22,16 +22,26 @@ if (isset($_POST['subject']))
 		*/
 	}
 
-	// IF [this] USER CANCELS AN EVENT
+	// IF [staff] CANCELS AN EVENT
 	else if ($_POST['subject'] == 'cancelEvent')
 	{
+		// GET ATTENDEE SEAT
+		$get = "SELECT * FROM attendee WHERE attendeeID='".$_POST['attendeeID']."'";
+		$result = $db->query($get);
+		$row = $result->fetch_assoc();
+		$seatID = $row['seatID'];
+
+		// REMOVE ATTENDEE ROW
 		$cancel = "DELETE FROM attendee WHERE clientID='".$_SESSION['userID']."' AND eventID='".$_POST['eventID']."'";
 		$result = $db->query($cancel);
-		
+	
+		// REMOVE PIZZA ORDER(S)
 		$cancel = "DELETE FROM pizza_order WHERE attendeeID='".$_POST['attendeeID']."'";
-		var_dump($cancel);
 		$result = $db->query($cancel);
-		var_dump($result);
+
+		// REMOVE SEAT STATUS
+		$cancel = "UPDATE seat SET status=1 WHERE seatID='".$seatID."'";
+		$result = $db->query($cancel);
 
 		$_POST['t'] = 1;
 	}

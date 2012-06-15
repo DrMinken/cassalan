@@ -160,7 +160,7 @@
 	$(document).ready(function()
 	{
 		$(".ajax").colorbox();
-		$(".inline").colorbox({inline:true, width:"1150px", height:"500px"});
+		$(".inline").colorbox({inline:true, width:"950px", height:"500px", scrolling: false});
 	});
 
 
