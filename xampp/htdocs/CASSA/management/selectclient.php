@@ -346,7 +346,9 @@ function ajax_client_table_basic($db, $startRow,$surname)
 		echo '<form name="search">';
 		echo 'Surname Search: <input id="searchTerm" type="text" name="surname" value="'. $_POST['surname'] .'" />';
 		echo '<input type="button" value="Search" onclick="(searchFunction())"/>';
-		echo '</form>';   
+		echo '</form>';
+                echo ' <br />';
+                echo ' <br />';
 	}
 }
 //***************************************************************************************
@@ -704,7 +706,7 @@ function manageClientEvent($db, $startRow, $clientID)
 	$query2 .= " WHERE a.clientID = '".$clientID."'";
 	$result2 = $db->query($query2);
 	$row2 = $result2->fetch_array(MYSQLI_BOTH);
-var_dump($query2);
+
 	if($row2['paid'] == '1')
 	{
 		$eventPaid = "<b>Paid :</b> Yes";
@@ -723,13 +725,13 @@ var_dump($query2);
 	$query3 .= "WHERE event_started != 2;";
 	$result3 = $db->query($query3);
 
-	$query4 = "SELECT team_name from teams WHERE ";
-	$query4 .=   "teamID = (Select teamID from team_attendee where attendeeID";
-	$query4 .= " = (SELECT attendeeID from attendee where clientID = " . $clientID ."));";
-	$result4 = $db->query($query4);
+//	$query4 = "SELECT team_name from teams WHERE ";
+//	$query4 .=   "teamID = (Select teamID from team_attendee where attendeeID";
+//	$query4 .= " = (SELECT attendeeID from attendee where clientID = " . $clientID ."));";
+//	$result4 = $db->query($query4);
 
-	$query5 = "SELECT team_name, teamID from teams";
-	$result5 = $db->query($query5);
+//	$query5 = "SELECT team_name, teamID from teams";
+//	$result5 = $db->query($query5);
 
 	$query6 = "SELECT tournID, name , start_time FROM tournament WHERE " ;
 	$query6 .=   "tournID = ANY (SELECT tournID FROM attendee_tournament WHERE attendeeID";
@@ -797,91 +799,7 @@ var_dump($query2);
 	echo '</tr>';
 	echo '</form>';
 
-// **************************************************************************************************
-// Abillity to change events taken out because not really relevant. Un-comment if you wish to see it
-// work.
-// **************************************************************************************************           
-//            echo '<tr>';
-//            //Populate the Event List Box
-//            echo '<td id="td11" >Change Events To:</td>';
-//            echo '<td colspan="2" id="td2">';
-//            
-//            echo '<select id= "eventSelect" name="eventSelect">';
-//                
-//             
-//                for ($i = 0; $i < $result3->num_rows;$i++) 
-//                        {
-//                            $row3 = $result3->fetch_array(MYSQLI_BOTH);    
-//
-//                                if ($i==0)
-//                                    {
-//                                        echo '<OPTION id="option' . $row3['eventID']. '" value="'.$row3['eventID'].'" selected="selected">' . $row3['event_name'] . '</OPTION><br />';			
-//                                    }
-//                                else
-//                                    {
-//                                        echo '<OPTION id="option' . $row3['eventID']. '" value="'.$row3['eventID'].'">' . $row3['event_name'] . '</OPTION><br />';
-//                                    }
-//                        }
-//
-//            echo '</select>';
-//          
-//            echo '</td>';
-//            echo '<td id="td14"><img class="button" align="right" src="../images/buttons/join.png"';
-//            echo 'alt="Change Events for this client" onclick="joinEvent('. $noEvent . "," . $row1['clientID'] . ')" /></td>';
-//            echo '</tr>';
-//            
-//****************************************************************************************************
-            
-	//Get Data for team name      
-/*
-	$row4 = $result4->fetch_array(MYSQLI_BOTH);
-	echo '<form id="editClientTeam">';
-	echo '<tr><th colspan="4">Client Team Details</th></tr>';
-	
-	echo '<tr>';
-		echo '<td id="td11" >Current Team:</td>';
-		echo '<td colspan="3" id="td12">' . $row4['team_name']. '</td>';
-	
-		//If the team name is blank the client is not a member of any team.          
-		if($row4['team_name']== "")
-		{
-			$noTeam = 1;
-		}
-		else 
-		{
-			$noTeam = 0;
-		}
-	echo '</tr>';
 
-	$row5 = $result5->fetch_array(MYSQLI_BOTH);
-	echo '<tr>';
-	//Populate the team list box.
-		echo '<td id="td11" >Change Team To:</td>';
-		echo '<td colspan="2" id="td2">';
-		echo '<select id= "teamSelect" name="teamSelect">';
-
-		for ($i = 0; $i < $result5->num_rows;$i++) 
-		{
-			$row5 = $result5->fetch_array(MYSQLI_BOTH);    
-
-			if ($i==0)
-			{
-				echo '<OPTION id="option' . $row5['teamID']. '" value="'.$row5['teamID'].'" selected="selected">' . $row5['team_name'] . '</OPTION><br />';			
-			}
-			else
-			{
-				echo '<OPTION id="option' . $row5['teamID']. '" value="'.$row5['teamID'].'">' . $row5['team_name'] . '</OPTION><br />';
-			}
-		}
-		echo '</select>';
-		echo '</td>';
-
-		echo '<td id="td14"><img class="button" align="right" src="../images/buttons/join.png"';
-		echo 'alt="Change Teams for this client" onclick="joinTeam('. $noTeam .','. $row1['clientID'] . ')" /></td>';
-	echo '</tr>';
-	echo '</form>';
-*/
-//*************************************************************************************************
 
 	echo '<form id="editClientTourn">';
 	echo '<tr><th colspan="4">Client Tournament Details</th></tr>';
@@ -892,37 +810,39 @@ var_dump($query2);
 
 	echo '<tr>';
 		echo '<td style ="text-align: left " id="td11">Tournament Name</td>';
-		echo '<td style ="text-align: left" id="td12"><b>Date</b></td>';
+		echo '<td style ="text-align: left" id="td12"></td>';
 		echo '<td style ="text-align: left; padding-left = 10px" id="td13"><b>Start Time</b></td>';
 		echo '<td style ="text-align: right; padding-right = 10px" id="td14"><b>Add / Remove</b></td>';
 	echo '</tr>';
 
-	$numTourn = $result6->num_rows;
-	$numTourn2 = $result7->num_rows;
+	if ($result6){$numTourn = $result6->num_rows;} else{$numTourn = 0;}
+	if ($result7) {$numTourn2 = $result7->num_rows;} else{$numTourn2 = 0;}
 	$total = 0;
 
-	if ($numTourn==0)
+	if ($numTourn == 0)
 	{
 		echo '<tr>';
+                        echo '<form id="form_tournSelect">';
 			echo '<td  id="td11">';
-			echo '<form id="form_tournSelect">';
+			
 			echo '<select id="tournSelect" name="tournSelect">';
 			for ($x = 0; $x < $numTourn2; $x++)
 			{
 				$row7 = $result7->fetch_array(MYSQLI_BOTH);
-				echo '<OPTION id="option' . $row7['tournID']. '" value="'.$row7['tournID'].'">' . $row7['name'] . '</OPTION><br />';  
+				echo '<OPTION id="option' . $row7['tournID']. '" value="'.$row7['tournID'].'">' . $row7['name'] . '</OPTION>';  
 			}
 			echo '</select>';
-			echo '</form>';
+			
 
 			echo '</td>';
 			echo '<td id="td12"></td>';
 			echo '<td id="td13"></td>';
 			echo '<td id="td14"><img align="right" class="button"  src="../images/buttons/join.png"';
 			echo 'alt="Add this client to Tournament" onclick="joinTournament('. $row1['clientID'] . ')" /></td>';
+                        echo '</form>';
 		echo '</tr>';			
 	}
-	else
+	elseif( $numTourn > 0)
 	{          
 		$i2 = 0;
 		for ($i = 0; $i < $numTourn;$i++) 
@@ -933,14 +853,16 @@ var_dump($query2);
 
 			echo '<tr id=' . $row6['tournID'] . '>';
 			echo '<td style ="text-align: left " id="td11"><p>' . $row6['name'] . '</p></td>';
-			echo '<td style ="text-align: left " id="td12"><p>'. $row6['date'] . '</p></td>';
+			echo '<td style ="text-align: left " id="td12"></p></td>';
 			echo '<td style ="text-align: left; padding-left = 10px" id="td13"><p>'. $row6['start_time'] . '</p></td>';
 			echo '<td style ="text-align: right;"id="td14"><img align="right" class="button"  src="../images/buttons/delete_up.png"';
 			echo 'alt="Remove This Client from This Tournament" onclick="un_joinTournament(' . $row6['tournID'] .','. $row1['clientID'] . ')" /></td>';
 			echo '</tr>';
 		}
 
-		echo '<tr>';
+		if ($numTourn == 0)
+                {
+                echo '<tr>';
 			echo '<td  id="td11">';
 			echo '<form id="form_tournSelect">';
 			echo '<select id="tournSelect" name="tournSelect">';
@@ -958,19 +880,31 @@ var_dump($query2);
 			echo 'alt="Add this client to Tournament" onclick="joinTournament('. $row1['clientID'] . ')" /></td>';
 		echo '</tr>';
 		echo '</form>';
+                }
 	}
 	echo '</table>';
 	echo '</form>';
 
-
+//**********************************************************************************************************
 	echo '<form id="editPizza">';
-	echo '<table id= "clientPizzaTableData">';
-	echo '<tr><th colspan="5">Client Pizza Details</th></tr>';
-	
+	echo '<table id ="clientPizzaTableData">';
+	//top row of table
+        echo '<tr><th colspan="5">Client Pizza Details</th>';
+        echo '<th></th>';
+        echo '<th></th>';
+        echo '<th></th>';
+        echo '<th></th>';
+        echo '</tr>';
+	//next row of table
 	echo '<tr>';
 		echo '<td colspan="5" id="td111" >Pizza(s)ordered:</td>';
+                echo '<td id="td122"></td>';
+                echo '<td id="td133"></td>';
+                echo '<td id="td144" ></td>';
+                echo '<td id="td155" ></td>';
+                
 	echo '</tr>';
-
+        //next row of table
 	echo '<tr>';
 		echo '<td id="td111">Pizza Name</td>';
 		echo '<td id="td122"><b>Quantity</b></td>';
@@ -978,7 +912,7 @@ var_dump($query2);
 		echo '<td id="td144"><b>Total</b></td>';
 		echo '<td id="td155" ><b>Add / Remove</b></td>';
 	echo '</tr>';
-
+        //Create loop to populate table with pizza ordered
 	if($result8)
 	{                    
 		$numPizza = $result8->num_rows;
@@ -998,7 +932,7 @@ var_dump($query2);
 
 			$total = $total + $row8['total'];
 		}
-                             
+                //next row of table             
 		echo '<tr>';
 			echo '<td id="td111" ></td>';
 			echo '<td id="td122"></td>';
@@ -1006,46 +940,69 @@ var_dump($query2);
 			echo '<td id="td144" >$' . $total . '</td>';
 			echo '<td id="td155" ></td>';
 		echo '</tr>';
+                
+                
+                
+         }
+//**************************************************************************************************
+        
+        elseif(!$result8)
+            {
+                //next row of table
+                    
+                                if($result9)
+                                {
+                                    echo '<tr>';
+                                    echo '<td id="td111" >';			
+                                    echo '<select id="pizzaSelect" name="pizzaSelect">';
+                                    $numPizza = $result9->num_rows;
+                                    for ($x = 0; $x < $numPizza; $x++)
+                                        {
+                                            $row9 = $result9->fetch_array(MYSQLI_BOTH);
+                                            echo '<OPTION id="option' . $row9['pizzaID']. '" value="'.$row9['pizzaID'].'">' . $row9['pizza_name'] . '</OPTION>';  
+                                        }
+                                    echo '</select>';
+                                    echo '</td>';
+                                    echo '</tr>';
+                                    echo '<td id="td122">Select Qty</td>';
+                                    echo '<td id="td133">';
+                                    echo '<select id="pizzaQty" name="pizzaQty">';
+                                    echo '<OPTION value="1">1</OPTION>';
+                                    echo '<OPTION value="2">2</OPTION>';
+                                    echo '<OPTION value="3">3</OPTION>';
+                                    echo '<OPTION value="4">4</OPTION>';
+                                    echo '<OPTION value="5">5</OPTION>';
+                                    echo '</select>';
+                                    echo '</td>';
+                                    $row8a = $result8a->fetch_array(MYSQLI_BOTH);
+                                  
+                                    echo '<td id="td144"></td>';
+                                    echo '<td id="td155">';
+                                    echo '<img  class="button"  src="../images/buttons/addto.png"';
+                                    echo 'alt="Add This Pizza to The Order"';
+                                    echo 'onclick="addPizza(' . $row9['menuID'] .','. $row8a['attendeeID'] .','.$row8a['seatID'].','. $clientID .')"/></td>';    
 
-		echo '<tr>';
-			echo '<td id="td111" >';
+                                    echo "</tr>"; 
+                            }
 
-			echo '<form id="form_PizzaSelect">';
-			echo '<select id="pizzaSelect" name="pizzaSelect">';
-				$numPizza = $result9->num_rows;
-				for ($x = 0; $x < $numPizza; $x++)
-				{
-					$row9 = $result9->fetch_array(MYSQLI_BOTH);
-					echo '<OPTION id="option' . $row9['pizzaID']. '" value="'.$row9['pizzaID'].'">' . $row9['pizza_name'] . '</OPTION>';  
-				}
-			echo '</select>';
-			echo '</td>';
-			echo '<td id="td122">Select Qty</td>';
+                
+                        elseif(!$result9)
+                        {
+                                echo '<tr>';
+                                echo '<td colspan = "5" id="td111" >No Pizzas on this menu</td>';
+                                echo '<td id="td122"></td>';
+                                echo '<td id="td133"></td>';
+                                echo '<td id="td144" ></td>';
+                                echo '<td id="td155" ></td>';
+                                echo '</tr>';
+                        }
+          }
+                            echo '</table>';
+                            echo '</form>';
+                            echo '<br />';
+                            echo '<br />';
+	
 
-			echo '<td id="td133">';
-			echo '<select id="pizzaQty" name="pizzaQty">';
-				echo '<OPTION value="1">1</OPTION>';
-				echo '<OPTION value="2">2</OPTION>';
-				echo '<OPTION value="3">3</OPTION>';
-				echo '<OPTION value="4">4</OPTION>';
-				echo '<OPTION value="5">5</OPTION>';
-			echo '</select>';
-			echo '</td>';
-
-		$row8a = $result8a->fetch_array(MYSQLI_BOTH);
-			echo '<td id="td144"></td>';
-			echo '<td id="td155">';
-			echo '<img  class="button"  src="../images/buttons/addto.png"';
-			echo 'alt="Add This Pizza to The Order"';
-			echo 'onclick="addPizza(' . $row9['menuID'] .','. $row8a['attendeeID'] .','.$row8a['seatID'].','. $clientID .')"/></td>';    
-		echo '</tr>';
-		echo '</form>';
-		echo '</tr>';
-	}
-	echo '</table>';
-	echo '</form>';
-	echo '<br />';
-	echo '<br />';
 }
 //Return back to the MANparticipants.php page.
 ?>
