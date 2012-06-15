@@ -125,6 +125,20 @@ if (!function_exists("getThisEvent"))
 }
 
 // GET [this] EVENT's NAME
+if (!function_exists("getThisEventRow"))
+{
+	function getThisEventRow($db)
+	{
+		$eventID = getThisEvent($db);
+		$get = "SELECT * FROM event WHERE eventID='".$eventID."'";
+		$result = $db->query($get);
+		$row = $result->fetch_assoc();
+
+		return $row;
+	}
+}
+
+// GET [this] EVENT's NAME
 if (!function_exists("getThisEventName"))
 {
 	function getThisEventName($db)

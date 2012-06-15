@@ -18,7 +18,6 @@
 // IF [this] USER BOOKS FOR AN EVENT
 	if (isset($_POST['bookID']) && isset($_POST['subject']))
 	{
-
 		if ($_POST['subject'] == 'bookEvent')
 		{
 		// CHECK IF USER HAS BOOKED THIS EVENT
@@ -50,27 +49,6 @@
 				*		-BOOK PIZZA (optional)
 				*/
 			}
-		}
-		else if ($_POST['subject'] == 'cancelEvent')
-		{
-			// CHECK IF ATTENDEE HAS BOOKED A SEAT
-			$check = "SELECT * FROM attendee WHERE clientID='".$_SESSION['userID']."' AND eventID='".$_POST['bookID']."'";
-			$result = $db->query($check);
-			$row = $result->fetch_assoc();
-			$seatID = $row['seatID'];
-
-			if ($seatID != '' || !empty($seatID))
-			{
-				// REMOVE FROM SEAT TABLE
-				$remove = "UPDATE seat SET status=1 WHERE seatID='".$seatID."'";
-				$result = $db->query($remove);
-			}
-
-			// REMOVE THIS EVENT
-			$remove = "DELETE FROM attendee WHERE clientID='".$_SESSION['userID']."' AND eventID='".$_POST['bookID']."'";
-			$result = $db->query($remove);
-			var_dump($remove);
-			var_dump($result);
 		}
 	}
 
@@ -167,13 +145,14 @@ function book(id)
 	}
 }
 // CANCEL EVENT
-function cancel(id)
+function cancel(id, attendeeID)
 {
 	var answer = confirm("Please confirm to cancel this Event");
 
 	if (answer == true)
 	{	
-		var params = "eventID=" + id + "&subject=cancelEvent";
+		var params = "eventID=" + id + "&attendeeID=" + attendeeID + "&subject=cancelEvent";
+		//alert(params);
 		getEvent(params);
 	}
 }
@@ -357,7 +336,6 @@ function cancelPizza(pizzaID, attendeeID, menuID)
 						$result = $db->query($get);
 						if ($result->num_rows == 0) { $pizzaID = 'No'; } else { $pizzaID = 'Yes'; }
 					}
-
 			}
 		}
 	}

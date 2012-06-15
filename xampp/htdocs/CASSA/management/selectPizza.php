@@ -140,7 +140,6 @@
 				}
 			}
 		}
-
 		
 		// IF [user] CLICKS TO UPDATE PIZZA ROW
 		else if ($_POST['action'] == 'updateRow')
@@ -175,6 +174,14 @@
 				$update = "UPDATE pizza_type SET pizza_name='".$_POST['name']."', description='".$_POST['description']."', price='".$_POST['price']."' WHERE pizzaID=".$_POST['i']."";
 				$result = $db->query($update);
 			}
+		}
+
+		// IF [attendee] PAYS FOR PIZZA LINE
+		else if ($_POST['action'] == 'payPizza')
+		{
+			// UPDATE PIZZA ORDER ROW
+			$update = "UPDATE pizza_order SET paid_pizza=1 WHERE attendeeID='".$_POST['attendeeID']."' AND pizzaID='".$_POST['pizzaID']."'";
+			$result = $db->query($update);
 		}
 	}
 ?>
@@ -278,7 +285,6 @@ for ($i=0; $i<$result->num_rows; $i++) // create a list of all pizza's in the da
 	echo "<h2 align='center' class='subtitle' style='font-size:14pt'>".$eventName."'s Pizza Menu: ".$row['menu_name']."</h2>";
 	echo "<input type='hidden' name='currentMenu' id='currentMenu' value='".$row['menuID']."' />";
 ?>
-
 
 
 

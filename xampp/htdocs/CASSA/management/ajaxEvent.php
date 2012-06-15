@@ -28,6 +28,11 @@ if (isset($_POST['subject']))
 		$cancel = "DELETE FROM attendee WHERE clientID='".$_SESSION['userID']."' AND eventID='".$_POST['eventID']."'";
 		$result = $db->query($cancel);
 		
+		$cancel = "DELETE FROM pizza_order WHERE attendeeID='".$_POST['attendeeID']."'";
+		var_dump($cancel);
+		$result = $db->query($cancel);
+		var_dump($result);
+
 		$_POST['t'] = 1;
 	}
 
@@ -285,15 +290,10 @@ if (isset($_POST['t']))
  */
 function display_all_events($db)
 {
-	// GET ALL CURRENT EVENTS
-	//$query = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed=0 ORDER BY startDate ASC";
-	//$result = $db->query($query);
-
 	// GET [current] EVENT
 	$eventID = getThisEvent($db);
 	$query = "SELECT * FROM event WHERE eventID='".$eventID."'";
 	$result = $db->query($query);
-
 ?>
 	<table class='displayTable' name='eventRegistration' border='0'>
 <?php 
@@ -344,7 +344,6 @@ function display_all_events($db)
 			$on = "this.style.backgroundColor='#E0ECF8'";
 			$off = "this.style.backgroundColor='transparent'";
 			$onclickBook = "book(".$row['eventID'].")";
-			$onclickCancel = "cancel(".$row['eventID'].")";
 
 			// CHECK IF USER HAS BOOKED THIS EVENT
 			$check = "SELECT * FROM attendee WHERE clientID='".$_SESSION['userID']."' AND eventID='".$row['eventID']."'";
@@ -364,6 +363,10 @@ function display_all_events($db)
 			}
 			else
 			{
+				$rowAttendee = $resultCheck->fetch_assoc();
+				$attendeeID = $rowAttendee['attendeeID'];
+				$onclickCancel = "cancel(".$row['eventID'].", ".$attendeeID.")";
+
 				echo '<td onclick="'.$onclickCancel.'" class="pointer">';
 					echo '<img src="/cassa/images/buttons/cancel.png" alt="Cancel this event" /></td>';
 			}
@@ -413,6 +416,7 @@ function display_all_booked_events($db)
 		else
 		{
 			$rowEvent = $result->fetch_assoc();
+			$attendeeID = $row['attendeeID'];
 
 			// GET SEAT COUNT FOR THIS EVENT
 			$count = "SELECT * FROM seat WHERE status=0";
@@ -452,7 +456,7 @@ function display_all_booked_events($db)
 			echo $seatCount.' / '.$seatQuantity.'</td></tr>';
 
 			echo '<tr><td colspan="2"><br />';
-			echo '<img class="pointer" src="/cassa/images/buttons/cancel.png" title="Click to cancel this event" onclick="cancel('.$eventID.')" /></td></tr>';
+			echo '<img class="pointer" src="/cassa/images/buttons/cancel.png" title="Click to cancel this event" onclick="cancel('.$eventID.', '.$attendeeID.')" /></td></tr>';
 		}
 	}
 ?>

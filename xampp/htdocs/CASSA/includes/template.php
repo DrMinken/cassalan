@@ -55,6 +55,8 @@
 	<!-- Website Common Functions -->
 	<?php include('functions.php'); ?>
 
+	<!-- Printable Pages -->
+	<link rel="stylesheet" href="/cassa/css/print.css" type="text/css" media="print" />
 
 	<!-- VALIDATE: login form -->
 	<script type='text/javascript'>
