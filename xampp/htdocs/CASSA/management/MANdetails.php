@@ -5,13 +5,10 @@
 	session_start();									// Start/resume THIS session
 
 	// PAGE SECURITY
-	if (isset($_SESSION['isAdmin']))
+	if (!isset($_SESSION['isAdmin']))
 	{
-		if ($_SESSION['isAdmin'] == 0)
-		{
-			echo '<script type="text/javascript">history.back()</script>';
-			die();
-		}
+		echo '<script type="text/javascript">history.back()</script>';
+		die();
 	}
 
 	$_SESSION['title'] = "Manage Details | MegaLAN"; 	// Declare this page's Title
@@ -31,46 +28,48 @@
 		
 
 	// SET REGISTRATION VARIABLES
-		//print_r($_POST);
 		$firstName = $_POST['firstName'];
 		$lastName = $_POST['lastName'];
 		$email = htmlspecialchars($_POST['email']);
 
 		$mobile = $_POST['mobile'];
-		$userType = $_POST['userType'];
 
 		$password = $_POST['password'];
 		$passwordConfirm = $_POST['passwordConfirm'];
 
 
 	// CHECK IF ANY INPUT ARE EMPTY OR DO NOT COMPLY
-		if ($firstName == '' || $firstName == 'Enter Text')
+		if ($firstName == '')
 		{
-			$_SESSION['errMsg'][0] = '<font class="error">*</font>';
+			$_SESSION['errMsg'][0] = '<font class="error">This field cannot be blank</font>';
 		}
-		if ($lastName == '' || $lastName == 'Enter Text')
+			else if (regLetters($firstName) == false)
+			{
+				$_SESSION['errMsg'][0] = '<font class="error">Name must only contain letters</font>';
+			}
+		if ($lastName == '')
 		{
-			$_SESSION['errMsg'][1] = '<font class="error">*</font>';
+			$_SESSION['errMsg'][1] = '<font class="error">This field cannot be blank</font>';
 		}
-		if ($email == '' || $email == 'Enter Text')
+		if ($email == '' || (filter_var($email,FILTER_VALIDATE_EMAIL) == false))
 		{
-			$_SESSION['errMsg'][2] = '<font class="error">*</font>';
+			$_SESSION['errMsg'][2] = '<font class="error">Invalid Email</font>';
 		}
-		if ($mobile == '' || $mobile == 'Enter Text')
+		if ($mobile == '')
 		{
-			$_SESSION['errMsg'][3] = '<font class="error">*</font>';
+			$_SESSION['errMsg'][3] = '<font class="error">This field cannot be blank</font>';
 		}
 			else if (!is_numeric($mobile))
 			{
-				$_SESSION['errMsg'][3] = '<font class="error">*</font>';
+				$_SESSION['errMsg'][3] = '<font class="error">Mobile must only contain numbers</font>';
 			}
 			else if (strlen($mobile) < 10)
 			{
-				$_SESSION['errMsg'][3] = '<font class="error">* Must be 10 digits</font>';
+				$_SESSION['errMsg'][3] = '<font class="error">Mobile must be 10 digits long</font>';
 			}
 		if ($password == '')
 		{
-			$_SESSION['errMsg'][4] = '<font class="error">*</font>';
+			$_SESSION['errMsg'][4] = '<font class="error">This field cannot be blank</font>';
 		}
 			else if (strlen($password) < 8)
 			{
@@ -193,64 +192,61 @@
 
 
 	<!-- FORM: Registration -->
-	<table id='registrationTable' border='0' width='630px' cellspacing='3px'>
+	<table id='registrationTable' border='0' width='700px' cellspacing='3px'>
 	<form name='registration' method='POST' onsubmit='return regVal()' action='/cassa/management/MANdetails.php'>
 
 	<?php if (isset($_SESSION['regError']))
 	{?>
 		<tr>
-			<td colspan='2' align='left'>
+			<td colspan='3' align='left'>
 				<font class='error'><?php echo $_SESSION['regError']; unset($_SESSION['regError']); ?></font>
 			</td>
 		</tr>
 		<?php 
 	}?>
 
-	<tr><td colspan='2' align='left'><b>Participant Details</b></td></tr>
+	<tr><td colspan='3' align='left'><b>Participant Details</b></td></tr>
 	<tr>
-		<td width='150px' align='right'><?php if (isset($_SESSION['errMsg'][0])) echo $_SESSION['errMsg'][0]; ?> First Name</td>
-		<td><input type='text' name='firstName' value='<?php echo $row['first_name']; ?>' size='30' maxlength='32' /></td>
+		<td width='120px' align='right'>First Name</td>
+		<td width='250px'><input type='text' name='firstName' value='<?php echo $row['first_name']; ?>' size='30' maxlength='32' /></td>
+		<td width='330px' class='inLeft'><?php if (isset($_SESSION['errMsg'][0])) echo $_SESSION['errMsg'][0]; ?></td>
 	</tr>
 
 	<tr>
-		<td width='150px' align='right'><?php if (isset($_SESSION['errMsg'][1])) echo $_SESSION['errMsg'][1]; ?> Last Name</td>
+		<td width='150px' align='right'>Last Name</td>
 		<td><input type='text' name='lastName' value='<?php echo $row['last_name']; ?>' size='30' maxlength='32' /></td>
+		<td class='inLeft'><?php if (isset($_SESSION['errMsg'][1])) echo $_SESSION['errMsg'][1]; ?></td>
 	</tr>
 
 	<tr>
-		<td width='150px' align='right'><?php if (isset($_SESSION['errMsg'][2]))  echo $_SESSION['errMsg'][2]; ?> Email</td>
+		<td width='150px' align='right'>Email</td>
 		<td><input type='text' name='email' value='<?php echo $row['email']; ?>' size='30' maxlength='256' />
 				   <?php if (isset($_SESSION['errMsg'][7]))  echo $_SESSION['errMsg'][7]; ?>
 		</td>
+		<td class='inLeft'><?php if (isset($_SESSION['errMsg'][2]))  echo $_SESSION['errMsg'][2]; ?></td>
 	</tr>
 
 	<tr>
-		<td width='150px' align='right'><?php if (isset($_SESSION['errMsg'][3])) echo $_SESSION['errMsg'][3]; ?> Mobile</td>
+		<td width='150px' align='right'>Mobile</td>
 		<td><input type='text' name='mobile' value='<?php echo $row['mobile']; ?>' size='30' maxlength='128' /></td>
-	</tr>
-
-	<tr>
-		<td width='150px' align='right'>Select Type</td>
-		<td>
-			<select name='userType'>
-				<option value='0' selected='selected'>Non Member</option>
-				<option value='1'>CASSA Member</option>		
-			</select> <font size='1'><a href='http://www.cassa.org.au/payments/membership/'>(CASSA member?)</a></font>
-		</td>
+		<td class='inLeft'><?php if (isset($_SESSION['errMsg'][3])) echo $_SESSION['errMsg'][3]; ?></td>
 	</tr>
 
 	<tr>
 		<td width='150px' align='right'>Username</td>
-		<td><input type='text' class='readonly' name='username' id='username' size='30' maxlength='256' readonly='readonly' value='<?php echo $row['username']; ?>' /></td>
+		<td><input type='text' class='readonly' name='username' id='username' size='30' maxlength='256' 
+			readonly='readonly' value='<?php echo $row['username']; ?>' /></td>
+		<td>&nbsp;</td>
 	</tr>
 
 	<tr>
-		<td width='150px' align='right'><?php if (isset($_SESSION['errMsg'][4])) echo $_SESSION['errMsg'][4]; ?> Password</td>
+		<td width='150px' align='right'>Password</td>
 		<td><input type='password' name='password' id='password' size='30' maxlength='30' 
 			value='<?php echo $row['password']; ?>' onkeyup='checkPassword(this.value)' />
-			<?php if (isset($_SESSION['errMsg'][5])) echo $_SESSION['errMsg'][5]; ?> 
 			<img id='passError' src='/cassa/images/layers/tick.png' border='0' style='visibility: visible;' />
 		</td>
+		<td class='inLeft'><?php if (isset($_SESSION['errMsg'][5])) echo $_SESSION['errMsg'][5]; ?> 
+						   <?php if (isset($_SESSION['errMsg'][4])) echo $_SESSION['errMsg'][4]; ?></td>
 	</tr>
 
 	<tr>
@@ -260,13 +256,14 @@
 			<?php if (isset($_SESSION['errMsg'][6])) echo $_SESSION['errMsg'][6]; ?> 
 			<img id='conPassError' src='/cassa/images/layers/tick.png' border='0' style='visibility: visible;' />
 		</td>
+		<td>&nbsp;</td>
 	</tr>
 	
 
 	<?php if (isset($_SESSION['errMsg'])) unset($_SESSION['errMsg']); ?>
 
-	<tr><td colspan='2' align='center'><br />
-		<input type='submit' name='submit' value='Submit' />
+	<tr><td colspan='3' align='center'><br />
+		<input type='submit' name='submit' value='  Update  ' />
 	</td></tr>
 
 

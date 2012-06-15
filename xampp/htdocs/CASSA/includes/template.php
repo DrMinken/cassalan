@@ -15,7 +15,6 @@
 //******************** Start of TEMPLATE PAGE ************** -->
 
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -86,6 +85,23 @@
 <!-- **************** B O D Y **************** -->
 <body>
 <center>
+
+
+
+
+
+
+<!-- IF JAVASCRIPT IS 'disabled' SEND WARNING MESSAGE -->
+<noscript>
+<font class='error'>
+	*WARNING* For this website to function correctly, JavaScript must be enabled.<br />
+	Please turn on javascript prior to proceeding. 
+</font>
+</noscript>
+
+
+
+
 
 
 <!-- OVERALL SHELL

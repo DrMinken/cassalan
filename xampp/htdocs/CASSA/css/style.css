@@ -306,6 +306,10 @@ body
 	font-size: 10pt;
 	line-height: 14pt;
 }
+.inLeft
+{
+	text-indent: -40px;
+}
 input
 {
 	height: 23px;
@@ -429,7 +433,6 @@ p
 	font-size: 10pt;
 
 	position: relative;
-	left: 80px;
 }
 
 
