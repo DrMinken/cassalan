@@ -1,7 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml"> 
 
-
 <?php
 	session_start();									// Start/resume THIS session
 	$_SESSION['title'] = "MegaLAN Management System"; 	// Declare this page's Title
@@ -18,7 +17,6 @@
 		$stmt->close();
 	}
 ?>
-
 
 <!-- //******************************************************
 
@@ -59,8 +57,13 @@ function deleteArticle(x)
 
 
 
+
+
 <!-- Main Content [left] -->
 <div id="content">
+
+
+
 
 
 <!-- FETCH RECENT NEWS FROM DATABASE -->
@@ -152,10 +155,14 @@ echo '</div>';
 </form>
 
 
+
+
+
 <!-- FORM - for posting [this] article to be deleted -->
 <form name='deleteNewsArticle' method='POST' action='/cassa/home.php'>
 <input type='hidden' name='deleteNews' id='deleteNews' value='' />
 </form>
+
 
 
 
