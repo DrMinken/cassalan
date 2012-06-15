@@ -7,101 +7,13 @@
 	include("includes/template.php"); 				// Include the template page
 	include("includes/conn.php"); 					// Include the database connection
 
-	// REGISTRATION FORM SUBMISSION
-	if (isset($_POST['submit']))
-	{
 
-	// SECURE AND ASSIGN POST VARIABLES 
-		// TRIM all posted values
-		$_POST = array_map('trim', $_POST);
-		
-		// REJECT all real escape strings (security)
-		$_POST = array_map('mysql_real_escape_string', $_POST);
-		
-
-	// SET REGISTRATION VARIABLES
-		//print_r($_POST);
-		$firstName = $_POST['firstName'];
-		$lastName = $_POST['lastName'];
-		$email = htmlspecialchars($_POST['email']);
-
-		$mobile = $_POST['mobile'];
-		$userType = $_POST['userType'];
-
-		$username = $email;
-		$password = $_POST['password'];
-		$passwordConfirm = $_POST['passwordConfirm'];
-
-	// CHECK IF ANY INPUT ARE EMPTY OR DO NOT COMPLY
-		if ($firstName == '' || $firstName == 'Enter Text')
-		{
-			$_SESSION['errMsg'][0] = '<font class="error">*</font>';
-		}
-		else if (regLetters($firstName) == false)
-		{
-			$_SESSION['errMsg'][0] = '<font class="error">*Name must contain letters only</font>';
-		}
-		if ($lastName == '' || $lastName == 'Enter Text')
-		{
-			$_SESSION['errMsg'][1] = '<font class="error">*</font>';
-		}
-		
-        if($email == '' || $email == 'Enter Text'|| (filter_var($email,FILTER_VALIDATE_EMAIL) == false))
-		{
-        
-			$_SESSION['errMsg'][2] = '<font class="error">*Invalid Email</font>';
-		}
-        
-		if ($mobile == '' || $mobile == 'Enter Text')
-		{
-			$_SESSION['errMsg'][3] = '<font class="error">*</font>';
-		}
-			else if (!is_numeric($mobile))
-			{
-				$_SESSION['errMsg'][3] = '<font class="error">*</font>';
-			}
-			else if (strlen($mobile) < 10)
-			{
-				$_SESSION['errMsg'][3] = '<font class="error">* Must be 10 digits</font>';
-			}
-		if ($password == '')
-		{
-			$_SESSION['errMsg'][4] = '<font class="error">*</font>';
-		}
-			else if (strlen($password) < 8)
-			{
-				$_SESSION['errMsg'][5] = '<font class="error">Minimum 8 characters</font>';
-			}
-		if ($passwordConfirm != $password)
-		{
-			$_SESSION['errMsg'][6] = '<font class="error">Does not match</font>';
-		}
-	// ^^^ end of empty checking
-
-
-	// CHECK IF EMAIL EXISTS
-		$check = "SELECT * FROM client WHERE email = '".$email."'";
-		$result = $db->query($check);
-
-		if ($result->num_rows > 0)
-		{
-			$_SESSION['errMsg'][7] = '<font class="error">Email already exists in our system</font>'; 
-		}
-
-
-	// IF NO ERRORS, ADD TO DATABASE
-		if (!isset($_SESSION['errMsg']))
-		{
-			// INSERT TO DATABASE
-			/*$stmt = $db->prepare("INSERT INTO client (clientID, username, password, first_name, last_name, mobile, email) VALUES (null, ?, ?, ?, ?, ?, ?");
-			$stmt->bind_param('ssssss', $email, $password, $first_name, $last_name, $mobile, $email);
-			$stmt->execute();
-			$stmt->close();*/
-
-			$insert = "INSERT INTO client (username, password, first_name, last_name, mobile, email) VALUES ('".$email."', '".$password."', '".$firstName."', '".$lastName."', '".$mobile."', '".$email."')";
-			$result = $db->query($insert);
-		}
-	}
+	// SET DEFAULT FIELD VARIABLES
+		$firstName = '';
+		$lastName = '';
+		$email = '';
+		$mobile = '';
+		$password = '';
 ?>
 
 
@@ -205,6 +117,9 @@
 
 </head>
 <body>
+
+
+
 <center>
 <div id='shell'>
 
@@ -221,42 +136,53 @@
 
 
 	<!-- FORM: Registration -->
-	<table id='registrationTable' border='0' width='630px' cellspacing='3px'>
+	<table id='registrationTable' border='0' width='700px' cellspacing='3px'>
 	<form name='registration' method='POST' onsubmit='return randomQuestion()' action='register.php'>
 
 	<?php if (isset($_SESSION['regError']))
-	{?>
+	{
+		?>
 		<tr>
-			<td colspan='2' align='left'>
+			<td colspan='3' align='left'>
 				<font class='error'><?php echo $_SESSION['regError']; unset($_SESSION['regError']); ?></font>
 			</td>
 		</tr>
 		<?php 
 	}?>
 
-	<tr><td colspan='2' align='left'><b>Participant Details</b></td></tr>
+	<tr><td colspan='3' align='left'><b>Participant Details</b></td></tr>
 	<tr>
-		<td width='150px' align='right'><?php if (isset($_SESSION['errMsg'][0])) echo $_SESSION['errMsg'][0]; ?> First Name</td>
-		<td><input type='text' name='firstName' value='Enter Text' size='30' maxlength='32' 
-				   onclick='this.value=""' /></td>
+		<td width='120px' align='right'>First Name</td>
+		<td width='250px'><input type='text' name='firstName' 
+			value='<?php echo $firstName; ?>' size='30' maxlength='32' /></td>
+		<td width='330px' class='inLeft'>
+			<?php if (isset($_SESSION['errMsg'][0])) echo $_SESSION['errMsg'][0]; ?></td>
 	</tr>
+
 	<tr>
-		<td width='150px' align='right'><?php if (isset($_SESSION['errMsg'][1])) echo $_SESSION['errMsg'][1]; ?> Last Name</td>
-		<td><input type='text' name='lastName' value='Enter Text' size='30' maxlength='32' 
-				   onclick='this.value=""' /></td>
+		<td width='150px' align='right'>Last Name</td>
+		<td><input type='text' name='lastName' 
+			value='<?php echo $lastName; ?>' size='30' maxlength='32' /></td>
+		<td class='inLeft'><?php if (isset($_SESSION['errMsg'][1])) echo $_SESSION['errMsg'][1]; ?></td>
 	</tr>
+
 	<tr>
-		<td width='150px' align='right'><?php if (isset($_SESSION['errMsg'][2]))  echo $_SESSION['errMsg'][2]; ?> Email</td>
-		<td><input type='text' name='email' value='Enter Text' size='30' maxlength='256' 
-				   onclick='this.value=""' onkeyup='updateUsername(this.value)' />
+		<td width='150px' align='right'>Email</td>
+		<td><input type='text' name='email' 
+				   value='<?php echo $email; ?>' size='30' maxlength='256' 
+				   onkeyup='updateUsername(this.value)' />
 				   <?php if (isset($_SESSION['errMsg'][7]))  echo $_SESSION['errMsg'][7]; ?>
 		</td>
+		<td class='inLeft'><?php if (isset($_SESSION['errMsg'][2]))  echo $_SESSION['errMsg'][2]; ?></td>
 	</tr>
+
 	<tr>
-		<td width='150px' align='right'><?php if (isset($_SESSION['errMsg'][3])) echo $_SESSION['errMsg'][3]; ?> Mobile</td>
-		<td><input type='text' name='mobile' value='Enter Text' size='30' maxlength='128' 
-				   onclick='this.value=""' /></td>
+		<td width='150px' align='right'>Mobile</td>
+		<td><input type='text' name='mobile' 
+			value='<?php echo $mobile; ?>' size='30' maxlength='128' /></td>
+		<td class='inLeft'><?php if (isset($_SESSION['errMsg'][3])) echo $_SESSION['errMsg'][3]; ?></td>
 	</tr>
+
 	<tr>
 		<td width='150px' align='right'>Select Type</td>
 		<td>
@@ -265,33 +191,38 @@
 				<option value='1'>CASSA Member</option>		
 			</select> <font size='1'><a href='http://www.cassa.org.au/payments/membership/'>(CASSA member?)</a></font>
 		</td>
-	</tr>
-	<tr>
-		<td width='150px' align='right'>Username</td>
-		<td><input type='text' class='muteInput' name='username' id='username' size='30' maxlength='32' readonly='readonly' /></td>
+		<td>&nbsp;</td>
 	</tr>
 
 	<tr>
-		<td width='150px' align='right'><?php if (isset($_SESSION['errMsg'][4])) echo $_SESSION['errMsg'][4]; ?> Password</td>
-		<td><input type='password' name='password' id='password' size='30' maxlength='30' onkeyup='checkPassword(this.value)' />
+		<td width='150px' align='right'>Username</td>
+		<td><input type='text' class='muteInput' name='username' id='username' size='30' 
+			maxlength='32' readonly='readonly' value='<?php echo $email; ?>' /></td>
+		<td>&nbsp;</td>
+	</tr>
+
+	<tr>
+		<td width='150px' align='right'>Password</td>
+		<td><input type='password' name='password' id='password' size='30' 
+			maxlength='30' onkeyup='checkPassword(this.value)' value='<?php echo $password; ?>' />
 			<?php if (isset($_SESSION['errMsg'][5])) echo $_SESSION['errMsg'][5]; ?> 
 			<img id='passError' src='' border='0' style='visibility: hidden;' />
 		</td>
+		<td class='inLeft'><?php if (isset($_SESSION['errMsg'][4])) echo $_SESSION['errMsg'][4]; ?></td>
 	</tr>
 
 	<tr>
 		<td width='150px' align='right'>Re-enter Password</td>
 		<td><input type='password' name='passwordConfirm' id='passwordConfirm' size='30' maxlength='30' onkeyup='checkConPassword(this.value)' /> 
-			<?php if (isset($_SESSION['errMsg'][6])) echo $_SESSION['errMsg'][6]; ?> 
 			<img id='conPassError' src='' border='0' style='visibility: hidden;' />
 		</td>
+		<td class='inLeft'><?php if (isset($_SESSION['errMsg'][6])) echo $_SESSION['errMsg'][6]; ?></td>
 	</tr>
 	
-
 	<?php if (isset($_SESSION['errMsg'])) unset($_SESSION['errMsg']); ?>
 
-	<tr><td colspan='2' align='center'><br />
-		<input type='submit' name='submit' value='Submit' />
+	<tr><td colspan='3' align='center'><br />
+		<input type='submit' name='submit' value='  Register  ' />
 	</td></tr>
 
 
@@ -323,6 +254,105 @@
 </div><!-- end of: Shell -->
 
 </center>
+
+<?php
+
+// REGISTRATION FORM SUBMISSION
+if (isset($_POST['submit']))
+{
+// SECURE AND ASSIGN POST VARIABLES 
+	// TRIM all posted values
+	$_POST = array_map('trim', $_POST);
+	
+	// REJECT all real escape strings (security)
+	$_POST = array_map('mysql_real_escape_string', $_POST);
+
+// SET REGISTRATION VARIABLES
+	$firstName = $_POST['firstName'];
+	$lastName = $_POST['lastName'];
+	$email = htmlspecialchars($_POST['email']);
+
+	$mobile = $_POST['mobile'];
+	$userType = $_POST['userType'];
+
+	$username = $email;
+	$password = $_POST['password'];
+	$passwordConfirm = $_POST['passwordConfirm'];
+
+// CHECK IF ANY INPUT ARE EMPTY OR DO NOT COMPLY
+	if ($firstName == '')
+	{
+		$_SESSION['errMsg'][0] = '<font class="error">This field cannot be blank</font>';
+	}
+		else if (regLetters($firstName) == false)
+		{
+			$_SESSION['errMsg'][0] = '<font class="error">Name must only contain letters</font>';
+		}
+	if ($lastName == '')
+	{
+		$_SESSION['errMsg'][1] = '<font class="error">This field cannot be blank</font>';
+	}
+	if ($email == '' || (filter_var($email,FILTER_VALIDATE_EMAIL) == false))
+	{
+		$_SESSION['errMsg'][2] = '<font class="error">Invalid Email</font>';
+	}
+	if ($mobile == '')
+	{
+		$_SESSION['errMsg'][3] = '<font class="error">This field cannot be blank</font>';
+	}
+		else if (!is_numeric($mobile))
+		{
+			$_SESSION['errMsg'][3] = '<font class="error">Mobile must only contain numbers</font>';
+		}
+		else if (strlen($mobile) < 10)
+		{
+			$_SESSION['errMsg'][3] = '<font class="error">Mobile must be 10 digits long</font>';
+		}
+	if ($password == '')
+	{
+		$_SESSION['errMsg'][4] = '<font class="error">This field cannot be blank</font>';
+	}
+		else if (strlen($password) < 8)
+		{
+			$_SESSION['errMsg'][5] = '<font class="error">Minimum 8 characters</font>';
+		}
+	if ($passwordConfirm != $password)
+	{
+		$_SESSION['errMsg'][6] = '<font class="error">Does not match</font>';
+	}
+// ^^^ end of empty checking
+
+
+// CHECK IF EMAIL EXISTS
+	$check = "SELECT * FROM client WHERE email = '".$email."'";
+	$result = $db->query($check);
+
+	if ($result->num_rows > 0)
+	{
+		$_SESSION['errMsg'][7] = '<font class="error">Email already exists in our system</font>'; 
+	}
+// IF NO ERRORS, ADD TO DATABASE
+	if (!isset($_SESSION['errMsg']))
+	{
+		// INSERT TO DATABASE
+		/*$stmt = $db->prepare("INSERT INTO client (clientID, username, password, first_name, last_name, mobile, email) VALUES (null, ?, ?, ?, ?, ?, ?");
+		$stmt->bind_param('ssssss', $email, $password, $first_name, $last_name, $mobile, $email);
+		$stmt->execute();
+		$stmt->close();*/
+
+		$insert = "INSERT INTO client (username, password, first_name, last_name, mobile, email) VALUES ('".$email."', '".$password."', '".$firstName."', '".$lastName."', '".$mobile."', '".$email."')";
+		$result = $db->query($insert);
+
+		// ALERT CLIENT
+		$message = 'You have succesfully registered into our system.\n';
+		$message .= 'Please write down your login details\n\n';
+		$message .= 'Username: '.$email.'\n';
+		$message .= 'Password: '.$password;
+		echo "<script>alert('".$message."'); window.location.href='home.php';</script>";	
+	}
+}
+?>
+
 </body>
 </html>
 
