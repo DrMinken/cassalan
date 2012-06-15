@@ -303,11 +303,13 @@ function payEvent(payStatus, clientID)
 //************************************************************************************************
 function joinTournament(clientID)
 {
+    
     var e = document.getElementById("tournSelect");
         var tournID = e.options[e.selectedIndex].value;
     
     var divID = document.getElementById("clientDetails");
     var params = "tournID=" + tournID + "&clientID=" + clientID + "&queryType=10&startRow=0";
+    alert (params);
     createRequest(clientID , params, divID);
         
 }
