@@ -4,6 +4,7 @@
 <?php 
 	session_start();
 
+
 	// PAGE SECURITY
 	if (isset($_SESSION['isAdmin']))
 	{
@@ -14,9 +15,24 @@
 		}
 	}
 
+
 	$_SESSION['title'] = "Manage Pizzas | MegaLAN";		// Declare this page's Title
 	include("../includes/template.php"); 				// Include the template page
 	include("../includes/conn.php");					// Include database connection
+
+
+	if (isset($_POST['action']))
+	{
+		// IF [attendee] PAYS FOR PIZZA LINE
+		if ($_POST['action'] == 'payPizza')
+		{
+			// UPDATE PIZZA ORDER ROW
+			$update = "UPDATE pizza_order SET paid_pizza=1 WHERE attendeeID='".$_POST['attendeeID']."' AND pizzaID='".$_POST['pizzaID']."'";
+			$result = $db->query($update);
+		}
+	}
+
+
 ?>
 
 <!-- //******************************************************
@@ -241,7 +257,19 @@ function createPizzaMenu(eventID)
 	xmlhttp.send(params);
 	parent.jQuery.colorbox.close();
 }
+function payPizza(pizzaID, attendeeID)
+{
+	// TO SEND BY AJAX
+	/* COMMENTED OUT 
+		var params = "pizzaID=" + pizzaID + "&attendeeID=" + attendeeID + "&action=payPizza";
+		generalQuery(params);
+	*/
 
+	// TO SEND SINGLY
+	document.getElementById('pizzaID').value = pizzaID;
+	document.getElementById('attendeeID').value = attendeeID;
+	document.forms['payPizzaForm'].submit();
+}
 
 $(document).ajaxStop(function(){
 	window.location.reload();
@@ -255,10 +283,10 @@ $(document).ready(function(){
 	$(".inline").colorbox({inline:true, width:"300px", height:"350px"});
 
 // PIZZA ORDER SUMMARY
-	$(".inlineB").colorbox({inline:true, width:"700px", height:"900px"});
+	$(".inlineB").colorbox({inline:true, width:"700px", height:"600px"});
 
 // PIZZA ORDER BREAK DOWN
-	$(".inlineC").colorbox({inline:true, width:"700px", height:"1200px"}); 
+	$(".inlineC").colorbox({inline:true, width:"840px", height:"600px"}); 
 });
 </script>
 
@@ -430,11 +458,9 @@ $(document).ready(function(){
 	<br />
 
 <?php 
-	// GET EVENT WHERE EVENT IS NEXT TO START
-	$get = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed=0 ORDER BY startDate ASC";
-	$result = $db->query($get);
-	$row = $result->fetch_assoc();
-	$eventID = $row['eventID'];
+	// GET [current] EVENT 
+	$eventID = getThisEvent($db);
+	$row = getThisEventRow($db);
 	$eventStartDate = dateToScreen($row['startDate']);
 
 	// GET [this] EVENTS MENU
@@ -466,12 +492,12 @@ $(document).ready(function(){
 	<br />
 
 	<!-- ORDER LINE TABLE -->
-	<table class='pizzaOrder'>
+	<table class='pizzaOrder' border='1'>
 	<tr>
 		<td class='MANheader' width='300px'>Name</td>
-		<td class='MANheader' width='120px'>QTY</td>
-		<td class='MANheader' width='120px'>Price ($)</td>
-		<td class='MANheader' width='140px'>Total ($)</td>
+		<td class='MANheader' width='60px'>QTY</td>
+		<td class='MANheader' width='60px'>Price ($)</td>
+		<td class='MANheader' width='70px'>Total ($)</td>
 	</tr>
 
 	<?php 
@@ -507,11 +533,11 @@ $(document).ready(function(){
 			for ($i=0 ; $i<sizeof($pizzaID); $i++)
 			{
 				// GET [this] PIZZA's NAME
-				$get = "SELECT `pizza_name` FROM pizza_type WHERE pizzaID='".$pizzaID[$i]."'";
+				$get = "SELECT `pizza_name`, `description` FROM pizza_type WHERE pizzaID='".$pizzaID[$i]."'";
 				$result = $db->query($get);
 				$row = $result->fetch_assoc();
 				$pizzaName = $row['pizza_name'];
-				
+				$description = $row['description'];
 				
 				// GET [this] PIZZA's PRICE
 				$get = "SELECT `price` FROM pizza_type WHERE pizzaID='".$pizzaID[$i]."'";
@@ -522,10 +548,10 @@ $(document).ready(function(){
 				$grandTotal = $grandTotal + $total;
 
 				echo '<tr>';
-				echo '<td>'.ucwords($pizzaName).'</td>';
+				echo '<td>'.ucwords($pizzaName).' <font size="2">('.$description.')</font></td>';
 				echo '<td>'.$pizzaSum[$i].'</td>';
 				echo '<td>'.$price.'</td>';
-				echo '<td>'.$total.'</td>';
+				echo '<td>'.number_format($total, 2).'</td>';
 				echo '</tr>';
 			}
 		}
@@ -534,8 +560,14 @@ $(document).ready(function(){
 
 	?>
 		<tr><td colspan="4"><hr /></td></tr>
-		<tr><td colspan="4" align="right">GRAND TOTAL: $<?php echo $grandTotal; ?></td></tr>
+		<tr><td colspan="4" align="right" style="padding-right: 45px;">
+			GRAND TOTAL: $<?php echo number_format($grandTotal, 2); ?></td></tr>
 	</table>
+
+	<!-- PRINT THIS PAGE -->
+	<div class='print' id='printButton'>
+		<a href="javascript:window.print()">Print This Page</a>
+	</div>
 	</div>
 </div>
 
@@ -559,10 +591,8 @@ $(document).ready(function(){
 	<br />
 	<?php 
 		// GET EVENT WHERE EVENT IS NEXT TO START
-		$get = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed=0 ORDER BY startDate ASC";
-		$result = $db->query($get);
-		$row = $result->fetch_assoc();
-		$eventID = $row['eventID'];
+		$eventID = getThisEvent($db);
+		$row = getThisEventRow($db);
 		$eventStartDate = dateToScreen($row['startDate']);
 
 		// GET [this] EVENTS MENU
@@ -572,35 +602,14 @@ $(document).ready(function(){
 		$menuID = $row['menuID'];
 		$menuName = $row['menu_name'];
 
-		// GET [this] EVENTS MENU PIZZA ORDER SUMMARY
-		$getpizzaID = "SELECT DISTINCT pizzaID FROM pizza_order WHERE menuID='".$menuID."' ORDER BY pizzaID ASC";
-		$result = $db->query($getpizzaID);
-
-
-		// FOR EVERY 'DISTINCT' PIZZA TYPE, FETCH THE SUM OF EACH
-		for ($i=0; $i<$result->num_rows; $i++) 
-		{
-			$row = $result->fetch_assoc();
-			$thisPizza = $row['pizzaID'];
-			
-			// GET THE SUM OF [this] PIZZA TYPE
-			$sum = "SELECT sum(quantity) as pizzaSum FROM pizza_order WHERE pizzaID='".$thisPizza."'";
-			$resultSum = $db->query($sum);
-			$rowSum = $resultSum->fetch_assoc();
-
-			// [this] PIZZA TYPE
-			$pizzaID[$i] = $thisPizza;
-
-			// [this] PIZZA TYPE's QUANTITY
-			$pizzaSum[$i] = $rowSum['pizzaSum'];
-		}
+		$grandTotal = 0;
 	?>
-
 
 	<!-- ORDER HEADER -->
 	<div class='orderLogo'></div>
 	<div class='orderHeader'>
 		<div style='float: left;'>
+			Order Break Down: 
 			<font class='subtitle' style='font-size: 18pt;'>
 				<?php echo $menuName; ?> 
 			</font>
@@ -610,26 +619,123 @@ $(document).ready(function(){
 		</div>
 	</div>
 
-
-
 	<br />
 	<br />
-
 
 	<!-- ORDER LINE TABLE -->
-	<table class='pizzaOrder'>
+	<table class='pizzaOrder' style='width:750px;' border='1'>
 	<tr>
-		<td class='MANheader' width='300px'>Name</td>
-		<td class='MANheader' width='120px'>QTY</td>
-		<td class='MANheader' width='120px'>Price ($)</td>
-		<td class='MANheader' width='140px'>Total ($)</td>
+		<td class='MANheader' width='250px'>Attendee <font size="2">(mobile)</font></td>
+		<td class='MANheader' width='60px' align="center">Seat #</td>
+		<td class='MANheader' width='150px'>Pizza</td>
+		<td class='MANheader' width='60px' align="center">Price</td>
+		<td class='MANheader' width='60px' align="center">QTY</td>
+		<td class='MANheader' width='100px' align="center">Total</td>
+		<td class='MANheader' width='60px' align="center">Paid</td>
+		<td class='MANheader' width='60px' align="center">&nbsp;</td>
 	</tr>
 	<?php
+		// GET [current] EVENTS ORDER BREAK DOWN
+		$get = "SELECT * FROM pizza_order WHERE menuID='".$menuID."' ORDER BY attendeeID ASC";
+		$result = $db->query($get);
+		
+		if ($result->num_rows == 0)
+		{
+			echo '<tr><td colspan="8"><i>There are no orders for this pizza menu.</i></td></tr>';
+		}
+		else
+		{
+			$sameAttendee = 0;
+			$attendeePrice = 0;
+
+			for ($i=0; $i<$result->num_rows; $i++)
+			{
+				$row = $result->fetch_assoc();
+				
+			// I M P O R T A N T   R E F E R E N C I N G   V A R I A B L E S
+				$attendeeID = $row['attendeeID'];
+				$pizzaID = $row['pizzaID'];
+				$pizzaQTY = $row['quantity'];
+					// PAID PIZZA?
+					if ($row['paid_pizza'] == 0)
+					{
+						$paid = "<font style='color: red;'><b>No</b></font>";
+						$paidButton = '<input type="button" name="paid" value="Paid" onclick="payPizza('.$pizzaID.', '.$attendeeID.')" />';
+					}
+					else
+					{
+						$paid = "<font style='color: blue;'><b>Yes</b></font>";
+						$paidButton = '<img src="/cassa/images/layers/tick.png" alt="This person has paid for this pizza" />';
+					}
 
 
+				if ($attendeeID == $sameAttendee)
+				{
+					$sameAttendee = $sameAttendee +1;
+				}
+				else
+				{
+					$sameAttendee = 0;
+				}
 
+				// GET ATTENDEE DETAILS --> GET CLIENT DETAILS
+				$getAttendee = "SELECT * FROM attendee WHERE attendeeID='".$attendeeID."'";
+				$resultAttendee = $db->query($getAttendee);
+				$rowAttendee = $resultAttendee->fetch_assoc();
+					$seatID = $rowAttendee['seatID'];
+					$clientID = $rowAttendee['clientID'];
+					$resultAttendee->close();
+
+				// GET CLIENT DETAILS
+				$getClient = "SELECT * FROM client WHERE clientID='".$clientID."'";
+				$resultClient = $db->query($getClient);
+				$rowClient = $resultClient->fetch_assoc();
+					$name = $rowClient['first_name']. ' ' .$rowClient['last_name'];
+					$mobile = $rowClient['mobile'];
+					$resultClient->close();
+
+				// GET PIZZA DETAILS
+				$getPizza = "SELECT * FROM pizza_type WHERE pizzaID='".$pizzaID."'";
+				$resultPizza = $db->query($getPizza);
+				$rowPizza = $resultPizza->fetch_assoc();
+					$pizzaName = $rowPizza['pizza_name'];
+					$pizzaPrice = $rowPizza['price'];
+					$pizzaDescription = $rowPizza['description'];
+					$resultPizza->close();
+
+				// GET LINE PRICING
+				$lineTotal = $pizzaQTY * number_format($pizzaPrice, 2);
+				$grandTotal = $grandTotal + $lineTotal;
+
+			// D I S P L A Y   I N F O R M A T I O N   I N   T A B L E
+				echo '<tr class="breakDownRow">';
+					echo '<td>'.$name.' <font size="2">('.$mobile.')</font></td>';
+					echo '<td align="center">'.$seatID.'</td>';
+					echo '<td>'.$pizzaName.'</td>';
+					echo '<td align="center">$'.$pizzaPrice.'</td>';
+					echo '<td align="center">'.$pizzaQTY.'</td>';
+					echo '<td align="center">$'.number_format($lineTotal, 2).'</td>';
+					echo '<td align="center">'.$paid.'</td>';
+					echo '<td align="center">'.$paidButton.'</td>';
+				echo '</tr>';
+			}
+		}
 	?>
+		<tr><td colspan="8"><hr /></td></tr>
+		<tr><td colspan="8" align="right" style="padding-right: 145px;">
+			GRAND TOTAL: $<?php echo number_format($grandTotal, 2); ?></td></tr>
 	</table>
+
+	<form name='payPizzaForm' method='post' action='MANpizza.php'>
+		<input type='hidden' name='attendeeID' id='attendeeID' value='' />
+		<input type='hidden' name='pizzaID' id='pizzaID' value='' />
+		<input type='hidden' name='action' id='action' value='payPizza' />
+	</form>
+
+	<!-- PRINT THIS PAGE -->
+	<div class='print' id='printButton'>
+		<a href="javascript:window.print()">Print This Page</a>
+	</div>
 	</div>
 </div>
 

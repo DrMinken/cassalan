@@ -326,6 +326,11 @@ p
 {
 	cursor: pointer;
 }
+.print
+{
+	height: 100px;
+	line-height: 60pt;
+}
 .readonly
 {
 	background-color: #F0F0F0;
@@ -333,7 +338,6 @@ p
 .redAstrix
 {
 	color: red;
-	font-size: 12pt;
 }
 .rowON
 {
@@ -721,10 +725,18 @@ p
 }
 
 /* PIZZA SUMMARY */
-#summaryPizza
+#summaryPizza, #breakdownPizza
 {
 	padding: 20px;
 	text-align: left;
+}
+#breakdownPizza
+{
+	width: 760px;
+}
+.breakDownRow
+{
+	font-size: 10pt;
 }
 .pizzaOrder
 {
