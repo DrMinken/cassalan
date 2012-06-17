@@ -484,8 +484,11 @@ function display_all_booked_events($db)
 // DISPLAY ALL TOURNAMENTS FOR [this] USER TO BOOK
 function display_all_event_tournaments($db)
 {
+	// GET [current] EVENT
+	$eventID = getThisEvent($db);
+
 	// GET ALL OF [this] USERS CURRENTLY BOOKED EVENTS @ ATTENDEE
-	$query = "SELECT * FROM attendee WHERE clientID='".$_SESSION['userID']."' ORDER BY eventID ASC";
+	$query = "SELECT * FROM attendee WHERE clientID='".$_SESSION['userID']."' AND eventID='".$eventID."'";
 	$result = $db->query($query);
 ?>
 
@@ -508,17 +511,11 @@ function display_all_event_tournaments($db)
 	}
 	else
 	{
-		$eventID = getThisEvent($db);
-
 		// GET ALL [current] EVENTS INFORMATION
-		$select = "SELECT * FROM event WHERE eventID='".$eventID."'";
-		$result = $db->query($select);
-		$rowEvent = $result->fetch_assoc();
+		$rowEvent = getThisEventRow($db);
 		$name = $rowEvent['event_name'];
 
-		// GET ATTENDEE DETAILS
-		$get = "SELECT * FROM attendee WHERE eventID='".$eventID."'";
-		$result = $db->query($get);
+		// GET ATTENDEE --> [current event] DETAILS
 		$row = $result->fetch_assoc();
 		$attendeeID = $row['attendeeID'];
 
