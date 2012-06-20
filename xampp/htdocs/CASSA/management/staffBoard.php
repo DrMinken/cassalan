@@ -77,6 +77,15 @@
 				onmouseout='this.src="../images/buttons/user.jpg"' />
 		</a>
 	</td>
+	<td>
+		<!-- MANAGE PAYMENT -->
+		<a href='MANpay.php'>
+			<img class='boardButton' src='../images/buttons/pay.jpg' title='Manage Payment' 
+				onmouseover='this.src="../images/buttons/payO.jpg"' 
+				onmouseout='this.src="../images/buttons/pay.jpg"' />
+		</a>
+	</td>
+
 
 	<?php 
 	if ($_SESSION['isAdmin'] == 2)

@@ -41,9 +41,7 @@ if (isset($_POST['submit']))
 		if ($eventStatus == 1) // event started when set to 1
 		{
 			$adminStatus = isStaff($db);
-			
-			// if user is a STAFF or ADMIN member then skip IP address check
-			if($adminStatus == 1 || $adminStatus == 2) 
+			if($adminStatus == 1) // if user is a staff member then skip IP address check
 			{
 				//close connection
 				$db->close();
@@ -53,9 +51,7 @@ if (isset($_POST['submit']))
 			}
 			else 
 			{
-				// $ipStatus = check_IP_address($db);
-				$ipStatus = 1;
-
+				$ipStatus = check_IP_address($db);
 				if ($ipStatus == 1) // if IP address is within range allow login
 				{
 					//close connection
@@ -81,8 +77,7 @@ if (isset($_POST['submit']))
 		{
 			$adminStatus = isStaff($db);
 			
-			// event has not started so process login normally as a STAFF / ADMIN
-			if($adminStatus == 1 || $adminStatus == 2) 
+			if($adminStatus == 1) //event has not started so process login normally as an admin
 			{
 				//close connection
 				$db->close();
@@ -156,12 +151,12 @@ function event_check($db)
 		
 function check_IP_address($db)
 {
-	$query = "SELECT server_IP_address FROM event WHERE event_started = '1'";
+	$query = "SELECT server_IP_address FROM event WHERE event_started = 1";
 	$result = $db->query($query);
 	$row = $result->fetch_array(MYSQLI_BOTH);	
 				
 	$serverIP = abs(ip2long($row['server_IP_address']));
-
+	
 	// Now create the hi and lo values of the server address
 	$lowIP = abs($serverIP - 20);
 	$highIP = abs($serverIP + 20);
@@ -174,27 +169,27 @@ function check_IP_address($db)
 		
 	// *******Remove after testing ***********
 	
-	$userIP = abs(ip2long("192.168.0.33"));
+		$userIP = abs(ip2long("192.168.0.33"));
 	// Check whether the address is within range and return the result
 	
 	if ( $userIP <= $lowIP || $userIP >= $highIP )
 	{
-		$_SESSION['errorMSG'] = "You have attempted to login after an event has started and from outside the MegaLAN";
-
-		if(isset ($_SESSION['username']))
-		{
-			unset ($_SESSION['username']);
-		}
-
+		
+	$_SESSION['errorMSG'] = "You have attempted to login after an event has started and from outside the MegaLAN";
+                
+                 if(isset ($_SESSION['username']))
+                {
+                    unset ($_SESSION['username']);
+                }
 		 // close result set
 		$result->close();
 		return 0; // IP address outside range
 	}
 	else	
 	{  
-		// close result set
-		$result->close();
-		return 1; // IP address within range.
+	// close result set
+	$result->close();
+	return 1; // IP address within range.
 	}
 }	
 		
@@ -213,26 +208,26 @@ function isStaff($db)
 	$row = $result->fetch_array(MYSQLI_BOTH);
 		
 		// Check to see if user is a staff member	
-		if ($row['admin'] == 1)
+		if ($row['admin'] == 1) // STAFF
 		{
-			 // close result set
+			// close result set
 			$result->close();
 			$_SESSION['isAdmin'] = 1;					
-			return 1; // user is an STAFF
+			return 1;
 		}
-		else if ($row['admin'] == 2)
+		else if ($row['admin'] == 2) // ADMIN
 		{
-			 // close result set
+			// close result set
 			$result->close();
 			$_SESSION['isAdmin'] = 2;					
-			return 2; // user is an ADMIN
+			return 1; // user is an admin
 		}
 		else 
 		{ 
-			 // close result set
+			// close result set
 			$result->close();
 			$_SESSION['isAdmin'] = 0;
-			return 0; // user is not an CLIENT
+			return 0; // user is not a client
 		}
 }
 
@@ -244,13 +239,17 @@ function isStaff($db)
 //*****************************************************************************************************************	
 function login_user($db)
 {
-	$query = "SELECT * FROM client WHERE username ='".trim(mysql_real_escape_string($_POST['username']))."' AND password ='".trim(mysql_real_escape_string($_POST['password']))."'";
+	$query = "SELECT * FROM client WHERE username = '" . mysql_real_escape_string($_POST['username']) . "' 
+				and password = '" . mysql_real_escape_string($_POST['password']) . "'";
+				
 	$result = $db->query($query);
+	$row = $result->fetch_array(MYSQLI_BOTH);
+	$row_cnt = $result->num_rows;
 
-	if ($result->num_rows > 0)
+	
+	// Check username and password match stored record
+	if ($row_cnt == 1) 
 	{
-		$row = $result->fetch_assoc();
-
 		// Set username session variable
 		$_SESSION['username'] = $_POST['username'];
 		$_SESSION['err_code'] = 0;
@@ -261,8 +260,8 @@ function login_user($db)
 		
 		// close result set
 		$result->close();			
+			return 1; // user exists in database
 		
-		return 1; // user exists in database
 	}
 	else 
 	{
