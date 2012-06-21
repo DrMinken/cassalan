@@ -692,6 +692,7 @@ $(document).ready(function(){
 				$rowClient = $resultClient->fetch_assoc();
 					$name = $rowClient['first_name']. ' ' .$rowClient['last_name'];
 					$mobile = $rowClient['mobile'];
+					$irc = $rowClient['irc'];
 					$resultClient->close();
 
 				// GET PIZZA DETAILS
@@ -709,7 +710,7 @@ $(document).ready(function(){
 
 			// D I S P L A Y   I N F O R M A T I O N   I N   T A B L E
 				echo '<tr class="breakDownRow">';
-					echo '<td>'.$name.' <font size="2">('.$mobile.')</font></td>';
+					echo '<td>'.$name.' <font size="2">('.$mobile.') IRC: '.$irc.' </font></td>';
 					echo '<td align="center">'.$seatID.'</td>';
 					echo '<td>'.$pizzaName.'</td>';
 					echo '<td align="center">$'.$pizzaPrice.'</td>';
