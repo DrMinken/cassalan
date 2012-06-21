@@ -22,7 +22,9 @@
 
 	if(isset($_POST['question'])  && isset($_POST['answer']) ) 
 	{
-		$query = "UPDATE faq SET question='".$_POST['question']."', answer='".$_POST['answer']."' WHERE FAQID='".$_POST['FAQID']."'";
+	
+		$d = dateToDatabase(date("d/m/Y"));
+		$query = "UPDATE faq SET date='".$d."', question='".$_POST['question']."', answer='".$_POST['answer']."' WHERE FAQID='".$_POST['FAQID']."'";
 		$result = $db->query($query);
 
 		echo '<script type="text/javascript">window.location.href="/cassa/faq.php";</script>';
