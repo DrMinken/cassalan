@@ -31,7 +31,7 @@
 		$firstName = $_POST['firstName'];
 		$lastName = $_POST['lastName'];
 		$email = htmlspecialchars($_POST['email']);
-
+		$irc = $_POST['irc'];
 		$mobile = $_POST['mobile'];
 
 		$password = $_POST['password'];
@@ -96,7 +96,7 @@
 		if (!isset($_SESSION['errMsg']))
 		{
 			// UPDATE TO DATABASE
-			$update = "UPDATE client SET first_name='".$firstName."', last_name='".$lastName."', email='".$email."', mobile='".$mobile."', password='".$password."' WHERE clientID='".$_SESSION['userID']."'";
+			$update = "UPDATE client SET first_name='".$firstName."', last_name='".$lastName."', email='".$email."', irc='".$irc."', mobile='".$mobile."', password='".$password."' WHERE clientID='".$_SESSION['userID']."'";
 			$result = $db->query($update);
 
 
