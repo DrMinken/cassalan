@@ -295,6 +295,14 @@ else
 		</tr>
 
 		<tr>
+			<td>Description / Rules:</td>
+			<td>
+				<textarea name='description' id='description' class='tournDescription'>
+				</textarea>
+			</td>
+		</tr>
+
+		<tr>
 			<td>Start Time: <font size='1'>(24 hour)</font></td>
 			<td><input type='time' name='start_time' id='start_time' value='00:00' size='5' maxlength='5' /></td>
 		</tr>
