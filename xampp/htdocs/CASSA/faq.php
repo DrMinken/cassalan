@@ -81,7 +81,7 @@ echo '<div id="article">';
 	// DISPLAY [THIS] QUESTION
 		// TITLE
 		echo '<div class="articleTitle" style="border: 0px solid black;">'.$question.'<br /></div>';
-		echo '<div class="articleSubTitle"> Question last updated: ' . $date. '</div>'; 
+		echo '<div class="articleSubTitle" > Question last updated: ' . $date. '</div>'; 
 
 		// IF USER = STAFF, ADD TOOLBOX [EDIT/DELETE]
 		if (isset($_SESSION['isAdmin']))
@@ -102,7 +102,7 @@ echo '<div id="article">';
 
 
 		// MESSAGE
-		echo '<div class="articleMessage">'.$answer.'<br /><br /></div>';
+		echo '<br><br><div class="articleMessage">'.$answer.'<br /><br /></div>';
 
 
 		// IF THERE IS ANOTHER ARTICLE -add a blue line spacer
