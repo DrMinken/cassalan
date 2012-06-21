@@ -86,7 +86,7 @@ function payPizza(attendeeID)
 
 
 <!-- Main Content [left] -->
-<div id="content" style='min-height: 600px;'>
+<div id="content" style='min-height: 600px; width: 900px;'>
 
 
 
@@ -117,14 +117,14 @@ function payPizza(attendeeID)
 		$result = $db->query($get);
 	}
 
-	echo 'Payment list for: ';
+	echo '<div align="center">Payment list for: ';
 	echo '<font class="subtitle" style="font-size: 16pt;">';
 	echo '<b>'.$eventName . '</b> ';
-	echo '</font>';
+	echo '</font></div>';
 ?>
 
 <table class='pizzaOrder' rules='rows' style='width: 900px;'>
-<tr>
+<tr style='background-color: black; color: white;'>
 	<th align='left'>Name</th>
 	<th align='left'>Email</th>
 	<th>Mobile</th>
