@@ -172,12 +172,12 @@
 
 		// SEAT NAME
 		var name = document.getElementById(seat + 'name').value;
-		document.getElementById('seatName').value = name;
+		document.getElementById('seatName').innerHTML = '<b>'+name+'</b>';
 	}
 	function hideName()
 	{
 		document.getElementById('seatNumber').value = '';
-		document.getElementById('seatName').value = '';
+		document.getElementById('seatName').innerHTML = '';
 	}
 	function bookSeat(seat)
 	{
@@ -210,14 +210,14 @@
 <!-- Main Content [left] -->
 <div id="content">
 	<h1>Seat Availability</h1>
-
+	<br />
 
 
 
 
 <a class='inline' href="#inline_content">
 	<!-- SMALL IMAGE -->
-	<img src='images/seatPlan/layout.png' border='0' width='571px' height='239px' />
+	<img src='images/seatPlan/layout_small.png' border='0' />
 </a> 
 
 
@@ -281,8 +281,9 @@
 	
 	&nbsp;&nbsp;&nbsp;
 	
-	Reserved For: 
-		<input type='text' name='seatName' id='seatName' value='' size='32' readonly='readonly' />
+	Booked For: 
+		<!-- input type='text' name='seatName' id='seatName' value='' size='32' readonly='readonly' / -->
+		<span name='seatName' id='seatName' value=''></span>
 
 	&nbsp;&nbsp;&nbsp;
 	
