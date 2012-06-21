@@ -128,6 +128,7 @@ function payPizza(attendeeID)
 	<th align='left'>Name</th>
 	<th align='left'>Email</th>
 	<th>Mobile</th>
+	<th> IRC Nickname </th>
 	<th>Seat #</th>
 	<th>Event Pay</th>
 	<th style="border-left: 1px solid black">Pizza Total</th>
@@ -168,6 +169,7 @@ function payPizza(attendeeID)
 			$rowC = $resultC->fetch_assoc();
 				$name = $rowC['first_name'] . ' ' .$rowC['last_name'];
 				$email = $rowC['email'];
+				$irc = $rowC['irc'];
 				$mobile = $rowC['mobile'];
 			
 			// GET ALL [this] ATTENDEE'S PIZZA LINE ORDERS
@@ -227,6 +229,7 @@ function payPizza(attendeeID)
 				echo '<td style="min-width:120px;">'.$name.'</td>';
 				echo '<td style="min-width:120px;">'.$email.'</td>';
 				echo '<td align="center" style="min-width:60px;">'.$mobile.'</td>';
+				echo '<td align="center" style="min-width:60px;">'.$irc.'</td>';
 				echo '<td align="center" style="min-width:60px;">'.$seatID.'</td>';
 				echo '<td align="center" style="min-width:60px;">'.$eventPaid.'</td>';
 

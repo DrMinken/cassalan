@@ -408,6 +408,10 @@ function ajax_client_Summary_table($db, $startRow, $clientID)
 		echo '<td id="td2">' . $row1['email'] . '</td>';
 		echo '</tr>';
 		echo '<tr>';
+		echo '<td id="td1">Client IRC </td>';
+		echo '<td id="td2">' . $row1['irc'] . '</td>';
+		echo '</tr>';
+		echo '<tr>';
 		echo '<td id="td1">Client Phone </td>';
 		echo '<td id="td2">' . $row1['mobile'] . '</td>';
 		echo '</tr>';
