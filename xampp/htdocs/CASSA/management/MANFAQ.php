@@ -27,6 +27,7 @@
 		$_POST = array_map("trim", $_POST);
 
 		$q = $_POST['question'];
+		$d = dateToDatabase(date("d/m/Y"));
 		$a = $_POST['answer'];
 		$_SESSION['errMsg'] = '';
 
@@ -43,7 +44,7 @@
 		// INSERT
 		if ($_SESSION['errMsg'] == '')
 		{
-			$insert = "INSERT INTO faq VALUES ('', '".$q."', '".$a."')";
+			$insert = "INSERT INTO faq VALUES ('', '".$d."', '".$q."', '".$a."')";
 			$result = $db->query($insert);
 		}
 	}
