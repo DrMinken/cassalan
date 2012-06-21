@@ -231,6 +231,11 @@
 		<td><input type='text' name='mobile' value='<?php echo $row['mobile']; ?>' size='30' maxlength='128' /></td>
 		<td class='inLeft'><?php if (isset($_SESSION['errMsg'][3])) echo $_SESSION['errMsg'][3]; ?></td>
 	</tr>
+	
+		<tr>
+		<td width='150px' align='right'>IRC Nickname</td>
+		<td><input type='text' name='irc' value='<?php echo $row['irc']; ?>' size='30' maxlength='128' /></td>
+	</tr>
 
 	<tr>
 		<td width='150px' align='right'>Username</td>

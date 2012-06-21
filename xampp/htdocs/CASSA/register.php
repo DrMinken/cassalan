@@ -12,6 +12,7 @@
 		$firstName = '';
 		$lastName = '';
 		$email = '';
+		$irc = '';
 		$mobile = '';
 		$password = '';
 ?>
@@ -175,6 +176,12 @@
 		</td>
 		<td class='inLeft'><?php if (isset($_SESSION['errMsg'][2]))  echo $_SESSION['errMsg'][2]; ?></td>
 	</tr>
+	
+	<tr>
+		<td width='150px' align='right'>IRC Nickname</td>
+		<td><input type='text' name='irc' 
+			value='<?php echo $irc; ?>' size='30' maxlength='32' /></td>
+	</tr>
 
 	<tr>
 		<td width='150px' align='right'>Mobile</td>
@@ -276,6 +283,7 @@ if (isset($_POST['submit']))
 	$userType = $_POST['userType'];
 
 	$username = $email;
+	$irc= $_POST['irc'];
 	$password = $_POST['password'];
 	$passwordConfirm = $_POST['passwordConfirm'];
 
@@ -308,6 +316,10 @@ if (isset($_POST['submit']))
 		{
 			$_SESSION['errMsg'][3] = '<font class="error">Mobile must be 10 digits long</font>';
 		}
+	if ($irc == '')
+	{
+		$_SESSION['errMsg'][3] = '<font class="error">This field cannot be blank</font>';
+	}
 	if ($password == '')
 	{
 		$_SESSION['errMsg'][4] = '<font class="error">This field cannot be blank</font>';
@@ -340,7 +352,7 @@ if (isset($_POST['submit']))
 		$stmt->execute();
 		$stmt->close();*/
 
-		$insert = "INSERT INTO client (username, password, first_name, last_name, mobile, email) VALUES ('".$email."', '".$password."', '".$firstName."', '".$lastName."', '".$mobile."', '".$email."')";
+		$insert = "INSERT INTO client (username, password, first_name, last_name, irc, mobile, email) VALUES ('".$email."', '".$password."', '".$firstName."', '".$lastName."', '".$irc."', '".$mobile."', '".$email."')";
 		$result = $db->query($insert);
 
 		// ALERT CLIENT
