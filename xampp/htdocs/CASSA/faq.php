@@ -73,6 +73,7 @@ echo '<div id="article">';
 	{
 		$row = $result->fetch_assoc();
 		$FAQID = $row['FAQID'];
+		$date = $row['date'];
 		$question = $row['question'];
 		$answer = $row['answer'];
 
@@ -80,7 +81,7 @@ echo '<div id="article">';
 	// DISPLAY [THIS] QUESTION
 		// TITLE
 		echo '<div class="articleTitle" style="border: 0px solid black;">'.$question.'<br /></div>';
-
+		echo '<div class="articleSubTitle"> Question last updated: ' . $date. '</div>'; 
 
 		// IF USER = STAFF, ADD TOOLBOX [EDIT/DELETE]
 		if (isset($_SESSION['isAdmin']))
