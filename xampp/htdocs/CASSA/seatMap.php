@@ -269,7 +269,7 @@
 	<br />
 		<img src='/cassa/images/seatPlan/seatTop_Y30.png' /> <b>Available</b> 
 		<img src='/cassa/images/seatPlan/seatTop_N30.png' /> <b>Booked</b>
-		<img src='/cassa/images/seatPlan/seatTop_R30.png' /> <b>Reserved</b>
+		<!-- img src='/cassa/images/seatPlan/seatTop_R30.png' /> <b>Reserved</b -->
 	</div><!-- end of: LEGEND -->
 
 
