@@ -14,6 +14,7 @@
 		$email = '';
 		$irc = '';
 		$mobile = '';
+		$irc = '';
 		$password = '';
 ?>
 
@@ -186,8 +187,15 @@
 	<tr>
 		<td width='150px' align='right'>Mobile</td>
 		<td><input type='text' name='mobile' 
-			value='<?php echo $mobile; ?>' size='30' maxlength='128' /></td>
+			value='<?php echo $mobile; ?>' size='30' maxlength='10' /></td>
 		<td class='inLeft'><?php if (isset($_SESSION['errMsg'][3])) echo $_SESSION['errMsg'][3]; ?></td>
+	</tr>
+
+	<tr>
+		<td width='150px' align='right'>IRC</td>
+		<td><input type='text' name='irc' 
+			value='<?php echo $irc; ?>' size='30' maxlength='64' /></td>
+		<td class='inLeft'>&nbsp;</td>
 	</tr>
 
 	<tr>
@@ -280,6 +288,7 @@ if (isset($_POST['submit']))
 	$email = htmlspecialchars($_POST['email']);
 
 	$mobile = $_POST['mobile'];
+	$irc = $_POST['irc'];
 	$userType = $_POST['userType'];
 
 	$username = $email;
