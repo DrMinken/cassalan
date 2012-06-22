@@ -106,6 +106,7 @@ function payPizza(attendeeID)
 	if (empty($eventRow))
 	{
 		$eventName = 'There are no current events at this time';
+		$go = 0;
 	}
 	else
 	{
@@ -115,6 +116,7 @@ function payPizza(attendeeID)
 		// GET ALL ATTENDEE'S RELATING TO THIS EVENT
 		$get = "SELECT * FROM attendee WHERE eventID='".$eventID."'";
 		$result = $db->query($get);
+		$go = 1;
 	}
 
 	echo '<div align="center">Payment list for: ';
@@ -123,6 +125,10 @@ function payPizza(attendeeID)
 	echo '</font></div>';
 ?>
 
+<?php 
+if ($go == 1)
+{
+?>
 <table class='pizzaOrder' rules='rows' style='width: 900px;'>
 <tr style='background-color: black; color: white;'>
 	<th align='left'>Name</th>
@@ -246,6 +252,7 @@ function payPizza(attendeeID)
 			echo '</tr>';
 		}
 	}
+}
 ?>
 </table>
 
