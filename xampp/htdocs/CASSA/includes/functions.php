@@ -162,4 +162,19 @@ if (!function_exists("getThisEventName"))
 	}
 }
 
+// GET [this] EVENT'S DAY COUNT
+if (!function_exists("getDayCount"))
+{
+	function getDayCount($db)
+	{
+		$get = "SELECT `days` FROM event WHERE event_name='".$eventName."'";
+		$result = $db->query($get);
+		$row = $result->fetch_assoc();
+		$dayCount = $row['days'];
+		
+		return $dayCount;
+	}
+}
+
+
 ?>

@@ -119,15 +119,16 @@
         $event_location = $_POST['event_location'];
         $event_name = $_POST['event_name'];
         $startDate = dateToDatabase($_POST['startDate']);
+		$days = $_POST['days'];
         $startTime = $_POST['startTime'];
         $server_IP_address = $_POST['server_IP_address'];
         $seatQuantity = $_POST['seatQuantity'];
     
-        $postData = array($event_location, $event_name, 
-                                $startDate, $startTime, $seatQuantity, $server_IP_address);
+        $postData = array($event_location, $event_name, $startDate, 
+						  $startTime, $seatQuantity, $server_IP_address, $days);
         
-        $postNames = array("Event Location", "Event Name", 
-                           "Start Date", "Start Time", "Number of Seats", "Server IP Address");
+        $postNames = array("Event Location", "Event Name", "Start Date", 
+						   "Start Time", "Number of Seats", "Server IP Address", "This events day count");
 
 	//Validate the fields - first check to see if they are empty
 		$_SESSION['errMsg'] = "";
@@ -137,8 +138,11 @@
 		{
 			if ($postData[$i] == '')
 			{
-				$_SESSION['errMsg'] .= $postNames[$i] . ' is empty.' . '<br />';
-				$errCount ++;
+				if ($i != 5)
+				{
+					$_SESSION['errMsg'] .= $postNames[$i] . ' is empty.' . '<br />';
+					$errCount ++;
+				}
 			}
 		}
 		if ($postData[2] == '00/00/0000')
@@ -146,7 +150,7 @@
 			$_SESSION['errMsg'] .= 'Date format is not valid' . '<br />';
 			$errCount ++; 
 		}
-		if (validateIpAddress($postData[5])== false)
+		if ($postData[5] != '' && validateIpAddress($postData[5])== false)
 		{
 		  $_SESSION['errMsg'] .= 'Server I.P Address is not valid' . '<br />';
 			$errCount ++;  
@@ -176,6 +180,7 @@
 			$query .= "', seatQuantity ='" . $seatQuantity;
 			$query .= "', server_IP_Address='" . $server_IP_address;
 			$query .= "', startDate='" . $startDate;
+			$query .= "', days='" . $days;
 			$query .= "' WHERE eventID=".$eventID;
 
 			$db->autocommit(FALSE);
@@ -220,14 +225,15 @@
         $event_location = $_POST['event_location'];
         $event_name = $_POST['event_name'];
         $startDate = $_POST['startDate'];
+		$days = $_POST['days'];
         $startTime = $_POST['startTime'];
         $server_IP_address = $_POST['server_IP_address'];
         $seatQuantity = $_POST['seatQuantity'];
 		$postData = array($event_location, $event_name, 
-                          $startDate, $startTime, $seatQuantity, $server_IP_address);
+                          $startDate, $startTime, $seatQuantity, $server_IP_address, $days);
         
         $postNames = array("Event Location", "Event Name", 
-                           "Start Date", "Start Time", "Number of Seats", "Server IP Address");
+                           "Start Date", "Start Time", "Number of Seats", "Server IP Address", "Amount of days");
         											
         ajax_event_table_AddNew($db, $eventID, $postData, $postNames);
     }
@@ -288,7 +294,9 @@ function ajax_event_table_AddNew($db, $eventID, $postData, $postNames)
 		3 = Start Time
 		4 = Number of Seats
 		5 = Server IP Address
+		6 = Amount of Days this event runs for
 	*/
+
 	$_SESSION['errMsg'] = "";
 	$errCount = 0;
 
@@ -297,8 +305,11 @@ function ajax_event_table_AddNew($db, $eventID, $postData, $postNames)
 	{
 		if ($postData[$i] == '')
 		{
-			$_SESSION['errMsg'] .= $postNames[$i] . ' is empty.' . '<br />';
-			$errCount ++;
+			if ($i != 5)
+			{
+				$_SESSION['errMsg'] .= $postNames[$i] . ' is empty.' . '<br />';
+				$errCount ++;
+			}
 		}
 	}
 
@@ -328,7 +339,7 @@ function ajax_event_table_AddNew($db, $eventID, $postData, $postNames)
 		$_SESSION['errMsg'] .= 'Start Time is not Valid' . '<br />';
 		$errCount ++;
 	}
-	if (validateIpAddress($postData[5])== false)
+	if ($postData[5] != '' && validateIpAddress($postData[5])== false)
 	{
 		$_SESSION['errMsg'] .= 'Server I.P Address is not valid' . '<br />';
 		$errCount ++;
@@ -351,6 +362,7 @@ function ajax_event_table_AddNew($db, $eventID, $postData, $postNames)
 		$eLocation = $_POST['event_location'];
 		$eStartTime = $_POST['startTime'];
 		$eEventDate = $_POST['startDate'];
+		$days = $_POST['days'];
 		$eServerIP = $_POST['server_IP_address'];
 		$eSeatNum = $_POST['seatQuantity'];
 	}
@@ -358,12 +370,13 @@ function ajax_event_table_AddNew($db, $eventID, $postData, $postNames)
 	{
 		$event_location = $_POST['event_location'];
 		$event_name = $_POST['event_name'];
+		$days = $_POST['days'];
 		$startTime = $_POST['startTime'];
 		$server_IP_address = $_POST['server_IP_address'];
 		$seatQuantity = $_POST['seatQuantity'];
   
-		$query = "INSERT INTO `event` (`eventID`, `event_name`, `event_location`, `startDate`, `startTime`, `seatQuantity`, `server_IP_address`, `event_started`, `event_completed`)"; 
-		$query .= "VALUES (NULL, '".$event_name."', '".$event_location."', '".$sqlDate."', ";
+		$query = "INSERT INTO `event` (`eventID`, `event_name`, `event_location`, `startDate`, `days`, `startTime`, `seatQuantity`, `server_IP_address`, `event_started`, `event_completed`)"; 
+		$query .= "VALUES (NULL, '".$event_name."', '".$event_location."', '".$sqlDate."', '".$days."', ";
 		$query .= "'".$startTime."', '".$seatQuantity."', '".$server_IP_address."', 0, 0);";      
 				
 		$page = $_SERVER['PHP_SELF']; 
@@ -495,7 +508,8 @@ echo '<table class="pizzaOrder">';
     $off = 'this.src="../images/buttons/edit_up.png"';
 
     echo '<tr>';
-		echo '<td colspan="2" id="headCell_left"> Event Details for: <font class="subtitle">'.$row1['event_name'].'</font></td>';
+		echo '<td colspan="2" id="headCell_left">&nbsp;&nbsp;';
+		echo '<font class="subtitle" style="font-size: 14pt;">'.$row1['event_name'].'</font></td>';
 		echo '<td id="headCell_right">';
 		echo '<img class="button" src="../images/buttons/edit_dwn.png"';
 			echo 'alt="Edit The Selected Event" onclick="editEvent('.$row1['eventID'].')"';
@@ -516,6 +530,12 @@ echo '<table class="pizzaOrder">';
 		echo '<tr>';
 			echo '<td><b>Start Date: </b></td>';
 			echo '<td>'.dateToScreen($row['startDate']).'</td>';
+			echo '<td></td>';
+		echo '</tr>';
+
+		echo '<tr>';
+			echo '<td><b>Day Count: </b></td>';
+			echo '<td>'.$row['days'].'</td>';
 			echo '<td></td>';
 		echo '</tr>';
 
@@ -605,6 +625,7 @@ function ajax_event_table_edit($db, $eventID)
         $eLocation = $row1['event_location'];
         $eStartTime = $row1['startTime'];
         $eEventDate = $row1['startDate'];
+		$eDays = $row1['days'];
         $eServerIP = $row1['server_IP_address'];
         $eSeatNum = $row1['seatQuantity'];
     }
@@ -615,6 +636,7 @@ function ajax_event_table_edit($db, $eventID)
 		$eLocation = $_POST['event_location'];
 		$eStartTime = $_POST['startTime'];
 		$eEventDate = $_POST['startDate'];
+		$eDays = $row1['days'];
 		$eServerIP = $_POST['server_IP_address'];
 		$eSeatNum = $_POST['seatQuantity'];
 		$eventID = $_POST['eventID'];
@@ -706,6 +728,27 @@ echo '</table>';
 	</tr>
 
 	<tr>
+		<td><b>Day Count: </b></td>
+		<td>
+			<select name='E_days' id='E_days'>
+			<?php
+				for($i=1; $i<6; $i++)
+				{	
+					if ($i == $eDays)
+					{
+						echo '<option value="'.($i+1).'" selected="selected">'.$i.'</option>';
+					}
+					else
+					{
+						echo '<option value="'.($i+1).'">'.$i.'</option>';
+					}
+				}
+			?>
+			</select>
+		</td>
+	</tr>
+
+	<tr>
 		<td><b>Event Time: </b></td>
 		<td><input type="text" name="E_startTime" id="E_startTime" 
 				   value="<?php echo $eStartTime; ?>" 
@@ -738,13 +781,13 @@ echo '</table>';
 			$cancelUp = 'this.src="../images/buttons/delete_up.png"';
 	?>	  	
 			<img src="../images/buttons/delete_dwn.png" width="30" height="30"
-				alt="Cancel Current Update" 
+				title="Cancel update" 
 				onclick="getEvent('<?php echo $eventID; ?>')" 
 				onmouseover='<?php echo $cancelUp; ?>' 
 				onmouseout='<?php echo $cancelDwn; ?>' />
 				
 			<img src="../images/buttons/save_dwn.png" width="30" height="30"
-				alt="Update the current event" 
+				title="Update this event" 
 				onclick="updateEvent()"
 				onmouseover='<?php echo $off; ?>' 
 				onmouseout='<?php echo $on; ?>' />

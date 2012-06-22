@@ -142,13 +142,15 @@ function checkaddEvent()
 	var event_name = document.getElementById('event_name').value;
 	var event_location = document.getElementById('event_location').value;
 	var startDate = document.getElementById('inputDate').value;
+	var days = document.getElementById('days').selectedIndex;
 	var startTime = document.getElementById('startTime').value;
 	var server_IP_address = document.getElementById('server_IP_address').value;
 	var seatQuantity = document.getElementById('seatQuantity').value;
 
    var params = "eventID=" + eventID + "&queryType=6" + "&event_name=" + event_name
 				+ "&event_location=" + event_location + "&startDate=" + startDate 
-				+ "&startTime=" + startTime + "&server_IP_address=" + server_IP_address
+				+ "&days=" + days + "&startTime=" + startTime 
+				+ "&server_IP_address=" + server_IP_address 
 				+ "&seatQuantity=" + seatQuantity;			
 	createRequest(eventID,params);
 }
@@ -264,13 +266,15 @@ function updateEvent()
 	var event_name = document.getElementById('E_event_name').value;
 	var event_location = document.getElementById('E_event_location').value;
 	var startDate = document.getElementById('E_startDate').value;
+	var days = document.getElementById('E_days').selectedIndex+1;
 	var startTime = document.getElementById('E_startTime').value;
 	var server_IP_address = document.getElementById('E_server_IP_address').value;
 	var seatQuantity = document.getElementById('E_seatQuantity').value;
 
 	var params = "eventID=" + eventID + "&queryType=4" + "&event_name=" + event_name
 				+ "&event_location=" + event_location + "&startDate=" + startDate 
-				+ "&startTime=" + startTime + "&server_IP_address=" + server_IP_address
+				+ "&days=" + days + "&startTime=" + startTime 
+				+ "&server_IP_address=" + server_IP_address
 				+ "&seatQuantity=" + seatQuantity;			
 
 	createRequest(eventID,params);		
@@ -291,7 +295,7 @@ function setDate()
 // COLORBOX
 $(document).ready(function(){
 	$(".ajax").colorbox();
-	$(".inlineADD").colorbox({inline:true, width:"550px", height:"350px"});
+	$(".inlineADD").colorbox({inline:true, width:"550px", height:"370px", scrolling: false});
 	$(".inlineB").colorbox({inline:true, width:"700px", height:"900px"});
 
 	// DATE PICKER:
@@ -367,12 +371,28 @@ if (isset($_SESSION['errMsg']))
 	</tr>
 
 	<tr>
-		<td>Event Date:</td>
+		<td>Start Date:</td>
 		<td>
 			<input class="inputDate" type='text' name='inputDate' id="inputDate" readonly='readonly'/>
-			<label id='closeOnSelect'><input type='checkbox' checked='true' style='visibility: hidden' /></label>
+			<label id='closeOnSelect'>
+			<input type='checkbox' checked='true' style='visibility: hidden' /></label>
 		</td>
 	</tr>
+
+	<tr>
+		<td>Day Count:</td>
+		<td>
+			<select name='days' id='days'>
+				<option value='1' selected='selected'>1</option>
+				<option value='2'>2</option>
+				<option value='3'>3</option>
+				<option value='4'>4</option>
+				<option value='5'>5</option>
+			</select>
+		</td>
+	</tr>
+
+
 
 	<tr>
 		<td>Event Time: <font size='1'>(24 Hour)</font></td>
@@ -395,7 +415,7 @@ if (isset($_SESSION['errMsg']))
 			<!-- SAVE EVENT -->
 			<img class='button'
 				 src="../images/buttons/save_dwn.png" 
-				 alt="Save the current Event" onclick="checkaddEvent()" 
+				 title="Create this event" onclick="checkaddEvent()" 
 				 onmouseover='<?php echo $off; ?>' onmouseout='<?php echo $on; ?>' />
         </div>
 		</td>
