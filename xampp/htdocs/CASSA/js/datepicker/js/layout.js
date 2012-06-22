@@ -62,6 +62,8 @@
 			date: $('#inputDate').val(),
 			current: $('#inputDate').val(),
 			starts: 1,
+			//mode: 'multiple',
+			//calendars: 2,
 			position: 'right',
 			onBeforeShow: function()
 			{

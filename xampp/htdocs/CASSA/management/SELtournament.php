@@ -57,7 +57,7 @@ function draw_tournament_table($db, $tournID)
 	draw_current_tournament($db);
 
 	//Create the general select query.
-	$query = "SELECT * FROM tournament WHERE tournID='".$tournID."'";
+	$query = "SELECT * FROM tournament WHERE tournID='".$tournID."' ORDER BY start_time ASC";
 	$result = $db->query($query);
 	
 	if ($result->num_rows == 0)
@@ -76,26 +76,21 @@ function draw_tournament_table($db, $tournID)
 	// DECLARE MOUSE EVENTS
 	$on = 'this.src="../images/buttons/edit_dwn.png"';
 	$off = 'this.src="../images/buttons/edit_up.png"';
-	
-
-	
-
 ?>
 	<br /><br />
 
 
-	<table class="pizzaOrder" style="width: 400px;" border='0'>
+	<table class="pizzaOrder" style="width: 650px;" border='0'>
 
 
 	<tr><td colspan="2" id="headCell_left">
-		&nbsp;&nbsp;Tournament Details for: 
-		<font class='subtitle'><?php echo $row1['name']; ?></font></td>
+		&nbsp;&nbsp;<font class='subtitle' style="font-size: 14pt;"><?php echo $row1['name']; ?></font></td>
 	
 	<td id="headCell_right">
 		<img class="pointer" 
 			 src="../images/buttons/edit_dwn.png" 
 			 width="30px" height="30px"
-			 alt="Click to edit this tournament" 
+			 title="Click to edit this tournament" 
 			 onclick="editTournament(' <?php echo $row1['tournID']; ?> ')" 
 			 onmouseover='<?php echo $off; ?>' onmouseout='<?php echo $on; ?>' /></td>
 	</tr>
@@ -103,8 +98,20 @@ function draw_tournament_table($db, $tournID)
 <?php 
 	// While Loop starts here - 
 	// Retrieve the data for the table. There should only be one row.
-	while($row = $result->fetch_array(MYSQLI_BOTH))                            
+	while($row = $result->fetch_assoc())                            
 	{
+		if ($row['description'] == ''){	$row['description'] = '-'; }
+
+		echo '<tr>';
+			echo '<td width="170px" style="vertical-align: top; border-bottom: 1px solid black;">Description: </td>';
+			echo '<td colspan="2" align="left" style="border-bottom: 1px solid black;"><textarea class="tournDescriptionRead">' . $row['description'] . '</textarea></td>';
+		echo '</tr>';    
+
+		echo '<tr>';
+			echo '<td>Held on day: </td>';
+			echo '<td colspan="2" align="left">' . $row['day'] . '</td>';
+		echo '</tr>';    
+
 		echo '<tr>';
 			echo '<td>Start Time: </td>';
 			echo '<td colspan="2" align="left">' . substr($row['start_time'], 0, 5) . '</td>';
@@ -168,6 +175,7 @@ function draw_tournament_table($db, $tournID)
 	}//While Loop ends here
 
 	echo '</table>';
+	echo '<br />';
 }
 
 
@@ -200,7 +208,9 @@ else if($queryType == "insert")
 {
 	// SETUP SUBJECTIVE VARIABLES
 	$eventID = $_POST['eventID'];
+	$days = $_POST['tournDays'];
 	$name = $_POST['name'];
+	$description = substr($_POST['description'], 0 , 255);
 	$startTime = $_POST['startTime'];
 	$endTime = $_POST['endTime'];
 	$_SESSION['errMsg'] = '';
@@ -220,6 +230,14 @@ else if($queryType == "insert")
 		{
 			$_SESSION['errMsg'] .= '<br />No event was selected';
 		}
+		if ($days == '')
+		{
+			$_SESSION['errMsg'] .= '<br />This tournament be on a particular day';
+		}
+			if (!is_numeric($days))
+			{
+				$_SESSION['errMsg'] .= "<br />Days must be numeric only. Eg. '2'";
+			}
 		if ($name == '')
 		{
 			$_SESSION['errMsg'] .= '<br />No event name was entered';
@@ -241,8 +259,8 @@ else if($queryType == "insert")
 		else
 		{
 			// INSERT INTO DATABASE
-			$insert = "INSERT INTO tournament (eventID, name, start_time, end_time, winner, started, finished) ";
-			$insert .= "VALUES ('".$eventID."','".$name."','".$startTime."','".$endTime."', '', 0, 0)";
+			$insert = "INSERT INTO tournament (eventID, name, description, start_time, end_time, winner, started, finished) ";
+			$insert .= "VALUES ('".$eventID."','".$name."','".$description."','".$startTime."','".$endTime."', '', 0, 0)";
 			$result = $db->query($insert);
 
 			// DISPLAY CURRENT EVENT->TOURNAMENT
@@ -263,7 +281,9 @@ else if($queryType == "update")
 {
 	// SETUP SUBJECTIVE VARIABLES
 	$tournID = $_POST['tournID'];
+	$day = $_POST['day'];
 	$name = $_POST['name'];
+	$description = substr($_POST['description'], 0, 255);
 	$startTime = $_POST['startTime'];
 	$endTime = $_POST['endTime'];
 	$_SESSION['errMsg'] = '';
@@ -284,6 +304,14 @@ else if($queryType == "update")
 		{
 			$_SESSION['errMsg'] .= '<br />No event name was entered';
 		}
+		if ($day == '')
+		{
+			$_SESSION['errMsg'] .= '<br />Day this tournament is held on cannot be blank';
+		}
+			if (!is_numeric($day))
+			{
+				$_SESSION['errMsg'] .= '<br />Day this tournament is held must only be numeric';
+			}
 		if ($startTime < '00:00' && $startTime > '24:00' || $endTime > '00:00' && $endTime > '24:00')
 		{
 			$_SESSION['errMsg'] .= '<br />Start and End times must be within 24 hours';
@@ -301,7 +329,7 @@ else if($queryType == "update")
 		else
 		{
 			// UPDATE TOURNAMENT
-			$update = "UPDATE tournament SET name='".$name."', start_time='".$startTime."', end_time='".$endTime."' WHERE tournID='".$tournID."'";
+			$update = "UPDATE tournament SET name='".$name."', day='".$day."', description='".$description."', start_time='".$startTime."', end_time='".$endTime."' WHERE tournID='".$tournID."'";
 			$result = $db->query($update);
 			$queryType='0';
 		}
@@ -358,7 +386,7 @@ function draw_current_tournament($db)
 
 <?php
 	// AVAILABLE EVENTS
-	$query = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed=0 ORDER BY startDate ASC";
+	$query = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed != 2 ORDER BY startDate ASC";
 	$result = $db->query($query);
 
 	// FOR EACH AVAILABLE EVENTS, LOOP THROUGH AND DISPLAY EACH TOURNAMENT
@@ -369,7 +397,7 @@ function draw_current_tournament($db)
 		$eventName = $row['event_name'];
 
 		// GET TOURNAMENT
-		$queryTourn = "SELECT * FROM tournament WHERE eventID=".$row['eventID']."";
+		$queryTourn = "SELECT * FROM tournament WHERE eventID=".$row['eventID']." ORDER BY start_time ASC";
 		$resultTourn = $db->query($queryTourn);
 		
 		// FOR EACH TOURNAMENT IN [this] EVENT, DISPLAY
@@ -437,7 +465,7 @@ else if($queryType == '2')
     <br />
     <br />
          
-<table class="pizzaOrder" style='width: 400px;' border='0'>
+<table class="pizzaOrder" style='width: 650px;' border='0'>
 	<tr><td colspan="2" class="tableTitle">&nbsp;&nbsp;Edit Tournament: 
 		<font class='subtitle'><?php echo $num['name']; ?></font></td>
 	</tr>
@@ -450,15 +478,30 @@ else if($queryType == '2')
 	</tr>
 
 	<tr>
+		<td>Held on day: </td>
+		<td><input type="text" name="E_day" id='E_day' 
+				   value="<?php echo $num['day']; ?>" 
+				   size="1" maxlength="1" /></td>
+	</tr>
+
+	<tr>
+		<td width='200px' style='vertical-align: top'>Description: </td>
+		<td><textarea name="E_description" id='E_description' 
+				   class="tournDescription"
+				   onkeyup="checkTextEdit()" /><?php echo $num['description']?></textarea>
+		</td>
+	</tr>
+
+	<tr>
 		<td>Start Time: </td>
-		<td><input type="time" name="E_start_time" id='E_start_time' 
+		<td><input type="text" name="E_start_time" id='E_start_time' 
 				   value="<?php echo substr($num['start_time'], 0, 5) ?>" 
 				   size="5" maxlength="5" /></td>
 	</tr>
 
 	<tr>
 		<td>End Time: </td>
-		<td><input type="time" name="E_end_time" id='E_end_time' 
+		<td><input type="text" name="E_end_time" id='E_end_time' 
 				   value="<?php echo substr($num['end_time'], 0, 5) ?>" 
 				   size="5" maxlength="5" /></td>
 	</tr>
@@ -468,6 +511,7 @@ else if($queryType == '2')
 		<input type='submit' value='Update' onclick='updateTourn(<?php echo $num['tournID']; ?>)' /></td>
 	</tr>
 </table>
+<br />
 <?php                 
 }
 ?>

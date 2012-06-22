@@ -775,13 +775,29 @@ p
 
 .tournDescription
 {
-	width: 400px;
-	height: 200px;
+	width: 300px;
+	min-height: 100px;
+	max-height: 200px;
 	padding: 5px;
-
+	overflow: auto;
+	resize: none;
+	font-family: arial;
+	font-size: 12pt;
 }
+.tournDescriptionRead
+{
+	width: 300px;
+	
+	min-height: 100px;
+	max-height: 200px;
+	padding: 5px;
+	overflow: auto;
+	resize: none;
+	font-family: arial;
+	font-size: 12pt;
 
-
+	border: 0;
+}
 
 
 

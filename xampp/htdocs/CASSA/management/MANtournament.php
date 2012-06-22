@@ -31,7 +31,7 @@
 
 
 	// AVAILABLE EVENTS
-	$query = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed=0 ORDER BY startDate ASC";
+	$query = "SELECT * FROM event WHERE startDate >= CURDATE() AND event_completed != 2 ORDER BY startDate ASC";
 	$result = $db->query($query);
 	$row = $result->fetch_assoc();
 
@@ -46,7 +46,7 @@
 	else
 	{
 		// TOURNAMENT
-		$query = "SELECT * FROM tournament WHERE eventID=".$row['eventID']."";
+		$query = "SELECT * FROM tournament WHERE eventID=".$row['eventID']." ORDER BY start_time ASC";
 		$result = $db->query($query);
 		$row = $result->fetch_array(MYSQLI_BOTH);
 		$tournID = $row['tournID'];
@@ -88,6 +88,7 @@ function createRequest(params)
 	xmlhttp.setRequestHeader("Connection", "close");
 	xmlhttp.send(params);
 }
+
 //***************************************************************
 //
 // Ajax Function to create summary table on page.
@@ -98,6 +99,7 @@ function getTournament(tournID)
 	var params = "tournID=" + tournID + "&queryType=0";
 	createRequest(params);
 }
+
 //***************************************************************
 //
 // Function Create Tournament
@@ -106,16 +108,21 @@ function getTournament(tournID)
 function createTourn()
 {
 	var eventID = document.getElementById('selectedEvent').value;
+	var tournDays = document.getElementById('tournDays').value;
 	var name = document.getElementById('name').value;
+	var description = document.getElementById('description').value;
 	var startTime = document.getElementById('start_time').value;
 	var endTime = document.getElementById('end_time').value;
 
-	var params = "eventID=" + eventID + "&name=" + name + 
+	var params = "eventID=" + eventID + "&tournDays=" + tournDays + 
+				 "&name=" + name + "&description=" + description +
 				 "&startTime=" + startTime + "&endTime=" + endTime + 
 				 "&queryType=insert";
 	
+	parent.$.fn.colorbox.close(); 
 	createRequest(params);
 }
+
 //***************************************************************
 //
 // Function Edit Tournament
@@ -130,14 +137,18 @@ function editTournament(tournID)
 function updateTourn(tournID)
 {
 	var name = document.getElementById('E_name').value;
+	var day = document.getElementById('E_day').value;
+	var description = document.getElementById('E_description').value;
 	var startTime = document.getElementById('E_start_time').value;
 	var endTime = document.getElementById('E_end_time').value;
 
-	var params = "tournID=" + tournID + "&name=" + name + "&startTime= " + 
-				 startTime + "&endTime=" + endTime + "&queryType=update";
+	var params = "tournID=" + tournID + "&day=" + day + "&name=" 
+				 + name + "&description=" + description + "&startTime= " 
+				 + startTime + "&endTime=" + endTime + "&queryType=update";
 
 	createRequest(params);
 }
+
 //***************************************************************
 //
 // Delete a Tournament @ AJAX
@@ -158,19 +169,6 @@ function deleteTournament(tournID, tournName)
 		return;
 	}
 }
-//***************************************************************
-//
-// PREPARE ColorBox
-//
-//****************************************************************
-$(document).ajaxStop(function(){
-	window.location.reload();
-});
-
-$(document).ready(function(){
-	// COLORBOX
-	$(".inline").colorbox({inline:true, width:"550px", height:"380px"});
-});
 
 //***************************************************************
 //
@@ -219,9 +217,54 @@ function stopTournament(tournID)
 	}
 }
 
+function checkText()
+{
+	var size = document.getElementById('description').value.length;
+	var textarea = document.getElementById('description').value;
 
+	if (size > 256)
+	{
+		document.getElementById('description').value = textarea.substring(0, 255);
+	}
+}
+function checkTextEdit()
+{
+	var size = document.getElementById('E_description').value.length;
+	var textarea = document.getElementById('E_description').value;
 
+	if (size > 256)
+	{
+		document.getElementById('E_description').value = textarea.substring(0, 255);
+	}
+}
+function clearInputs()
+{
+	document.getElementById('name').value = '';
+	document.getElementById('description').value = '';
+	document.getElementById('start_time').value = '00:00';
+	document.getElementById('end_time').value = '00:00';
+}
+function getDays(index)
+{
+	var event = document.selectDays.selectedEvent[index].text;
+}
 
+//***************************************************************
+//
+// PREPARE ColorBox
+//
+//****************************************************************
+$(document).ajaxStop(function(){
+	window.location.reload();
+});
+
+$(document).ready(function(){
+	// COLORBOX
+	$(".inline").colorbox({inline:true, width:"580px", height:"480px", scrolling: false});
+	$(".inline").colorbox({
+		onClosed:function(){ clearInputs() }
+	});
+});
 </script>
 </head>
 
@@ -270,11 +313,12 @@ else
 
 	<br /><br />
 
-	<table border="0" width="400px" style='text-align: left; line-height: 23pt;'>
+	<table border="0" width="" style='text-align: left; line-height: 23pt;'>
 		<tr> 
-			<td>Select Event:</td>
+			<td width='150px'>Select Event:</td>
 			<td>
-				<select name="selectedEvent" id="selectedEvent">
+				<form name='selectDays' id='selectDays'>
+				<select name="selectedEvent" id="selectedEvent" onchange="getDays(this.selectedIndex);">
 				<?php
 				$get = "SELECT * FROM event WHERE event_completed=0 AND startDate >= CURDATE()";
 				$result = $db->query($get);
@@ -286,6 +330,26 @@ else
 				}
 				?>
 				</select>
+				</form>
+			</td>
+		</tr>
+
+		<tr> 
+			<td width='150px'>On Day:</td>
+			<td><input type='text' name='tournDays' id='tournDays' value='1' size='1' maxlength='1' />
+				<!-- select name="selectedEventDay" id="selectedEventDay">
+				<?php
+					$get = "SELECT `days` FROM event WHERE eventID=''";
+					$result = $db->query($get);
+					$row = $result->fetch_assoc();
+					$days = $row['days'];
+
+					for ($i=0; $i<$days; $i++)
+					{
+						echo '<option value="'.$i.'">'.$i.'</option>';
+					}
+				?>
+				</select -->
 			</td>
 		</tr>
 
@@ -295,10 +359,10 @@ else
 		</tr>
 
 		<tr>
-			<td>Description / Rules:</td>
+			<td style='vertical-align: top;'>Description / Rules:</td>
 			<td>
-				<textarea name='description' id='description' class='tournDescription'>
-				</textarea>
+				<textarea name='description' id='description' class='tournDescription'
+					onkeyup='checkText()'></textarea>
 			</td>
 		</tr>
 
