@@ -33,6 +33,7 @@
 		$email = htmlspecialchars($_POST['email']);
 		$irc = $_POST['irc'];
 		$mobile = $_POST['mobile'];
+		$irc = $_POST['irc'];
 
 		$password = $_POST['password'];
 		$passwordConfirm = $_POST['passwordConfirm'];
@@ -96,7 +97,7 @@
 		if (!isset($_SESSION['errMsg']))
 		{
 			// UPDATE TO DATABASE
-			$update = "UPDATE client SET first_name='".$firstName."', last_name='".$lastName."', email='".$email."', irc='".$irc."', mobile='".$mobile."', password='".$password."' WHERE clientID='".$_SESSION['userID']."'";
+			$update = "UPDATE client SET first_name='".$firstName."', last_name='".$lastName."', irc='".$irc."', email='".$email."', mobile='".$mobile."', password='".$password."' WHERE clientID='".$_SESSION['userID']."'";
 			$result = $db->query($update);
 
 
@@ -228,13 +229,14 @@
 
 	<tr>
 		<td width='150px' align='right'>Mobile</td>
-		<td><input type='text' name='mobile' value='<?php echo $row['mobile']; ?>' size='30' maxlength='128' /></td>
+		<td><input type='text' name='mobile' value='<?php echo $row['mobile']; ?>' size='30' maxlength='10' /></td>
 		<td class='inLeft'><?php if (isset($_SESSION['errMsg'][3])) echo $_SESSION['errMsg'][3]; ?></td>
 	</tr>
 	
-		<tr>
-		<td width='150px' align='right'>IRC Nickname</td>
-		<td><input type='text' name='irc' value='<?php echo $row['irc']; ?>' size='30' maxlength='128' /></td>
+	<tr>
+		<td width='150px' align='right'>IRC</td>
+		<td><input type='text' name='irc' value='<?php echo $row['irc']; ?>' size='30' maxlength='64' /></td>
+		<td class='inLeft'>&nbsp;</td>
 	</tr>
 
 	<tr>
