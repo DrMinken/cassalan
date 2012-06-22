@@ -73,7 +73,7 @@ echo '<div id="article">';
 	{
 		$row = $result->fetch_assoc();
 		$FAQID = $row['FAQID'];
-		$date = $row['date'];
+		$date = dateToScreen($row['faqDate']);
 		$question = $row['question'];
 		$answer = $row['answer'];
 

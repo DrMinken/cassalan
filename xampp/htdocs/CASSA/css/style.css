@@ -80,7 +80,10 @@ body
 #container
 {
 	width: 950px;
-
+}
+#content
+{
+	min-height: 650px;
 }
 
 
@@ -584,31 +587,31 @@ p
 #S1
 {
 	position: relative;
-	top: -430px;
+	top: -420px;
 	left: 40px;
 }
 #S2
 {
 	position: relative;
-	top: -550px;
+	top: -540px;
 	left: 700px;
 }
 #S3
 {
 	position: relative;
-	top: -570px;
+	top: -560px;
 	left: 260px;
 }
 #S4
 {
 	position: relative;
-	top: -550px;
+	top: -540px;
 	left: 260px;
 }
 #S5
 {
 	position: relative;
-	top: -650px;
+	top: -640px;
 	left: 700px;
 }
 .seatNumber
